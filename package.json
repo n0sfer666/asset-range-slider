@@ -7,11 +7,18 @@
     "@types/jquery": "^3.5.4",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
+    "autoprefixer": "^10.0.1",
+    "css-loader": "^5.0.0",
+    "cssnano": "^4.1.10",
     "eslint": "^7.12.1",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-fsd": "^1.0.1",
     "eslint-plugin-import": "^2.22.1",
     "jquery": "^3.5.1",
+    "postcss-loader": "^4.0.4",
+    "postcss-nested": "^5.0.1",
+    "postcss-simple-vars": "^6.0.1",
+    "style-loader": "^2.0.0",
     "ts-loader": "^8.0.7",
     "typescript": "^4.0.5",
     "webpack": "^5.3.1",
@@ -30,5 +37,6 @@
   "bugs": {
     "url": "https://github.com/n0sfer666/FSD-Task-4-v3/issues"
   },
-  "homepage": "https://github.com/n0sfer666/FSD-Task-4-v3#readme"
+  "homepage": "https://github.com/n0sfer666/FSD-Task-4-v3#readme",
+  "dependencies": {}
 }
