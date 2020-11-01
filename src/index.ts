@@ -1,12 +1,14 @@
-import './style/main.css';
+import "./style/main.css";
+import DemoPanel from './DemoPanel/DemoPanel';
 
 class Main {
   constructor() {
-    console.log('hello world');
-  }
-  sum(a: number, b: number): number {
-    return a + b;
+    jQuery(document).ready(() => {
+      const container:JQuery = $('.js-plugin');
+      const demoPanel = new DemoPanel(container);
+    });
+    console.log('main was initiated');
   }
 }
 
-const main = new Main();
+const main: Main = new Main();

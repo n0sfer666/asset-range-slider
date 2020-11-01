@@ -1,4 +1,4 @@
-import TestClass from '../plugin/TestClasses/TestClass';
+import TestClass from '../TestClasses/TestClass';
 
 test('test', () => {
   const testInst = new TestClass();

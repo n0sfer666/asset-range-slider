@@ -1,15 +1,19 @@
 const webpack = require('webpack');
+const copy = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
     index: './src/index.ts'
   },
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
   output: {
     filename: '[name].js',
-    path: __dirname + '/dist',
+    path: `${__dirname}/dist`,
   },
   devServer: {
-    contentBase: __dirname + '/dist',
+    contentBase: `${__dirname}/dist`,
     compress: true,
     port: 9090,
   },
@@ -32,5 +36,13 @@ module.exports = {
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
     }),
+    new copy({
+      patterns: [
+        {
+          from: 'src/page/',
+          to: '',
+        }
+      ]
+    })
   ],
 }
