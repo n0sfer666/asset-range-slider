@@ -15,7 +15,7 @@ export default DemoPanel;
 (function ($: JQueryStatic) {
   $.fn.extend({
     DemoPanel() {
-      return new DemoPanel(<JQuery>this);
+      return new DemoPanel(<JQuery> this);
     },
   });
 }(jQuery));

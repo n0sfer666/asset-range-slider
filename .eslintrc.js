@@ -26,5 +26,6 @@ module.exports = {
     'import/extensions': ['off'],
     'no-unused-vars': ['off'],
     'no-undef': ['off'],
+    'func-names': ['off'],
   },
 };
