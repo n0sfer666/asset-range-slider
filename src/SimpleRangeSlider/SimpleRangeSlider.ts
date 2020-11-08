@@ -1,10 +1,87 @@
+import Presenter from './Controller/Presenter';
+import Model from './Model/Model';
+import View from './View/View';
+
 class SimpleRangeSlider {
   private container: JQuery;
 
-  constructor(container: JQuery) {
+  private config: iConfigUser;
+
+  private view: View;
+
+  private model: Model;
+
+  private presenter: Presenter;
+
+  constructor(container: JQuery, config: iConfigUser) {
     this.container = container;
-    console.log(this.container);
-    console.log('Simple Range Slider was initiated');
+    this.config = config;
+    const defaultConfig: iConfigUser = this.getDefaultConfig();
+    const completeConfig: iConfigUser = this.getCompleteConfig(this.config, defaultConfig);
+    const modelConfig: iConfigModel = this.getModelConfig(completeConfig);
+    const viewConfig: iConfigView = this.getViewConfig(completeConfig);
+    this.view = new View(this.container, viewConfig);
+    this.model = new Model(modelConfig);
+    this.presenter = new Presenter(this.view, this.model);
+  }
+
+  getDefaultConfig(): iConfigUser {
+    return {
+      orientation: 'horizontal',
+      start: [10],
+      range: [0, 100],
+      step: 1,
+      connect: true,
+      tooltip: true,
+      scale: true,
+    };
+  }
+
+  getCompleteConfig(userConfig: iConfigUser, defaultConfig: iConfigUser): iConfigUser {
+    return {
+      orientation: userConfig.orientation === undefined
+        ? defaultConfig.orientation
+        : userConfig.orientation,
+      start: userConfig.start === undefined
+        ? defaultConfig.start
+        : userConfig.start,
+      range: userConfig.range === undefined
+        ? defaultConfig.range
+        : userConfig.range,
+      step: userConfig.step === undefined
+        ? defaultConfig.step
+        : userConfig.step,
+      connect: userConfig.connect === undefined
+        ? defaultConfig.connect
+        : userConfig.connect,
+      tooltip: userConfig.tooltip === undefined
+        ? defaultConfig.tooltip
+        : userConfig.tooltip,
+      scale: userConfig.scale === undefined
+        ? defaultConfig.scale
+        : userConfig.scale,
+      input: userConfig.input,
+    };
+  }
+
+  getModelConfig(completeConfig: iConfigUser): iConfigModel {
+    return {
+      start: completeConfig.start,
+      range: completeConfig.range,
+      step: completeConfig.step,
+    };
+  }
+
+  getViewConfig(completeConfig: iConfigUser): iConfigView {
+    return {
+      orientation: completeConfig.orientation,
+      start: completeConfig.start,
+      range: completeConfig.range,
+      tooltip: completeConfig.tooltip,
+      connect: completeConfig.connect,
+      scale: completeConfig.scale,
+      input: completeConfig.input,
+    };
   }
 }
 
@@ -12,8 +89,8 @@ export default SimpleRangeSlider;
 
 (function ($: JQueryStatic) {
   $.fn.extend({
-    SimpleRangeSlider() {
-      return new SimpleRangeSlider(<JQuery> this);
+    SimpleRangeSlider(config: iConfigUser) {
+      return new SimpleRangeSlider(<JQuery> this, <iConfigUser> config);
     },
   });
 }(jQuery));

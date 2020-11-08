@@ -30,7 +30,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "start": "webpack server"
+    "start": "webpack serve"
   },
   "repository": {
     "type": "git",

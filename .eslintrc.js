@@ -27,5 +27,6 @@ module.exports = {
     'no-unused-vars': ['off'],
     'no-undef': ['off'],
     'func-names': ['off'],
+    'class-methods-use-this': ['off'],
   },
 };

@@ -5,9 +5,18 @@ class Main {
   constructor() {
     jQuery(document).ready(() => {
       const container: JQuery = $('.js-plugin');
-      const demoPanel = new DemoPanel(container);
+      const config: iConfigUser = {
+        orientation: 'horizontal',
+        range: [-100, 100],
+        start: [-10],
+        step: 1,
+        connect: true,
+        tooltip: true,
+        scale: true,
+      };
+      const demoPanel = new DemoPanel(container, config);
+      console.log('main was initiated');
     });
-    console.log('main was initiated');
   }
 }
 
