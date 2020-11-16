@@ -8,7 +8,7 @@ class Main {
       const config: iConfigUser = {
         orientation: 'horizontal',
         range: [-100, 100],
-        start: [-10],
+        start: [-10, 10],
         step: 1,
         connect: true,
         tooltip: true,

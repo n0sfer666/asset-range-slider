@@ -5,21 +5,21 @@ $slider_background: #ffffff;
 $slider_border_size: 1px;
 $slider_border_color: rgba(31, 32, 65, 0.25);
 $slider_border_radius: calc($slider_width / 2);
-/* tumbler */
-$tumbler_size: 16px;
-$tumbler_background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
-$tumbler_border_size: 2px;
-$tumbler_border_color: #ffffff;
-$tumbler_border_radius: 50%;
+/* Pointer */
+$pointer_size: 16px;
+$pointer_background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
+$pointer_border_size: 2px;
+$pointer_border_color: #ffffff;
+$pointer_border_radius: 50%;
 /* Connect */
 $connect_width: $slider_width;
 $connect_background_horizontal: linear-gradient(90deg, #6FCF97 0%, #66D2EA 100%);
-$connect_background_vertical: $tumbler_background;
+$connect_background_vertical: $pointer_background;
 /* Tooltip */
 $tooltip_margin: 20px;
 $tooltip_padding: 2px;
 $tooltip_text_size: 10px;
-$tooltip_background: $tumbler_background;
+$tooltip_background: $pointer_background;
 $tooltip_color: #ffffff;
 $tooltip_font: normal normal $tooltip_text_size/$tooltip_text_size Serif;
 
@@ -44,7 +44,7 @@ $tooltip_font: normal normal $tooltip_text_size/$tooltip_text_size Serif;
     }
   }
 
-  &__tumbler {
+  &__pointer {
     position: absolute;
     z-index: 9;
     background: transparent;
@@ -64,11 +64,11 @@ $tooltip_font: normal normal $tooltip_text_size/$tooltip_text_size Serif;
       content: '';
       position: absolute;
       z-index: 10;
-      background: $tumbler_background;
-      width: $tumbler_size;
-      height: $tumbler_size;
-      border: $tumbler_border_size solid $tumbler_border_color;
-      border-radius: $tumbler_border_radius;
+      background: $pointer_background;
+      width: $pointer_size;
+      height: $pointer_size;
+      border: $pointer_border_size solid $pointer_border_color;
+      border-radius: $pointer_border_radius;
       box-sizing: border-box;
       cursor: pointer;
       outline: none;
@@ -84,12 +84,12 @@ $tooltip_font: normal normal $tooltip_text_size/$tooltip_text_size Serif;
 
     &_horizontal:after {
       top: -$slider_width;
-      left: calc( -$tumbler_size / 2 );
+      left: calc( -$pointer_size / 2 );
     }
 
     &_vertical:after {
       left: -$slider_width;
-      top: calc( -$tumbler_size / 2 );
+      top: calc( -$pointer_size / 2 );
     }
   }
 
