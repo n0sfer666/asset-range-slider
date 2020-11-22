@@ -1,17 +1,17 @@
 module.exports = {
-  'roots': [
-    '<rootDir>/src'
+  roots: [
+    '<rootDir>/src',
   ],
-  'testMatch': [
+  testMatch: [
     '**/tests/**/*+(spec|test).+(ts|tsx|js)',
   ],
-  'transform': {
-    '^.+\\.(ts|tsx)$': 'ts-jest'
+  transform: {
+    '^.+\\.(ts|tsx)$': 'ts-jest',
   },
-  'collectCoverage': true,
-  'collectCoverageFrom': [
+  collectCoverage: true,
+  collectCoverageFrom: [
     '**/plugin/*.{ts,js}',
-    '!**/node_modules/**'
+    '!**/node_modules/**',
   ],
-  'coverageReporters': ['text-summary', 'text'],
-}
+  coverageReporters: ['text-summary', 'text'],
+};
