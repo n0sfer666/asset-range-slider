@@ -1,9 +1,9 @@
-const webpack = require('webpack');
-const copy = require('copy-webpack-plugin');
+const Webpack = require('webpack');
+const Copy = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    index: './src/index.ts'
+    index: './src/index.ts',
   },
   resolve: {
     extensions: ['.ts', '.js'],
@@ -27,22 +27,22 @@ module.exports = {
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
-      }
-    ]
+      },
+    ],
   },
   plugins: [
-    new webpack.ProvidePlugin({
+    new Webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
     }),
-    new copy({
+    new Copy({
       patterns: [
         {
           from: 'src/page/',
           to: '',
-        }
-      ]
-    })
+        },
+      ],
+    }),
   ],
-}
+};

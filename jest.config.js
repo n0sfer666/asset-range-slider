@@ -10,8 +10,11 @@ module.exports = {
   },
   collectCoverage: true,
   collectCoverageFrom: [
-    '**/plugin/*.{ts,js}',
+    '**/SimpleRangeSlider/**/*.ts',
+    // '**/DemoPanel/*.ts',
+    '!**/*.d.ts',
     '!**/node_modules/**',
   ],
   coverageReporters: ['text-summary', 'text'],
+  setupFiles: ['<rootDir>/jest.setup.js'],
 };
