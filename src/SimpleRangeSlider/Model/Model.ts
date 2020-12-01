@@ -2,9 +2,9 @@ import Calculation from './entities/Calculation';
 import Handler from './entities/Handler';
 
 class Model {
-  private config: iConfigModel;
+  config: iConfigModel;
 
-  private calculation: Calculation;
+  calculation: Calculation;
 
   handler: Handler;
 

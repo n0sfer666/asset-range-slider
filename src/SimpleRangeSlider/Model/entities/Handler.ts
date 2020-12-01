@@ -1,6 +1,6 @@
 class Handler {
   constructor() {
-    console.log('handler initiated');
+    const removeMe: number = 0;
   }
 }
 

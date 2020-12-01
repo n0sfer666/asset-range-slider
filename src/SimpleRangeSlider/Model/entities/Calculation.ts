@@ -1,15 +1,15 @@
 class Calculation {
-  private config: iConfigModel;
+  config: iConfigModel;
 
-  private range: tRange;
+  range: tRange;
 
-  private value: tValue;
+  value: tValue;
 
-  private step: number;
+  step: number;
 
-  private activeIndex: number = 0;
+  activeIndex: number = 0;
 
-  private readonly normalizingCoefficient: number = 1e4;
+  readonly normalizingCoefficient: number = 1e4;
 
   constructor(config: iConfigModel) {
     this.config = config;

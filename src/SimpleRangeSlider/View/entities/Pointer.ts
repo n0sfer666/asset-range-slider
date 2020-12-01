@@ -1,13 +1,13 @@
 class Pointer {
-  private orientation: tOrientation;
+  orientation: tOrientation;
 
-  private position: number;
+  position: number;
 
-  private index: number;
+  index: number;
 
-  public $element: JQuery;
+  $element: JQuery;
 
-  private readonly normalizingCoefficient: number = 1e4;
+  readonly normalizingCoefficient: number = 1e4;
 
   constructor(orientation: tOrientation, position: number, index: number) {
     this.orientation = orientation;
@@ -17,7 +17,7 @@ class Pointer {
     this.setPosition(this.position);
   }
 
-  private getElement(): JQuery {
+  getElement(): JQuery {
     const $element: JQuery = jQuery(document.createElement('div'));
     $element.addClass('simple-range-slider__pointer');
     $element.addClass(`simple-range-slider__pointer_${this.orientation}`);

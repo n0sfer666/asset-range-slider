@@ -10,7 +10,7 @@ describe('SimpleRangeSlider.ts', () => {
     value: [$('.js-input-1'), $('.js-input-2')],
     tooltip: [$('.js-input-check')],
   };
-  const testConfig:iConfigUser = {
+  const testConfig: iConfigUser = {
     orientation: 'vertical',
     range: [-1000, 1000],
     start: [-100, 500],

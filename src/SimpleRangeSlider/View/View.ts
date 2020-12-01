@@ -1,11 +1,11 @@
 import Pointer from './entities/Pointer';
 
 class View {
-  private readonly normalizingCoefficient: number = 1e4;
+  readonly normalizingCoefficient: number = 1e4;
 
-  private $container: JQuery;
+  $container: JQuery;
 
-  private config: iConfigView;
+  config: iConfigView;
 
   $slider: JQuery;
 

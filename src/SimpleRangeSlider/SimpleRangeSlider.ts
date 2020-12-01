@@ -3,15 +3,15 @@ import Model from './Model/Model';
 import View from './View/View';
 
 class SimpleRangeSlider {
-  private $container: JQuery;
+  $container: JQuery;
 
-  private config: iConfigUser;
+  config: iConfigUser;
 
-  private view: View;
+  view: View;
 
-  private model: Model;
+  model: Model;
 
-  private presenter: Presenter;
+  presenter: Presenter;
 
   constructor($container: JQuery, config: iConfigUser) {
     this.$container = $container;
