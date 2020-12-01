@@ -3,7 +3,7 @@ import Model from './Model/Model';
 import View from './View/View';
 
 class SimpleRangeSlider {
-  private container: JQuery;
+  private $container: JQuery;
 
   private config: iConfigUser;
 
@@ -13,19 +13,19 @@ class SimpleRangeSlider {
 
   private presenter: Presenter;
 
-  constructor(container: JQuery, config: iConfigUser) {
-    this.container = container;
+  constructor($container: JQuery, config: iConfigUser) {
+    this.$container = $container;
     this.config = config;
-    const defaultConfig: iConfigUser = this.getDefaultConfig();
-    const completeConfig: iConfigUser = this.getCompleteConfig(this.config, defaultConfig);
+    const defaultConfig: iCompleteConfig = this.getDefaultConfig();
+    const completeConfig: iCompleteConfig = this.getCompleteConfig(this.config, defaultConfig);
     const modelConfig: iConfigModel = this.getModelConfig(completeConfig);
     const viewConfig: iConfigView = this.getViewConfig(completeConfig);
-    this.view = new View(this.container, viewConfig);
+    this.view = new View(this.$container, viewConfig);
     this.model = new Model(modelConfig);
     this.presenter = new Presenter(this.view, this.model);
   }
 
-  getDefaultConfig(): iConfigUser {
+  getDefaultConfig(): iCompleteConfig {
     return {
       orientation: 'horizontal',
       start: [10],
@@ -37,7 +37,7 @@ class SimpleRangeSlider {
     };
   }
 
-  getCompleteConfig(userConfig: iConfigUser, defaultConfig: iConfigUser): iConfigUser {
+  getCompleteConfig(userConfig: iConfigUser, defaultConfig: iCompleteConfig): iCompleteConfig {
     return {
       orientation: userConfig.orientation === undefined
         ? defaultConfig.orientation
@@ -64,7 +64,7 @@ class SimpleRangeSlider {
     };
   }
 
-  getModelConfig(completeConfig: iConfigUser): iConfigModel {
+  getModelConfig(completeConfig: iCompleteConfig): iConfigModel {
     return {
       start: completeConfig.start,
       range: completeConfig.range,
@@ -72,7 +72,7 @@ class SimpleRangeSlider {
     };
   }
 
-  getViewConfig(completeConfig: iConfigUser): iConfigView {
+  getViewConfig(completeConfig: iCompleteConfig): iConfigView {
     return {
       orientation: completeConfig.orientation,
       start: completeConfig.start,

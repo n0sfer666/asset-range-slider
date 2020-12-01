@@ -3,18 +3,18 @@ import Pointer from './entities/Pointer';
 class View {
   private readonly normalizingCoefficient: number = 1e4;
 
-  private container: JQuery;
+  private $container: JQuery;
 
   private config: iConfigView;
 
-  private slider: JQuery;
+  $slider: JQuery;
 
-  private pointer: Pointer[];
+  pointer: Pointer[];
 
-  constructor(container: JQuery, config: iConfigView) {
-    this.container = container;
+  constructor($container: JQuery, config: iConfigView) {
+    this.$container = $container;
     this.config = config;
-    this.slider = this.getSlider();
+    this.$slider = this.getSlider();
     this.pointer = this.config.start.map((value, index) => this.getPointer(value, index));
     this.drawSlider();
   }
@@ -39,9 +39,9 @@ class View {
 
   drawSlider() {
     this.pointer.forEach((pointer) => {
-      this.slider.append(pointer.element);
+      this.$slider.append(pointer.$element);
     });
-    this.container.append(this.slider);
+    this.$container.append(this.$slider);
   }
 }
 

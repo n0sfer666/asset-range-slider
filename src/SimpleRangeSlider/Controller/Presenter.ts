@@ -9,7 +9,6 @@ class Presenter {
   constructor(view: View, model: Model) {
     this.view = view;
     this.model = model;
-    console.log('presenter initiated');
   }
 }
 

@@ -9,7 +9,6 @@ class DemoPanel {
     this.container = container;
     this.config = config;
     const slider: SimpleRangeSlider = new SimpleRangeSlider(this.container, this.config);
-    console.log('Demo Panel was initiated');
   }
 }
 

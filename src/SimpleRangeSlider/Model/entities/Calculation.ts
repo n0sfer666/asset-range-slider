@@ -16,7 +16,6 @@ class Calculation {
     this.range = this.config.range;
     this.value = this.config.start;
     this.step = this.config.step;
-    console.log('Calculation initiated');
   }
 }
 

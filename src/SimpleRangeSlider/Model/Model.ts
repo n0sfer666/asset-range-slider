@@ -12,7 +12,6 @@ class Model {
     this.config = config;
     this.calculation = new Calculation(this.config);
     this.handler = new Handler();
-    console.log('model initialized');
   }
 }
 

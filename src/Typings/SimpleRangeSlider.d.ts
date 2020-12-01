@@ -6,8 +6,8 @@ type tValue = [number] | [number, number];
 type tPosition = [number] | [number, number];
 type tInputType = 'value' | 'tooltip'
 type tConfigInput = {
-  value?: [HTMLInputElement] | [HTMLInputElement, HTMLInputElement],
-  tooltip?: [HTMLInputElement]
+  value?: [JQuery] | [JQuery, JQuery],
+  tooltip?: [JQuery]
 };
 
 type tTumblerData = {
@@ -22,6 +22,16 @@ type tModelData = {
 }
 // interfaces
 interface iConfigUser {
+  readonly orientation?: tOrientation;
+  readonly start?: tValue;
+  readonly range?: tRange;
+  readonly step?: number;
+  readonly connect?: boolean;
+  readonly tooltip?: boolean;
+  readonly scale?: boolean;
+  readonly input?: tConfigInput;
+}
+interface iCompleteConfig {
   readonly orientation: tOrientation;
   readonly start: tValue;
   readonly range: tRange;

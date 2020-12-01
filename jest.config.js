@@ -8,13 +8,13 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
-  collectCoverage: true,
-  collectCoverageFrom: [
-    '**/SimpleRangeSlider/**/*.ts',
-    // '**/DemoPanel/*.ts',
-    '!**/*.d.ts',
-    '!**/node_modules/**',
-  ],
-  coverageReporters: ['text-summary', 'text'],
+  // collectCoverage: true,
+  // collectCoverageFrom: [
+  //   '**/SimpleRangeSlider/**/*.ts',
+  //   // '**/DemoPanel/*.ts',
+  //   '!**/*.d.ts',
+  //   '!**/node_modules/**',
+  // ],
+  // coverageReporters: ['text'],
   setupFiles: ['<rootDir>/jest.setup.js'],
 };

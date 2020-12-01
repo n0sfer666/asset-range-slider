@@ -15,7 +15,6 @@ class Main {
         scale: true,
       };
       const demoPanel = new DemoPanel(container, config);
-      console.log('main was initiated');
     });
   }
 }
