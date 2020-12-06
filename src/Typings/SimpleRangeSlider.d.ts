@@ -9,6 +9,10 @@ type tConfigInput = {
   value?: [JQuery] | [JQuery, JQuery],
   tooltip?: [JQuery]
 };
+type tCssValues = {
+  attribute: string,
+  value: string
+}
 
 type tTumblerData = {
   position?: number,

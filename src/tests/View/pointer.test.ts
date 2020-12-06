@@ -15,7 +15,7 @@ describe('Pointer.ts', () => {
     return $element;
   });
 
-  test('getElement()', () => {
+  it('getElement()', () => {
     pointers.forEach(
       (pointer, index) => expect(pointer.getElement()).toEqual($testElement[index]),
     );

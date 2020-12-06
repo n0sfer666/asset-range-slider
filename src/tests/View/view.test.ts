@@ -75,14 +75,14 @@ describe('View.ts', () => {
     });
   });
 
-  test('drawSlider()', () => {
-    $testContainer.forEach(($container, index) => {
-      const $expectSlider: JQuery = $container.children();
-      const $expectPointers: JQuery = $expectSlider.children();
-      $.each($expectPointers, (key, pointer) => {
-        expect($(pointer).is(testInstance[index].pointer[key].$element)).toBe(true);
-      });
-      expect($expectSlider.is(testInstance[index].$slider)).toBe(true);
-    });
-  });
+  // test('drawSlider()', () => {
+  //   $testContainer.forEach(($container, index) => {
+  //     const $expectSlider: JQuery = $container.children();
+  //     const $expectPointers: JQuery = $expectSlider.children();
+  //     $.each($expectPointers, (key, pointer) => {
+  //       expect($(pointer).is(testInstance[index].pointer[key].$element)).toBe(true);
+  //     });
+  //     expect($expectSlider.is(testInstance[index].$slider)).toBe(true);
+  //   });
+  // });
 });

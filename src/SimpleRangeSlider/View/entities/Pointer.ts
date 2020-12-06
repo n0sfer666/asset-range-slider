@@ -7,7 +7,7 @@ class Pointer {
 
   $element: JQuery;
 
-  readonly normalizingCoefficient: number = 1e4;
+  // readonly normalizingCoefficient: number = 1e4;
 
   constructor(orientation: tOrientation, position: number, index: number) {
     this.orientation = orientation;

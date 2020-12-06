@@ -13,8 +13,7 @@ $pointer_border_color: #ffffff;
 $pointer_border_radius: 50%;
 /* Connect */
 $connect_width: $slider_width;
-$connect_background_horizontal: linear-gradient(90deg, #6FCF97 0%, #66D2EA 100%);
-$connect_background_vertical: $pointer_background;
+$connect_background: $pointer_background;
 /* Tooltip */
 $tooltip_margin: 20px;
 $tooltip_padding: 2px;
@@ -101,12 +100,12 @@ $tooltip_font: normal normal $tooltip_text_size/$tooltip_text_size Serif;
     border-radius: $slider_border_radius;
 
     &_horizontal {
-      background: $connect_background_horizontal;
+      background: $connect_background;
       height: $connect_width;
     }
 
     &_vertical {
-      background: $connect_background_vertical;
+      background: $connect_background;
       width: $connect_width;
     }
   }
