@@ -17,6 +17,15 @@ describe('Connect.ts', () => {
     new Connect(startPosition, endPosition, 'vertical'),
   ];
 
+  test('getElement()', () => {
+    connects.forEach((connect) => {
+      const $element: JQuery = jQuery(document.createElement('div'));
+      $element.addClass('simple-range-slider__connect');
+      $element.addClass(`simple-range-slider__connect_${connect.orientation}`);
+      expect(connect.getElement()).toEqual($element);
+    });
+  });
+
   test('setPosition(startPosition, endPosition)', () => {
     connects.forEach((connect) => {
       const testStart: number = makeRandomNumber(0, 10000);
