@@ -2,6 +2,7 @@ const Webpack = require('webpack');
 const Copy = require('copy-webpack-plugin');
 
 module.exports = {
+  stats: 'errors-only',
   entry: {
     index: './src/index.ts',
   },
