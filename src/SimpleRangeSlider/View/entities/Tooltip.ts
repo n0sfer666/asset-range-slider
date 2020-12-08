@@ -9,6 +9,7 @@ class Tooltip {
     this.value = value;
     this.orientation = orientation;
     this.$element = this.getElement();
+    this.setValue(this.value);
   }
 
   getElement(): JQuery {
