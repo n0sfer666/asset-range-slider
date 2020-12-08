@@ -31,4 +31,16 @@ describe('Pointer.ts', () => {
       expect(pointer.position).toBe(position);
     });
   });
+
+  test('getShift(event)', () => {
+    pointers.forEach((pointer) => {
+      const randomValue: number = Math.round(Math.random() * 1e2);
+      const testEvent: MouseEvent | void = document.createEvent('MouseEvent');
+      testEvent.initMouseEvent('click', true, true, window, 0, 0, 0, randomValue, randomValue, false, false, false, false, 0, null);
+      const expectShift: number = pointer.orientation === 'horizontal'
+        ? testEvent.clientX - pointer.$element.position().left
+        : testEvent.clientY - pointer.$element.position().top;
+      expect(pointer.getShift(testEvent)).toEqual(expectShift);
+    });
+  });
 });

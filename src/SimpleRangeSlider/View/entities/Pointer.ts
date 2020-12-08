@@ -7,8 +7,6 @@ class Pointer {
 
   $element: JQuery;
 
-  // readonly normalizingCoefficient: number = 1e4;
-
   constructor(orientation: tOrientation, position: number, index: number) {
     this.orientation = orientation;
     this.position = position;
@@ -28,6 +26,12 @@ class Pointer {
     const liter: string = this.orientation === 'horizontal' ? 'X' : 'Y';
     this.$element.css('transform', `translate${liter}(${position}%)`);
     this.position = position;
+  }
+
+  getShift(event: MouseEvent): number {
+    return this.orientation === 'horizontal'
+      ? event.clientX - this.$element.position().left
+      : event.clientY - this.$element.position().top;
   }
 }
 
