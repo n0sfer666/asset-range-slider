@@ -10,8 +10,8 @@ describe('View.ts', () => {
   const normalizingCoefficient: number = 1e4;
   const $testContainer: JQuery[] = [$('.js-plugin-1'), $('.js-plugin-2')];
   const testInputs: tConfigInput = {
-    value: [$('.js-input-1'), $('.js-input-2')],
-    tooltip: [$('.js-input-check')],
+    $value: [$('.js-input-1'), $('.js-input-2')],
+    $tooltip: [$('.js-input-check')],
   };
   const testConfig: iConfigView[] = [
     {

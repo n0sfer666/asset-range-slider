@@ -6,8 +6,8 @@ class Main {
     jQuery(document).ready(() => {
       const container: JQuery = $('.js-plugin');
       const input: tConfigInput = {
-        value: [$('.js-input-value-1'), $('.js-input-value-2')],
-        tooltip: [$('.js-input-tooltip')],
+        $value: [$('.js-input-value-1'), $('.js-input-value-2')],
+        $tooltip: [$('.js-input-tooltip')],
       };
       const config: iConfigUser = {
         orientation: 'horizontal',

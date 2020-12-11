@@ -1,4 +1,5 @@
 import Connect from './entities/Connect';
+import Input from './entities/Input';
 import Pointer from './entities/Pointer';
 import Tooltip from './entities/Tooltip';
 
@@ -17,6 +18,10 @@ class View {
 
   connect?: Connect;
 
+  inputValue?: Input[];
+
+  inputTooltip?: Input[];
+
   constructor($container: JQuery, config: iConfigView) {
     this.$container = $container;
     this.config = config;
@@ -26,6 +31,7 @@ class View {
       ? this.config.start.map((value) => this.getTooltip(value))
       : undefined;
     this.connect = this.config.connect ? this.getConnect(this.pointer) : undefined;
+    this.initInputs();
     this.drawSlider();
   }
 
@@ -52,6 +58,27 @@ class View {
       return new Connect(0, pointer[0].position, this.config.orientation);
     }
     return new Connect(pointer[0].position, pointer[1].position, this.config.orientation);
+  }
+
+  getInput(type: tInputType, $element: JQuery, value?: number, index?: number): Input {
+    if (type === 'value') {
+      return new Input(type, $element, value, index);
+    }
+    return new Input(type, $element);
+  }
+
+  initInputs() {
+    if (this.config.input && this.tooltip) {
+      if (this.config.input.$value) {
+        this.inputValue = this.config.input.$value.map(
+          ($inputValue, index) => new Input('value', $inputValue, this.config.start[index], index),
+        );
+      }
+      if (this.config.input.$tooltip) {
+        this.inputTooltip = [new Input('tooltip', this.config.input.$tooltip[0])];
+        this.inputTooltip[0].setVisibilityTooltip(this.tooltip);
+      }
+    }
   }
 
   getNormalizedPosition(position: number):number {
