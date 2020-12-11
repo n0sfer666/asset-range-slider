@@ -25,13 +25,10 @@ class Input {
     }
   }
 
-  setVisibilityTooltip(tooltips: Tooltip[]) {
+  handleTooltipCheckboxChange(tooltips: Tooltip[]) {
     if (this.type === 'tooltip') {
-      if (this.$element.is(':checked')) {
-        tooltips.forEach((tooltip) => tooltip.$element.show());
-      } else {
-        tooltips.forEach((tooltip) => tooltip.$element.hide());
-      }
+      const isVisible: boolean = this.$element.is(':checked');
+      tooltips.forEach((tooltip) => tooltip.switchHidden(isVisible));
     }
   }
 }

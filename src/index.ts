@@ -7,16 +7,13 @@ class Main {
       const container: JQuery = $('.js-plugin');
       const input: tConfigInput = {
         $value: [$('.js-input-value-1'), $('.js-input-value-2')],
-        $tooltip: [$('.js-input-tooltip')],
+        $tooltip: $('.js-input-tooltip'),
       };
       const config: iConfigUser = {
         orientation: 'horizontal',
         range: [-100, 100],
         start: [-10, 10],
         step: 1,
-        connect: true,
-        tooltip: true,
-        scale: true,
         input,
       };
       const demoPanel = new DemoPanel(container, config);

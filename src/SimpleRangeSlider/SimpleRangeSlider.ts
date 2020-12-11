@@ -54,7 +54,7 @@ class SimpleRangeSlider {
       connect: userConfig.connect === undefined
         ? defaultConfig.connect
         : userConfig.connect,
-      tooltip: userConfig.tooltip === undefined
+      tooltip: userConfig.tooltip === undefined || userConfig.input?.$tooltip !== undefined
         ? defaultConfig.tooltip
         : userConfig.tooltip,
       scale: userConfig.scale === undefined

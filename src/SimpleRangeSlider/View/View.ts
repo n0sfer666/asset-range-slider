@@ -1,5 +1,7 @@
 import Connect from './entities/Connect';
 import Input from './entities/Input';
+import InputCheckboxTooltip from './entities/inputs/InputCheckboxTooltip';
+import InputTextValue from './entities/inputs/InputTextValue';
 import Pointer from './entities/Pointer';
 import Tooltip from './entities/Tooltip';
 
@@ -14,20 +16,20 @@ class View {
 
   pointer: Pointer[];
 
-  tooltip?: Tooltip[];
+  tooltips?: Tooltip[];
 
   connect?: Connect;
 
-  inputValue?: Input[];
+  inputValue?: InputTextValue[];
 
-  inputTooltip?: Input[];
+  inputTooltip?: InputCheckboxTooltip;
 
   constructor($container: JQuery, config: iConfigView) {
     this.$container = $container;
     this.config = config;
     this.$slider = this.getSlider();
     this.pointer = this.config.start.map((value, index) => this.getPointer(value, index));
-    this.tooltip = this.config.tooltip
+    this.tooltips = this.config.tooltip
       ? this.config.start.map((value) => this.getTooltip(value))
       : undefined;
     this.connect = this.config.connect ? this.getConnect(this.pointer) : undefined;
@@ -68,15 +70,14 @@ class View {
   }
 
   initInputs() {
-    if (this.config.input && this.tooltip) {
+    if (this.config.input) {
       if (this.config.input.$value) {
         this.inputValue = this.config.input.$value.map(
-          ($inputValue, index) => new Input('value', $inputValue, this.config.start[index], index),
+          ($inputValue, index) => new InputTextValue($inputValue, this.config.start[index], index),
         );
       }
-      if (this.config.input.$tooltip) {
-        this.inputTooltip = [new Input('tooltip', this.config.input.$tooltip[0])];
-        this.inputTooltip[0].setVisibilityTooltip(this.tooltip);
+      if (this.config.input.$tooltip && this.tooltips) {
+        this.inputTooltip = new InputCheckboxTooltip(this.config.input.$tooltip, this.tooltips);
       }
     }
   }
@@ -87,8 +88,8 @@ class View {
 
   drawSlider() {
     this.pointer.forEach((pointer, index) => {
-      if (this.tooltip) {
-        pointer.$element.append(this.tooltip[index].$element);
+      if (this.tooltips) {
+        pointer.$element.append(this.tooltips[index].$element);
       }
       this.$slider.append(pointer.$element);
     });
