@@ -1,5 +1,4 @@
 import Connect from './entities/Connect';
-import Input from './entities/Input';
 import InputCheckboxTooltip from './entities/inputs/InputCheckboxTooltip';
 import InputTextValue from './entities/inputs/InputTextValue';
 import Pointer from './entities/Pointer';
@@ -60,13 +59,6 @@ class View {
       return new Connect(0, pointer[0].position, this.config.orientation);
     }
     return new Connect(pointer[0].position, pointer[1].position, this.config.orientation);
-  }
-
-  getInput(type: tInputType, $element: JQuery, value?: number, index?: number): Input {
-    if (type === 'value') {
-      return new Input(type, $element, value, index);
-    }
-    return new Input(type, $element);
   }
 
   initInputs() {
