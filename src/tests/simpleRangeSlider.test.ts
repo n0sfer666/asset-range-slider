@@ -8,7 +8,7 @@ describe('SimpleRangeSlider.ts', () => {
   const testContainer: JQuery = $('.js-plugin');
   const testInputs: tConfigInput = {
     $value: [$('.js-input-1'), $('.js-input-2')],
-    $tooltip: [$('.js-input-check')],
+    $tooltip: $('.js-input-check'),
   };
   const testConfig: iConfigUser = {
     orientation: 'vertical',

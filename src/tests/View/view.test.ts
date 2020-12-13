@@ -11,7 +11,7 @@ describe('View.ts', () => {
   const $testContainer: JQuery[] = [$('.js-plugin-1'), $('.js-plugin-2')];
   const testInputs: tConfigInput = {
     $value: [$('.js-input-1'), $('.js-input-2')],
-    $tooltip: [$('.js-input-check')],
+    $tooltip: $('.js-input-check'),
   };
   const testConfig: iConfigView[] = [
     {
