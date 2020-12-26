@@ -14,9 +14,8 @@ type tCssValues = {
   value: string
 }
 
-type tTumblerData = {
-  position?: number,
-  value?: number,
+type tPointerData = {
+  position: number,
   index: number
 }
 type tModelData = {
@@ -59,8 +58,8 @@ interface iConfigView {
   readonly scale: boolean;
   readonly input?: tConfigInput;
 }
-interface iTumblerCallback {
-  (tumblerData: tTumblerData): void
+interface iPointerCallback {
+  (tumblerData: tPointerData): void
 }
 interface iModelCallback {
   (modelData: tModelData): void

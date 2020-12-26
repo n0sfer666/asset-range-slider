@@ -47,7 +47,7 @@ class View {
     const { range } = this.config;
     const position: number = (value - range[0]) / (range[1] - range[0]);
     const normalizedPosition: number = this.getNormalizedPosition(position);
-    return new Pointer(this.config.orientation, normalizedPosition, index);
+    return new Pointer(this.$container, this.config.orientation, normalizedPosition, index);
   }
 
   getTooltip(value: number): Tooltip {
