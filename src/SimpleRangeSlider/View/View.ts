@@ -2,6 +2,7 @@ import Connect from './entities/Connect';
 import InputCheckboxTooltip from './entities/inputs/InputCheckboxTooltip';
 import InputTextValue from './entities/inputs/InputTextValue';
 import Pointer from './entities/Pointer';
+import Scale from './entities/Scale';
 import Tooltip from './entities/Tooltip';
 
 class View {
@@ -19,6 +20,8 @@ class View {
 
   connect?: Connect;
 
+  scale?: Scale;
+
   inputValue?: InputTextValue[];
 
   inputTooltip?: InputCheckboxTooltip;
@@ -32,6 +35,7 @@ class View {
       ? this.config.start.map((value) => this.getTooltip(value))
       : undefined;
     this.connect = this.config.connect ? this.getConnect(this.pointer) : undefined;
+    this.scale = this.config.scale ? this.getScale() : undefined;
     this.initInputs();
     this.drawSlider();
   }
@@ -59,6 +63,10 @@ class View {
       return new Connect(0, pointer[0].position, this.config.orientation);
     }
     return new Connect(pointer[0].position, pointer[1].position, this.config.orientation);
+  }
+
+  getScale(): Scale {
+    return new Scale(this.config.range, this.config.orientation);
   }
 
   initInputs() {
@@ -89,6 +97,9 @@ class View {
       this.$slider.append(this.connect.$element);
     }
     this.$container.append(this.$slider);
+    if (this.scale) {
+      this.$container.append(this.scale.$element);
+    }
   }
 }
 

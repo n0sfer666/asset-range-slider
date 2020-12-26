@@ -175,7 +175,7 @@ $scale_font: $tooltip_font;
       }
     }
 
-    &-unit {
+    &-pip {
       position: absolute;
       display: flex;
       align-items: center;
