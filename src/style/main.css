@@ -144,6 +144,7 @@ $scale_font: $tooltip_font;
   &__scale {
     position: relative;
     display: flex;
+    justify-content: space-between;
     flex-wrap: nowrap;
     margin-bottom: $scale_margin;
 
@@ -151,11 +152,11 @@ $scale_font: $tooltip_font;
       width: 100%;
       height: fit-content;
 
-      & .simple-range-slider__scale-unit {
+      & .simple-range-slider__scale-pip {
         flex-direction: column;
       }
 
-      & .simple-range-slider__scale-unit-dash {
+      & .simple-range-slider__scale-pip-dash {
         height: $scale_size;
         width: 2px;
       }
@@ -165,19 +166,19 @@ $scale_font: $tooltip_font;
       height: 100%;
       width: fit-content;
 
-      & .simple-range-slider__scale-unit {
+      & .simple-range-slider__scale-pip {
         flex-direction: row;
       }
 
-      & .simple-range-slider__scale-unit-dash {
+      & .simple-range-slider__scale-pip-dash {
         width: $scale_size;
         height: 2px;
       }
     }
 
     &-pip {
-      position: absolute;
       display: flex;
+      justify-content: space-between;
       align-items: center;
       width: fit-content;
       height: fit-content;
@@ -187,6 +188,7 @@ $scale_font: $tooltip_font;
         background-color: $scale_dash_color;
 
         &_empty {
+          cursor: default;
           background-color: $scale_empty_dash_color;
         }
       }
