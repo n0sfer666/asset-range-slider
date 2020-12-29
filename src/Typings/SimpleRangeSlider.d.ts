@@ -8,15 +8,17 @@ type tInputType = 'value' | 'tooltip'
 type tConfigInput = {
   $value?: [JQuery] | [JQuery, JQuery],
   $tooltip?: JQuery
-};
+}
 type tCssValues = {
   attribute: string,
   value: string
 }
-
 type tPointerData = {
   position: number,
   index: number
+}
+type tScaleData = {
+  position: number,
 }
 type tModelData = {
   value: tValue,
@@ -59,7 +61,10 @@ interface iConfigView {
   readonly input?: tConfigInput;
 }
 interface iPointerCallback {
-  (tumblerData: tPointerData): void
+  (pointerData: tPointerData): void
+}
+interface iScaleCallback {
+  (scaleData: tScaleData): void
 }
 interface iModelCallback {
   (modelData: tModelData): void

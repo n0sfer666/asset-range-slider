@@ -9,23 +9,30 @@ class Scale {
 
   orientation: tOrientation;
 
-  $emptyDashPips: JQuery[] = [];
+  $emptyPips: JQuery[] = [];
 
-  $valueDashPips: JQuery[] = [];
+  $valuePips: JQuery[] = [];
+
+  callbackList: iScaleCallback[] = [];
 
   diapason: number;
 
   values: number[] = [];
+
+  positions: number[] = [];
 
   constructor(range: tRange, orientation: tOrientation) {
     this.orientation = orientation;
     this.range = range;
     this.diapason = this.range[1] - this.range[0];
     this.values = this.getValues();
+    this.positions = this.getPositions();
     this.$element = this.getElement('scale', this.orientation);
-    this.$emptyDashPips = this.getEmptyDashPips();
-    this.$valueDashPips = this.getValueDashPips();
+    this.$emptyPips = this.getEmptyPips();
+    this.$valuePips = this.getValuePips();
     this.drawPips();
+    this.bindContext();
+    this.bindHandler();
   }
 
   getElement(elementName: string, modifier?: string): JQuery {
@@ -37,31 +44,31 @@ class Scale {
     return $element;
   }
 
-  getEmptyDashPips(): JQuery[] {
-    const $EmptyDashPips: JQuery[] = [];
+  getEmptyPips(): JQuery[] {
+    const $emptyPips: JQuery[] = [];
     for (let i = 0; i < this.emptyPipsNumber; i += 1) {
       const $emptyDash = this.getElement('scale-pip-dash', 'empty');
-      $EmptyDashPips.push(this.getElement('scale-pip').append($emptyDash));
+      $emptyPips.push(this.getElement('scale-pip').append($emptyDash));
     }
-    return $EmptyDashPips;
+    return $emptyPips;
   }
 
-  getValueDashPips(): JQuery[] {
-    const $valueDashPips: JQuery[] = this.values.map((value) => {
+  getValuePips(): JQuery[] {
+    const $valuePips: JQuery[] = this.values.map((value) => {
       const $dash = this.getElement('scale-pip-dash');
       const $pipValue = this.getElement('scale-pip-value').text(value);
       return this.getElement('scale-pip').append($dash, $pipValue);
     });
 
-    return $valueDashPips;
+    return $valuePips;
   }
 
   drawPips() {
-    this.$valueDashPips.forEach(($valueDashPip, index) => {
+    this.$valuePips.forEach(($valueDashPip, index) => {
       this.$element.append($valueDashPip);
-      const isLast: boolean = this.$valueDashPips.length - 1 === index;
+      const isLast: boolean = this.$valuePips.length - 1 === index;
       if (!isLast) {
-        this.$emptyDashPips.forEach(($emptyDashPip) => {
+        this.$emptyPips.forEach(($emptyDashPip) => {
           this.$element.append($emptyDashPip.clone());
         });
       }
@@ -76,6 +83,41 @@ class Scale {
     }
     result.push(this.range[1]);
     return result;
+  }
+
+  getPositions(): number[] {
+    const result: number[] = [0];
+    const difference: number = Math.round(10000 / (this.valuePipsNumber - 1));
+    for (let i = 0; result.length < (this.valuePipsNumber - 1); i += 1) {
+      result.push(result[i] + difference);
+    }
+    result.push(10000);
+    return result;
+  }
+
+  handlerValuePipClick(event: JQuery.MouseEventBase) {
+    const targetValue: number = Number($(event.target).text());
+    this.values.forEach((value, index) => {
+      if (value === targetValue) {
+        this.callbackList.forEach((callback) => {
+          callback({ position: this.positions[index] });
+        });
+      }
+    });
+  }
+
+  subscribeOn(callback: iScaleCallback) {
+    this.callbackList.push(callback);
+  }
+
+  bindContext() {
+    this.handlerValuePipClick = this.handlerValuePipClick.bind(this);
+  }
+
+  bindHandler() {
+    this.$valuePips.forEach(($valueDashPip) => {
+      $valueDashPip.on('click', this.handlerValuePipClick);
+    });
   }
 }
 
