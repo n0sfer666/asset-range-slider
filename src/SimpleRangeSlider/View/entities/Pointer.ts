@@ -96,8 +96,6 @@ class Pointer {
       index: this.index,
       position: this.position,
     }));
-    // * to remove
-    console.log(`${this.index}: ${this.position}`);
   }
 
   handlePointerMouseUp() {
