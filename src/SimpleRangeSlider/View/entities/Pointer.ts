@@ -60,13 +60,13 @@ class Pointer {
     this.position = position;
   }
 
-  getShift(event: MouseEvent): number {
+  getShift(event: JQuery.MouseEventBase): number {
     return this.orientation === 'horizontal'
       ? event.clientX - this.$element.position().left
       : event.clientY - this.$element.position().top;
   }
 
-  handlePointerMouseDown(event: MouseEvent) {
+  handlePointerMouseDown(event: JQuery.MouseEventBase) {
     event.preventDefault();
     this.shift = this.getShift(event);
     this.boundingClientRect = this.orientation === 'horizontal'
@@ -79,7 +79,7 @@ class Pointer {
     this.$document.on('mouseup', this.handlePointerMouseUp);
   }
 
-  handlePointerMove(event: MouseEvent) {
+  handlePointerMove(event: JQuery.MouseEventBase) {
     const cursorPosition: number = this.orientation === 'horizontal'
       ? event.clientX
       : event.clientY;
@@ -110,10 +110,7 @@ class Pointer {
   }
 
   bindHandler() {
-    $.each(this.$element, (_, element) => {
-      element.addEventListener('mousedown', this.handlePointerMouseDown);
-    });
-    // this.$element.on('mousedown', this.handlePointerMouseDown);
+    this.$element.on('mousedown', this.handlePointerMouseDown);
   }
 }
 
