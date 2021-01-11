@@ -20,6 +20,10 @@ type tPointerData = {
 type tScaleData = {
   position: number,
 }
+type tInputTextData = {
+  value: number,
+  index: number
+}
 type tModelData = {
   value: tValue,
   position: tPosition,
@@ -65,6 +69,9 @@ interface iPointerCallback {
 }
 interface iScaleCallback {
   (scaleData: tScaleData): void
+}
+interface iInputTextCallback {
+  (inputTextData: tInputTextData): void
 }
 interface iModelCallback {
   (modelData: tModelData): void
