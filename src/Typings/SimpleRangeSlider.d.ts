@@ -13,6 +13,11 @@ type tCssValues = {
   attribute: string,
   value: string
 }
+type tViewData = {
+  position: number,
+  value: number,
+  index: number
+}
 type tPointerData = {
   position: number,
   index: number
@@ -63,6 +68,9 @@ interface iConfigView {
   readonly tooltip: boolean;
   readonly scale: boolean;
   readonly input?: tConfigInput;
+}
+interface iViewCallback {
+  (viewData: tViewData): void
 }
 interface iPointerCallback {
   (pointerData: tPointerData): void

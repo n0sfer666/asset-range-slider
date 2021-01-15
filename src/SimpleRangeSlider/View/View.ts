@@ -26,6 +26,8 @@ class View {
 
   inputTooltip?: InputCheckboxTooltip;
 
+  callbackList: iViewCallback[] = [];
+
   constructor($container: JQuery, config: iConfigView) {
     this.$container = $container;
     this.config = config;
@@ -38,6 +40,10 @@ class View {
     this.scale = this.config.scale ? this.getScale() : undefined;
     this.initInputs();
     this.drawSlider();
+  }
+
+  subscribeOn(callback: iViewCallback) {
+    this.callbackList.push(callback);
   }
 
   getSlider() {
