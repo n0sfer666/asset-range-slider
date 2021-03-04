@@ -4,19 +4,33 @@ import DemoPanel from './DemoPanel/DemoPanel';
 class Main {
   constructor() {
     jQuery(document).ready(() => {
-      const container: JQuery = $('.js-plugin');
-      const input: tConfigInput = {
-        $value: [$('.js-input-value-1'), $('.js-input-value-2')],
-        $tooltip: $('.js-input-tooltip'),
+      const containerHorizontal: JQuery = $('.js-plugin-horizontal');
+      const inputHorizontal: tConfigInput = {
+        $value: [$('.js-input-horizontal-value-1'), $('.js-input-horizontal-value-2')],
+        $tooltip: $('.js-input-horizontal-tooltip'),
       };
-      const config: iConfigUser = {
+      const configHorizontal: iConfigUser = {
         orientation: 'horizontal',
         range: [-100, 100],
         start: [-10, 10],
         step: 1,
-        input,
+        input: inputHorizontal,
       };
-      const demoPanel = new DemoPanel(container, config);
+      const demoPanelHorizontal = new DemoPanel(containerHorizontal, configHorizontal);
+
+      const containerVertical: JQuery = $('.js-plugin-vertical');
+      const inputVertical: tConfigInput = {
+        $value: [$('.js-input-vertical-value-1'), $('.js-input-vertical-value-2')],
+        $tooltip: $('.js-input-vertical-tooltip'),
+      };
+      const configVertical: iConfigUser = {
+        orientation: 'vertical',
+        range: [-100, 100],
+        start: [-10, 10],
+        step: 1,
+        input: inputVertical,
+      };
+      const demoPanelVertical = new DemoPanel(containerVertical, configVertical);
     });
   }
 }
