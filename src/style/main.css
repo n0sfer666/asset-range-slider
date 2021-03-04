@@ -48,6 +48,20 @@ $scale_font: $tooltip_font;
       height: 100%;
       margin: 0 $tooltip_margin 0 $slider_width;
     }
+
+    &-container {
+      display: flex;
+
+      &_vertical {
+        height: 100%;
+        flex-direction: row;
+      }
+
+      &_horizontal {
+        width: 100%;
+        flex-direction: column;
+      }
+    }
   }
 
   &__pointer {
@@ -146,7 +160,6 @@ $scale_font: $tooltip_font;
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
-    margin-bottom: $scale_margin;
 
     &_horizontal {
       width: 100%;
@@ -165,14 +178,16 @@ $scale_font: $tooltip_font;
     &_vertical {
       height: 100%;
       width: fit-content;
-
-      & .simple-range-slider__scale-pip {
-        flex-direction: row;
-      }
+      flex-direction: column;
+      align-items: flex-end;
 
       & .simple-range-slider__scale-pip-dash {
         width: $scale_size;
         height: 2px;
+      }
+
+      & .simple-range-slider__scale-pip-value {
+        margin-right: 1px;
       }
     }
 

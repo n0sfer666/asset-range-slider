@@ -12,6 +12,8 @@ class View {
 
   config: iConfigView;
 
+  $sliderContainer: JQuery;
+
   $slider: JQuery;
 
   pointer: Pointer[];
@@ -31,6 +33,7 @@ class View {
   constructor($container: JQuery, config: iConfigView) {
     this.$container = $container;
     this.config = config;
+    this.$sliderContainer = this.getSliderContainer();
     this.$slider = this.getSlider();
     this.pointer = this.config.start.map((value, index) => this.getPointer(value, index));
     this.tooltips = this.config.tooltip
@@ -50,6 +53,13 @@ class View {
     const element: JQuery = jQuery(document.createElement('div'));
     element.addClass('simple-range-slider__slider');
     element.addClass(`simple-range-slider__slider_${this.config.orientation}`);
+    return element;
+  }
+
+  getSliderContainer() {
+    const element: JQuery = jQuery(document.createElement('div'));
+    element.addClass('simple-range-slider__slider-container');
+    element.addClass(`simple-range-slider__slider-container_${this.config.orientation}`);
     return element;
   }
 
@@ -102,10 +112,18 @@ class View {
     if (this.connect) {
       this.$slider.append(this.connect.$element);
     }
-    this.$container.append(this.$slider);
     if (this.scale) {
-      this.$container.append(this.scale.$element);
+      if (this.config.orientation === 'vertical') {
+        this.$sliderContainer.append(this.scale.$element);
+        this.$sliderContainer.append(this.$slider);
+      } else {
+        this.$sliderContainer.append(this.$slider);
+        this.$sliderContainer.append(this.scale.$element);
+      }
+    } else {
+      this.$sliderContainer.append(this.$slider);
     }
+    this.$container.append(this.$sliderContainer);
   }
 }
 

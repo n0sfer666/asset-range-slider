@@ -57,6 +57,9 @@ class Scale {
     const $valuePips: JQuery[] = this.values.map((value) => {
       const $dash = this.getElement('scale-pip-dash');
       const $pipValue = this.getElement('scale-pip-value').text(value);
+      if (this.orientation === 'vertical') {
+        return this.getElement('scale-pip').append($pipValue, $dash);
+      }
       return this.getElement('scale-pip').append($dash, $pipValue);
     });
 
