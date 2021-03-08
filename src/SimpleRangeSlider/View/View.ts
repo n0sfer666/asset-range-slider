@@ -6,8 +6,6 @@ import Scale from './entities/Scale';
 import Tooltip from './entities/Tooltip';
 
 class View {
-  readonly normalizingCoefficient: number = 1e4;
-
   $container: JQuery;
 
   config: iConfigView;
@@ -40,8 +38,7 @@ class View {
     this.$container = $container;
     this.config = config;
     this.value = config.start;
-    this.position = position.map((pos) => pos * this.normalizingCoefficient);
-    console.log(this.position);
+    this.position = position;
     this.$sliderContainer = this.getSliderContainer();
     this.$slider = this.getSlider();
     this.pointers = this.position.map((pos, index) => this.getPointer(pos, index));
@@ -105,10 +102,6 @@ class View {
         this.inputTooltip = new InputCheckboxTooltip(this.config.input.$tooltip, this.tooltips);
       }
     }
-  }
-
-  getNormalizedPosition(position: number):number {
-    return Math.round(position * this.normalizingCoefficient);
   }
 
   drawSlider() {

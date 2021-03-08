@@ -9,7 +9,7 @@ class Connect {
 
   position: [number, number];
 
-  readonly normalizingCoefficient: number = 1e-2;
+  readonly normalizingCoefficient: number = 1e2;
 
   constructor(startPosition: number, endPosition: number, orientation: tOrientation) {
     this.startPosition = startPosition;

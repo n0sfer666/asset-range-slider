@@ -55,9 +55,9 @@ class Pointer {
   }
 
   setPosition(position: number) {
-    const liter: string = this.orientation === 'horizontal' ? 'X' : 'Y';
-    this.$element.css('transform', `translate${liter}(${position}%)`);
     this.position = position;
+    const liter: string = this.orientation === 'horizontal' ? 'X' : 'Y';
+    this.$element.css('transform', `translate${liter}(${this.position * this.normalizingCoefficient}%)`);
   }
 
   getShift(event: JQuery.MouseEventBase): number {
