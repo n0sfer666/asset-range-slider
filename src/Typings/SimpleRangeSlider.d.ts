@@ -3,7 +3,7 @@ type tOrientation = 'horizontal' | 'vertical';
 type tCssClasses = 'slider' | 'tumbler' | 'connect' | 'tooltip';
 type tRange = [number, number];
 type tValue = [number] | [number, number];
-type tPosition = [number] | [number, number];
+type tPosition = tValue;
 type tInputType = 'value' | 'tooltip'
 type tConfigInput = {
   $value?: [JQuery] | [JQuery, JQuery],

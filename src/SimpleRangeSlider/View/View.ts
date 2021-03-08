@@ -16,7 +16,7 @@ class View {
 
   $slider: JQuery;
 
-  pointer: Pointer[];
+  pointers: Pointer[];
 
   tooltips?: Tooltip[];
 
@@ -30,19 +30,31 @@ class View {
 
   callbackList: iViewCallback[] = [];
 
-  constructor($container: JQuery, config: iConfigView) {
+  position: number[];
+
+  value: number[];
+
+  activePointerIndex: number = 0;
+
+  constructor($container: JQuery, config: iConfigView, position: number[]) {
     this.$container = $container;
     this.config = config;
+    this.value = config.start;
+    this.position = position.map((pos) => pos * this.normalizingCoefficient);
+    console.log(this.position);
     this.$sliderContainer = this.getSliderContainer();
     this.$slider = this.getSlider();
-    this.pointer = this.config.start.map((value, index) => this.getPointer(value, index));
+    this.pointers = this.position.map((pos, index) => this.getPointer(pos, index));
     this.tooltips = this.config.tooltip
-      ? this.config.start.map((value) => this.getTooltip(value))
+      ? this.value.map((value) => this.getTooltip(value))
       : undefined;
-    this.connect = this.config.connect ? this.getConnect(this.pointer) : undefined;
+    this.connect = this.config.connect ? this.getConnect(this.pointers) : undefined;
     this.scale = this.config.scale ? this.getScale() : undefined;
     this.initInputs();
     this.drawSlider();
+    this.pointers.forEach(
+      (pointer, index) => pointer.switchActive(index === this.activePointerIndex),
+    );
   }
 
   subscribeOn(callback: iViewCallback) {
@@ -63,11 +75,8 @@ class View {
     return element;
   }
 
-  getPointer(value: number, index: number): Pointer {
-    const { range } = this.config;
-    const position: number = (value - range[0]) / (range[1] - range[0]);
-    const normalizedPosition: number = this.getNormalizedPosition(position);
-    return new Pointer(this.$container, this.config.orientation, normalizedPosition, index);
+  getPointer(position: number, index: number): Pointer {
+    return new Pointer(this.$container, this.config.orientation, position, index);
   }
 
   getTooltip(value: number): Tooltip {
@@ -103,7 +112,7 @@ class View {
   }
 
   drawSlider() {
-    this.pointer.forEach((pointer, index) => {
+    this.pointers.forEach((pointer, index) => {
       if (this.tooltips) {
         pointer.$element.append(this.tooltips[index].$element);
       }
