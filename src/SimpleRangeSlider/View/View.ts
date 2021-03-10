@@ -39,8 +39,8 @@ class View {
     this.config = config;
     this.value = config.start;
     this.position = position;
-    this.$sliderContainer = this.getSliderContainer();
-    this.$slider = this.getSlider();
+    this.$sliderContainer = this.getSliderElement(false);
+    this.$slider = this.getSliderElement(true);
     this.pointers = this.position.map((pos, index) => this.getPointer(pos, index));
     this.tooltips = this.config.tooltip
       ? this.value.map((value) => this.getTooltip(value))
@@ -58,17 +58,11 @@ class View {
     this.callbackList.push(callback);
   }
 
-  getSlider() {
+  getSliderElement(isContainer: boolean) {
+    const className = isContainer ? 'slider' : 'slider-container';
     const element: JQuery = jQuery(document.createElement('div'));
-    element.addClass('simple-range-slider__slider');
-    element.addClass(`simple-range-slider__slider_${this.config.orientation}`);
-    return element;
-  }
-
-  getSliderContainer() {
-    const element: JQuery = jQuery(document.createElement('div'));
-    element.addClass('simple-range-slider__slider-container');
-    element.addClass(`simple-range-slider__slider-container_${this.config.orientation}`);
+    element.addClass(`simple-range-slider__${className}`);
+    element.addClass(`simple-range-slider__${className}_${this.config.orientation}`);
     return element;
   }
 
