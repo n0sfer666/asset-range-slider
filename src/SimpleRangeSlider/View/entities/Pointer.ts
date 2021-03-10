@@ -61,20 +61,24 @@ class Pointer {
   }
 
   getShift(event: JQuery.MouseEventBase): number {
+    const elementOffset = this.$element.offset() || this.$element[0].getBoundingClientRect();
     return this.orientation === 'horizontal'
-      ? event.clientX - this.$element.position().left
-      : event.clientY - this.$element.position().top;
+      ? event.clientX - elementOffset.left
+      : event.clientY - elementOffset.top;
   }
 
   handlePointerMouseDown(event: JQuery.MouseEventBase) {
     event.preventDefault();
     this.shift = this.getShift(event);
+    const containerOffset = this.$container.offset() || this.$container[0].getBoundingClientRect();
     this.boundingClientRect = this.orientation === 'horizontal'
-      ? this.$container.position().left
-      : this.$container.position().top;
+      ? containerOffset.left
+      : containerOffset.top;
+    const outerWidth = this.$container.outerWidth() || this.$container[0].offsetWidth;
+    const outerHeight = this.$container.outerHeight() || this.$container[0].offsetHeight;
     this.containerOffsetSize = this.orientation === 'horizontal'
-      ? this.$container[0].offsetWidth
-      : this.$container[0].offsetHeight;
+      ? outerWidth
+      : outerHeight;
     this.$document.on('mousemove', this.handlePointerMove);
     this.$document.on('mouseup', this.handlePointerMouseUp);
   }
@@ -86,11 +90,12 @@ class Pointer {
     const newPosition: number = cursorPosition - this.shift - this.boundingClientRect;
     const newPositionInPercent: number = newPosition / this.containerOffsetSize;
     if (newPositionInPercent > 1) {
-      this.position = 1 * this.normalizingCoefficient;
+      this.position = 1;
     } else if (newPositionInPercent < 0) {
       this.position = 0;
     } else {
-      this.position = Math.round(newPositionInPercent * this.normalizingCoefficient);
+      this.position = Math.round(newPositionInPercent * this.normalizingCoefficient)
+        / this.normalizingCoefficient;
     }
     this.callbackList.forEach((callback) => callback({
       index: this.index,

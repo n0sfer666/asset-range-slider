@@ -42,6 +42,7 @@ class View {
     this.$sliderContainer = this.getSliderElement(false);
     this.$slider = this.getSliderElement(true);
     this.pointers = this.position.map((pos, index) => this.getPointer(pos, index));
+    this.pointers.forEach((pointer) => pointer.subscribeOn(this.onChangePosition));
     this.tooltips = this.config.tooltip
       ? this.value.map((value) => this.getTooltip(value))
       : undefined;
@@ -52,6 +53,11 @@ class View {
     this.pointers.forEach(
       (pointer, index) => pointer.switchActive(index === this.activePointerIndex),
     );
+  }
+
+  onChangePosition(pointerData: tPointerData) {
+    const { index, position } = pointerData;
+    console.log(`${index}: ${position}`);
   }
 
   subscribeOn(callback: iViewCallback) {
