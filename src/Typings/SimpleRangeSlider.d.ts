@@ -14,8 +14,8 @@ type tCssValues = {
   value: string
 }
 type tViewData = {
-  position: number,
-  value: number,
+  position?: number,
+  value?: number,
   index: number
 }
 type tPointerData = {
@@ -30,8 +30,8 @@ type tInputTextData = {
   index: number
 }
 type tModelData = {
-  value: tValue,
-  position: tPosition,
+  value: number[],
+  position: number[],
   index: number
 }
 // interfaces
