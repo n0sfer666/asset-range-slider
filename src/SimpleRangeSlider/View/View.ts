@@ -28,23 +28,24 @@ class View {
 
   callbackList: iViewCallback[] = [];
 
-  position: number[];
+  positions: number[];
 
-  value: number[];
+  values: number[];
 
   activePointerIndex: number = 0;
 
   constructor($container: JQuery, config: iConfigView, position: number[]) {
     this.$container = $container;
     this.config = config;
-    this.value = config.start;
-    this.position = position;
+    this.values = config.start;
+    this.positions = position;
+    this.bindContext();
     this.$sliderContainer = this.getSliderElement(false);
     this.$slider = this.getSliderElement(true);
-    this.pointers = this.position.map((pos, index) => this.getPointer(pos, index));
+    this.pointers = this.positions.map((pos, index) => this.getPointer(pos, index));
     this.pointers.forEach((pointer) => pointer.subscribeOn(this.onChangePosition));
     this.tooltips = this.config.tooltip
-      ? this.value.map((value) => this.getTooltip(value))
+      ? this.values.map((value) => this.getTooltip(value))
       : undefined;
     this.connect = this.config.connect ? this.getConnect(this.pointers) : undefined;
     this.scale = this.config.scale ? this.getScale() : undefined;
@@ -73,7 +74,9 @@ class View {
   }
 
   getPointer(position: number, index: number): Pointer {
-    return new Pointer(this.$container, this.config.orientation, position, index);
+    const pointerInstance = new Pointer(this.$container, this.config.orientation, position, index);
+    pointerInstance.subscribeOn(this.updateViewByPointer);
+    return pointerInstance;
   }
 
   getTooltip(value: number): Tooltip {
@@ -88,15 +91,19 @@ class View {
   }
 
   getScale(): Scale {
-    return new Scale(this.config.range, this.config.orientation);
+    const scaleInstance = new Scale(this.config.range, this.config.orientation);
+    scaleInstance.subscribeOn(this.updateViewByScale);
+    return scaleInstance;
   }
 
   initInputs() {
     if (this.config.input) {
       if (this.config.input.$value) {
-        this.inputValue = this.config.input.$value.map(
-          ($inputValue, index) => new InputTextValue($inputValue, this.config.start[index], index),
-        );
+        this.inputValue = this.config.input.$value.map(($inputValue, index) => {
+          const instance = new InputTextValue($inputValue, this.config.start[index], index);
+          instance.subscribeOn(this.updateViewByInputText);
+          return instance;
+        });
       }
       if (this.config.input.$tooltip && this.tooltips) {
         this.inputTooltip = new InputCheckboxTooltip(this.config.input.$tooltip, this.tooltips);
@@ -126,6 +133,41 @@ class View {
       this.$sliderContainer.append(this.$slider);
     }
     this.$container.append(this.$sliderContainer);
+  }
+
+  updateViewByPointer(pointerData: tPointerData) {
+    const { position, index } = pointerData;
+    this.activePointerIndex = index;
+    this.positions[index] = position;
+  }
+
+  updateViewByInputText(inputTextData: tInputTextData) {
+    const { index, value } = inputTextData;
+    this.values[index] = value;
+    this.activePointerIndex = index;
+  }
+
+  updateViewByScale(scaleData: tScaleData) {
+    const { position } = scaleData;
+    if (this.positions.length === 1) {
+      this.positions[0] = position;
+    } else {
+      const difference = this.positions.map((currentPosition) => {
+        const result = Math.round((position - currentPosition) * 1e4) / 1e4;
+        return Math.abs(result);
+      });
+      if (difference[0] <= difference[1]) {
+        this.positions[0] = position;
+      } else {
+        this.positions[1] = position;
+      }
+    }
+  }
+
+  bindContext() {
+    this.updateViewByInputText = this.updateViewByInputText.bind(this);
+    this.updateViewByScale = this.updateViewByScale.bind(this);
+    this.updateViewByPointer = this.updateViewByPointer.bind(this);
   }
 }
 

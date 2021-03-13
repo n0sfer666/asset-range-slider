@@ -90,11 +90,11 @@ class Scale {
 
   getPositions(): number[] {
     const result: number[] = [0];
-    const difference: number = Math.round(10000 / (this.valuePipsNumber - 1));
+    const difference: number = 1 / (this.valuePipsNumber - 1);
     for (let i = 0; result.length < (this.valuePipsNumber - 1); i += 1) {
       result.push(result[i] + difference);
     }
-    result.push(10000);
+    result.push(1);
     return result;
   }
 
