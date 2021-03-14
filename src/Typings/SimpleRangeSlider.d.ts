@@ -30,8 +30,8 @@ type tInputTextData = {
   index: number
 }
 type tModelData = {
-  value: number[],
-  position: number[],
+  values: number[],
+  positions: number[],
   index: number
 }
 // interfaces

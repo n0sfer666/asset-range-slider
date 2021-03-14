@@ -13,7 +13,7 @@ class Main {
         orientation: 'horizontal',
         range: [-100, 100],
         start: [-10, 10],
-        step: 1,
+        step: 10,
         input: inputHorizontal,
       };
       const demoPanelHorizontal = new DemoPanel(containerHorizontal, configHorizontal);

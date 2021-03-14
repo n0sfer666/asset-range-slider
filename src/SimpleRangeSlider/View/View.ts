@@ -16,6 +16,8 @@ class View {
 
   pointers: Pointer[];
 
+  isSinglePointer: boolean;
+
   tooltips?: Tooltip[];
 
   connect?: Connect;
@@ -34,16 +36,16 @@ class View {
 
   activePointerIndex: number = 0;
 
-  constructor($container: JQuery, config: iConfigView, position: number[]) {
+  constructor($container: JQuery, config: iConfigView, positions: number[]) {
     this.$container = $container;
     this.config = config;
     this.values = config.start;
-    this.positions = position;
+    this.positions = positions;
+    this.isSinglePointer = this.values.length === 1;
     this.bindContext();
     this.$sliderContainer = this.getSliderElement(false);
     this.$slider = this.getSliderElement(true);
     this.pointers = this.positions.map((pos, index) => this.getPointer(pos, index));
-    this.pointers.forEach((pointer) => pointer.subscribeOn(this.onChangePosition));
     this.tooltips = this.config.tooltip
       ? this.values.map((value) => this.getTooltip(value))
       : undefined;
@@ -51,14 +53,7 @@ class View {
     this.scale = this.config.scale ? this.getScale() : undefined;
     this.initInputs();
     this.drawSlider();
-    this.pointers.forEach(
-      (pointer, index) => pointer.switchActive(index === this.activePointerIndex),
-    );
-  }
-
-  onChangePosition(pointerData: tPointerData) {
-    const { index, position } = pointerData;
-    console.log(`${index}: ${position}`);
+    this.switchActivePointer();
   }
 
   subscribeOn(callback: iViewCallback) {
@@ -75,7 +70,7 @@ class View {
 
   getPointer(position: number, index: number): Pointer {
     const pointerInstance = new Pointer(this.$container, this.config.orientation, position, index);
-    pointerInstance.subscribeOn(this.updateViewByPointer);
+    pointerInstance.subscribeOn(this.updateByPointer);
     return pointerInstance;
   }
 
@@ -92,7 +87,7 @@ class View {
 
   getScale(): Scale {
     const scaleInstance = new Scale(this.config.range, this.config.orientation);
-    scaleInstance.subscribeOn(this.updateViewByScale);
+    scaleInstance.subscribeOn(this.updateByScale);
     return scaleInstance;
   }
 
@@ -101,7 +96,7 @@ class View {
       if (this.config.input.$value) {
         this.inputValue = this.config.input.$value.map(($inputValue, index) => {
           const instance = new InputTextValue($inputValue, this.config.start[index], index);
-          instance.subscribeOn(this.updateViewByInputText);
+          instance.subscribeOn(this.updateByInputText);
           return instance;
         });
       }
@@ -135,22 +130,31 @@ class View {
     this.$container.append(this.$sliderContainer);
   }
 
-  updateViewByPointer(pointerData: tPointerData) {
+  switchActivePointer() {
+    this.pointers.forEach(
+      (pointer, index) => pointer.switchActive(index === this.activePointerIndex),
+    );
+  }
+
+  updateByPointer(pointerData: tPointerData) {
     const { position, index } = pointerData;
     this.activePointerIndex = index;
     this.positions[index] = position;
+    this.callbackList.forEach((modelCallback) => modelCallback({ index, position }));
   }
 
-  updateViewByInputText(inputTextData: tInputTextData) {
+  updateByInputText(inputTextData: tInputTextData) {
     const { index, value } = inputTextData;
     this.values[index] = value;
     this.activePointerIndex = index;
+    this.callbackList.forEach((modelCallback) => modelCallback({ index, value }));
   }
 
-  updateViewByScale(scaleData: tScaleData) {
+  updateByScale(scaleData: tScaleData) {
     const { position } = scaleData;
     if (this.positions.length === 1) {
       this.positions[0] = position;
+      this.activePointerIndex = 0;
     } else {
       const difference = this.positions.map((currentPosition) => {
         const result = Math.round((position - currentPosition) * 1e4) / 1e4;
@@ -158,16 +162,44 @@ class View {
       });
       if (difference[0] <= difference[1]) {
         this.positions[0] = position;
+        this.activePointerIndex = 0;
       } else {
         this.positions[1] = position;
+        this.activePointerIndex = 1;
       }
     }
+    this.callbackList.forEach((modelCallback) => modelCallback({
+      index: this.activePointerIndex,
+      position,
+    }));
+  }
+
+  updateByModel(modelData: tModelData) {
+    const { index, positions, values } = modelData;
+    this.activePointerIndex = index;
+    this.positions = positions;
+    this.values = values;
+    this.switchActivePointer();
+    if (this.inputValue) {
+      this.inputValue[index].setNewValue(values[index]);
+    }
+    if (this.tooltips) {
+      this.tooltips[index].setValue(values[index]);
+    }
+    if (this.connect) {
+      this.connect.setPosition(
+        this.isSinglePointer ? 0 : this.positions[0],
+        this.isSinglePointer ? this.positions[0] : this.positions[1],
+      );
+    }
+    this.pointers[index].setPosition(this.positions[this.activePointerIndex]);
   }
 
   bindContext() {
-    this.updateViewByInputText = this.updateViewByInputText.bind(this);
-    this.updateViewByScale = this.updateViewByScale.bind(this);
-    this.updateViewByPointer = this.updateViewByPointer.bind(this);
+    this.updateByInputText = this.updateByInputText.bind(this);
+    this.updateByScale = this.updateByScale.bind(this);
+    this.updateByPointer = this.updateByPointer.bind(this);
+    this.updateByModel = this.updateByModel.bind(this);
   }
 }
 

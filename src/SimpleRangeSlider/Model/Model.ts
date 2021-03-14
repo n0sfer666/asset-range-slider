@@ -5,7 +5,7 @@ class Model {
 
   callbackList: iModelCallback[] = [];
 
-  position: number[];
+  positions: number[];
 
   range: tRange;
 
@@ -20,7 +20,8 @@ class Model {
     this.value = config.start;
     this.range = config.range;
     this.step = config.step;
-    this.position = this.value.map((val) => this.getPositionFromValue(val));
+    this.positions = this.value.map((val) => this.getPositionFromValue(val));
+    this.bindContext();
   }
 
   subscribeOn(callback: iModelCallback) {
@@ -39,8 +40,9 @@ class Model {
 
   getNewValue(viewData: tViewData): number {
     const { index, position, value } = viewData;
-    const newValue: number = value || this.getValueFromPosition(position || this.position[index]);
-    const isTwoPointerSlider = this.value[1];
+    
+    const newValue: number = value || this.getValueFromPosition(position || NaN);
+    const isTwoPointerSlider = !!this.value[1];
     const rightBoundary = this.value[1] - this.step;
     const leftBoundary = this.value[0] + this.step;
     const isValueOfLeftPointerBiggerThanRight = newValue > rightBoundary;
@@ -66,21 +68,25 @@ class Model {
 
     if (!isOutOfRange && isOutOfBoundary) {
       this.value[index] = resultValue;
-      this.position[index] = this.getPositionFromValue(resultValue);
+      this.positions[index] = this.getPositionFromValue(resultValue);
     }
   }
 
-  updateView(viewData: tViewData) {
+  updateByView(viewData: tViewData) {
     this.activePointerIndex = viewData.index;
     const newValue = this.getNewValue(viewData);
     this.setValueAndPosition(newValue, this.activePointerIndex);
     this.callbackList.forEach(
-      (callback: iModelCallback) => callback({
-        position: this.position,
-        value: this.value,
+      (viewCallback: iModelCallback) => viewCallback({
+        positions: this.positions,
+        values: this.value,
         index: this.activePointerIndex,
       }),
     );
+  }
+
+  bindContext() {
+    this.updateByView = this.updateByView.bind(this);
   }
 }
 
