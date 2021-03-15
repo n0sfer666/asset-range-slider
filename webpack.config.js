@@ -22,8 +22,7 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: [/node_modules/, /\.(spec|test)\.ts$/],
+        use: 'ts-loader?configFile=tsconfig.webpack.json',
       },
       {
         test: /\.css$/,

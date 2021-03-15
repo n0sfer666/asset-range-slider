@@ -21,10 +21,10 @@ class SimpleRangeSlider {
     const modelConfig: iConfigModel = this.getModelConfig(completeConfig);
     const viewConfig: iConfigView = this.getViewConfig(completeConfig);
     this.model = new Model(modelConfig);
-    const position: number[] = completeConfig.start.map(
+    const positions: number[] = completeConfig.start.map(
       (value) => this.model.getPositionFromValue(value),
     );
-    this.view = new View(this.$container, viewConfig);
+    this.view = new View(this.$container, viewConfig, positions);
     this.presenter = new Presenter(this.view, this.model);
   }
 

@@ -38,16 +38,12 @@ class View {
 
   activePointerIndex: number = 0;
 
-  constructor($container: JQuery, config: iConfigView) {
+  constructor($container: JQuery, config: iConfigView, positions: number[]) {
     this.$container = $container;
     this.config = config;
     this.values = this.config.start;
     this.range = this.config.range;
-    this.positions = this.values.map((val) => {
-      const result: number = (val - this.range[0]) / (this.range[1] - this.range[0]);
-      const normalizingCoefficient: number = 1e4;
-      return Math.round(result * normalizingCoefficient) / normalizingCoefficient;
-    });
+    this.positions = positions;
     this.isSinglePointer = this.values.length === 1;
     this.bindContext();
     this.$sliderContainer = this.getSliderElement(false);
