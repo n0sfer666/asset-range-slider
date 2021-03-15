@@ -24,7 +24,7 @@ class SimpleRangeSlider {
     const position: number[] = completeConfig.start.map(
       (value) => this.model.getPositionFromValue(value),
     );
-    this.view = new View(this.$container, viewConfig, position);
+    this.view = new View(this.$container, viewConfig);
     this.presenter = new Presenter(this.view, this.model);
   }
 

@@ -34,13 +34,20 @@ class View {
 
   values: number[];
 
+  range: tRange;
+
   activePointerIndex: number = 0;
 
-  constructor($container: JQuery, config: iConfigView, positions: number[]) {
+  constructor($container: JQuery, config: iConfigView) {
     this.$container = $container;
     this.config = config;
-    this.values = config.start;
-    this.positions = positions;
+    this.values = this.config.start;
+    this.range = this.config.range;
+    this.positions = this.values.map((val) => {
+      const result: number = (val - this.range[0]) / (this.range[1] - this.range[0]);
+      const normalizingCoefficient: number = 1e4;
+      return Math.round(result * normalizingCoefficient) / normalizingCoefficient;
+    });
     this.isSinglePointer = this.values.length === 1;
     this.bindContext();
     this.$sliderContainer = this.getSliderElement(false);
@@ -80,9 +87,19 @@ class View {
 
   getConnect(pointer: Pointer[]): Connect {
     if (pointer.length === 1) {
-      return new Connect(0, pointer[0].position, this.config.orientation);
+      return new Connect(
+        0,
+        pointer[0].position,
+        this.config.orientation,
+        this.isSinglePointer,
+      );
     }
-    return new Connect(pointer[0].position, pointer[1].position, this.config.orientation);
+    return new Connect(
+      pointer[0].position,
+      pointer[1].position,
+      this.config.orientation,
+      this.isSinglePointer,
+    );
   }
 
   getScale(): Scale {
@@ -139,13 +156,11 @@ class View {
   updateByPointer(pointerData: tPointerData) {
     const { position, index } = pointerData;
     this.activePointerIndex = index;
-    this.positions[index] = position;
     this.callbackList.forEach((modelCallback) => modelCallback({ index, position }));
   }
 
   updateByInputText(inputTextData: tInputTextData) {
     const { index, value } = inputTextData;
-    this.values[index] = value;
     this.activePointerIndex = index;
     this.callbackList.forEach((modelCallback) => modelCallback({ index, value }));
   }
@@ -160,13 +175,7 @@ class View {
         const result = Math.round((position - currentPosition) * 1e4) / 1e4;
         return Math.abs(result);
       });
-      if (difference[0] <= difference[1]) {
-        this.positions[0] = position;
-        this.activePointerIndex = 0;
-      } else {
-        this.positions[1] = position;
-        this.activePointerIndex = 1;
-      }
+      this.activePointerIndex = difference[0] < difference[1] ? 0 : 1;
     }
     this.callbackList.forEach((modelCallback) => modelCallback({
       index: this.activePointerIndex,
@@ -176,9 +185,6 @@ class View {
 
   updateByModel(modelData: tModelData) {
     const { index, positions, values } = modelData;
-    this.activePointerIndex = index;
-    this.positions = positions;
-    this.values = values;
     this.switchActivePointer();
     if (this.inputValue) {
       this.inputValue[index].setNewValue(values[index]);
@@ -188,18 +194,20 @@ class View {
     }
     if (this.connect) {
       this.connect.setPosition(
-        this.isSinglePointer ? 0 : this.positions[0],
-        this.isSinglePointer ? this.positions[0] : this.positions[1],
+        this.isSinglePointer ? 0 : positions[0],
+        this.isSinglePointer ? positions[0] : positions[1],
       );
     }
-    this.pointers[index].setPosition(this.positions[this.activePointerIndex]);
+    this.pointers[index].setPosition(positions[index]);
+    this.activePointerIndex = index;
+    this.positions = positions;
+    this.values = values;
   }
 
   bindContext() {
     this.updateByInputText = this.updateByInputText.bind(this);
     this.updateByScale = this.updateByScale.bind(this);
     this.updateByPointer = this.updateByPointer.bind(this);
-    this.updateByModel = this.updateByModel.bind(this);
   }
 }
 

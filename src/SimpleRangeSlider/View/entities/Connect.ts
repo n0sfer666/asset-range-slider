@@ -5,16 +5,24 @@ class Connect {
 
   orientation: tOrientation;
 
+  isSinglePointer: boolean;
+
   $element: JQuery;
 
   position: [number, number];
 
   readonly normalizingCoefficient: number = 1e2;
 
-  constructor(startPosition: number, endPosition: number, orientation: tOrientation) {
+  constructor(
+    startPosition: number,
+    endPosition: number,
+    orientation: tOrientation,
+    isSinglePointer: boolean,
+  ) {
     this.startPosition = startPosition;
     this.endPosition = endPosition;
     this.orientation = orientation;
+    this.isSinglePointer = isSinglePointer;
     this.$element = this.getElement();
     this.position = [this.startPosition, this.endPosition];
     this.setPosition(this.startPosition, this.endPosition);
@@ -34,7 +42,7 @@ class Connect {
       attribute: this.orientation === 'horizontal' ? 'width' : 'height',
       value: `${end - start}%`,
     }];
-    if (start !== 0) {
+    if (!this.isSinglePointer) {
       cssValues.push({
         attribute: this.orientation === 'horizontal' ? 'left' : 'top',
         value: `${(start)}%`,

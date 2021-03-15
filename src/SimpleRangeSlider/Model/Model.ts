@@ -7,7 +7,7 @@ class Model {
 
   positions: number[];
 
-  range: tRange;
+  readonly range: tRange;
 
   value: number[];
 
@@ -17,11 +17,10 @@ class Model {
 
   constructor(config: iConfigModel) {
     this.config = config;
-    this.value = config.start;
-    this.range = config.range;
-    this.step = config.step;
+    this.value = this.config.start;
+    this.range = this.config.range;
+    this.step = this.config.step;
     this.positions = this.value.map((val) => this.getPositionFromValue(val));
-    this.bindContext();
   }
 
   subscribeOn(callback: iModelCallback) {
@@ -40,7 +39,12 @@ class Model {
 
   getNewValue(viewData: tViewData): number {
     const { index, position, value } = viewData;
-    
+    if (position === 0) {
+      return this.range[0];
+    }
+    if (position === 1) {
+      return this.range[1];
+    }
     const newValue: number = value || this.getValueFromPosition(position || NaN);
     const isTwoPointerSlider = !!this.value[1];
     const rightBoundary = this.value[1] - this.step;
@@ -57,8 +61,8 @@ class Model {
   }
 
   setValueAndPosition(newValue: number, index: number) {
-    const leftBoundary = this.value[index] - this.step;
-    const rightBoundary = this.value[index] + this.step;
+    const leftBoundary = this.value[index] - (this.step / 2);
+    const rightBoundary = this.value[index] + (this.step / 2);
     const isOutOfRange = newValue < this.range[0] || newValue > this.range[1];
     const isOutOfBoundary = newValue >= rightBoundary || newValue <= leftBoundary;
     const resultValue = newValue > 0
@@ -73,20 +77,17 @@ class Model {
   }
 
   updateByView(viewData: tViewData) {
-    this.activePointerIndex = viewData.index;
+    const { index } = viewData;
+    this.activePointerIndex = index;
     const newValue = this.getNewValue(viewData);
-    this.setValueAndPosition(newValue, this.activePointerIndex);
+    this.setValueAndPosition(newValue, index);
     this.callbackList.forEach(
       (viewCallback: iModelCallback) => viewCallback({
         positions: this.positions,
         values: this.value,
-        index: this.activePointerIndex,
+        index,
       }),
     );
-  }
-
-  bindContext() {
-    this.updateByView = this.updateByView.bind(this);
   }
 }
 
