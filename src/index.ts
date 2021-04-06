@@ -1,5 +1,7 @@
 import './style/main.css';
+import './style/demoPanel.css';
 import DemoPanel from './DemoPanel/DemoPanel';
+import DemoP from './DemoPanel/DemoP';
 
 class Main {
   constructor() {
@@ -31,6 +33,8 @@ class Main {
         input: inputVertical,
       };
       const demoPanelVertical = new DemoPanel(containerVertical, configVertical);
+      const demoPanelContainer: JQuery = $('.js-demo-panel');
+      const demoP = new DemoP(demoPanelContainer);
     });
   }
 }

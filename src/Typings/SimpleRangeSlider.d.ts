@@ -6,7 +6,7 @@ type tValue = [number] | [number, number];
 type tPosition = tValue;
 type tInputType = 'value' | 'tooltip'
 type tConfigInput = {
-  $value?: [JQuery] | [JQuery, JQuery],
+  $value?: JQuery[],
   $tooltip?: JQuery
 }
 type tCssValues = {
@@ -43,7 +43,7 @@ interface iConfigUser {
   readonly connect?: boolean;
   readonly tooltip?: boolean;
   readonly scale?: boolean;
-  readonly input?: tConfigInput;
+  input?: tConfigInput;
 }
 interface iCompleteConfig {
   readonly orientation: tOrientation;
@@ -53,7 +53,7 @@ interface iCompleteConfig {
   readonly connect: boolean;
   readonly tooltip: boolean;
   readonly scale: boolean;
-  readonly input?: tConfigInput;
+  input?: tConfigInput;
 }
 interface iConfigModel {
   readonly start: tValue;
