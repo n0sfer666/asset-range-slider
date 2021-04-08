@@ -5,8 +5,11 @@ class Drawing {
     return element;
   }
 
-  getContainerElement(typeContainer: tContainer): JQuery {
-    return this.getDOMElement('div', `${typeContainer}-container`);
+  getContainerElement(typeContainer?: tContainer): JQuery {
+    if (typeContainer) {
+      return this.getDOMElement('div', `${typeContainer}-container`);
+    }
+    return this.getDOMElement('div', 'container');
   }
 
   getTextElement({ isTitle = false, text = '' }): JQuery {
@@ -17,21 +20,23 @@ class Drawing {
   }
 
   getCheckboxElement(isChecked: boolean, text: string): JQuery {
-    const $result = this.getDOMElement('label', 'checkbox-label').text(text);
+    const $result = this.getDOMElement('label', 'label').text(text);
     const $checkbox = this.getDOMElement('input', 'checkbox');
     $checkbox.prop('type', 'checkbox');
     $checkbox.prop('checked', isChecked);
-    $result.append($checkbox);
+    $result.prepend($checkbox);
     return $result;
   }
 
   getRadioElement(title: string, name: string, isChecked: boolean): JQuery {
-    const $result = this.getDOMElement('label', 'radio-label').text(title);
+    const $result = this.getDOMElement('label', 'label');
+    const $text = this.getDOMElement('span', 'label-text').text(title);
     const $radio = this.getDOMElement('input', 'radio');
     $radio.prop('name', name);
     $radio.prop('type', 'radio');
     $radio.prop('checked', isChecked);
-    $result.append($radio);
+    $result.prepend($radio);
+    $result.append($text);
     return $result;
   }
 

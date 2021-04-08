@@ -64,14 +64,14 @@ class Panel extends Drawing {
 
   getContainers(): iDemoSingleElements {
     return {
-      $control: this.getContainerElement('control'),
-      $orientation: this.getContainerElement('orientation'),
-      $range: this.getContainerElement('range'),
-      $start: this.getContainerElement('start'),
-      $step: this.getContainerElement('step'),
-      $scale: this.getContainerElement('scale'),
-      $connect: this.getContainerElement('connect'),
-      $tooltip: this.getContainerElement('tooltip'),
+      $control: this.getContainerElement(),
+      $orientation: this.getContainerElement(),
+      $range: this.getContainerElement(),
+      $start: this.getContainerElement(),
+      $step: this.getContainerElement(),
+      $scale: this.getContainerElement(),
+      $connect: this.getContainerElement(),
+      $tooltip: this.getContainerElement(),
     };
   }
 
@@ -101,7 +101,6 @@ class Panel extends Drawing {
 
   initPanel() {
     $.each(this.titles, (key, element) => {
-      console.log(key);
       if (this.mainContainers[key]) {
         this.mainContainers[key].append(this.titles[key]);
       } else {
@@ -110,6 +109,9 @@ class Panel extends Drawing {
           this.containers[key].append(inputElement);
         });
         this.mainContainers.$config.append(this.containers[key]);
+      }
+      if (key === '$start') {
+        this.containers[key].append(this.$buttonPointerCountControl);
       }
     });
     this.containers.$control.append(this.$inputCheckboxTooltip);

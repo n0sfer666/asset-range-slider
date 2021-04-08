@@ -1,4 +1,4 @@
-type tContainer = 'main' | 'slider' | 'config' | 'control' | 'orientation' | 'tooltip' | 'connect' | 'scale' | 'range' | 'start' | 'step';
+type tContainer = 'main' | 'slider' | 'config';
 
 interface iDemoSingleElements {
   [key: string] : JQuery
