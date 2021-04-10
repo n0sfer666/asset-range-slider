@@ -48,7 +48,7 @@ class Drawing {
     return $input;
   }
 
-  getButtonElement(isIncrease: boolean): JQuery {
+  getButtonControlElement(isIncrease: boolean): JQuery {
     const $button: JQuery = this.getDOMElement('button', 'count-control-button');
     $button.text(isIncrease ? '+' : '-');
     return $button;

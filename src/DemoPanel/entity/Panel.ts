@@ -32,8 +32,8 @@ class Panel extends Drawing {
     this.containers = this.getContainers();
     this.inputs = this.getInputs();
     this.bindContext();
-    this.$buttonPointerCountControl = this.getButtonElement(this.isSinglePointer);
-    this.$buttonPointerCountControl.on('click', this.handleButtonClick);
+    this.$buttonPointerCountControl = this.getButtonControlElement(this.isSinglePointer);
+    this.$buttonPointerCountControl.on('click', this.handleButtonControlClick);
     this.$inputCheckboxTooltip = this.getCheckboxElement(this.config.tooltip, 'show/hidden tooltip');
     this.initPanel();
     this.slider = new SimpleRangeSlider(this.mainContainers.$slider, this.config);
@@ -227,9 +227,9 @@ class Panel extends Drawing {
     }
   }
 
-  handleButtonClick(event: JQuery.MouseEventBase) {
+  handleButtonControlClick(event: JQuery.MouseEventBase) {
     const $target = $(event.target);
-    const isIncrease = $target.text() === '+' && this.config.start.length === 1;
+    const isIncrease = this.isSinglePointer;
     if (isIncrease) {
       const nextValue = this.config.start[0] + this.config.step;
       if (nextValue <= this.config.range[1]) {
@@ -263,7 +263,7 @@ class Panel extends Drawing {
   bindContext() {
     this.handleRadioClick = this.handleRadioClick.bind(this);
     this.handleInputFocusout = this.handleInputFocusout.bind(this);
-    this.handleButtonClick = this.handleButtonClick.bind(this);
+    this.handleButtonControlClick = this.handleButtonControlClick.bind(this);
   }
 }
 
