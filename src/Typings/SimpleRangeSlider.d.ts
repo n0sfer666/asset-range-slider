@@ -35,7 +35,10 @@ type tModelData = {
   index: number
 }
 // interfaces
-interface iConfigUser {
+interface iObject {
+  [key: string]: any;
+}
+interface iConfigUser extends iObject {
   readonly orientation?: tOrientation;
   readonly start?: tValue;
   readonly range?: tRange;
@@ -45,22 +48,22 @@ interface iConfigUser {
   readonly scale?: boolean;
   input?: tConfigInput;
 }
-interface iCompleteConfig {
-  readonly orientation: tOrientation;
-  readonly start: tValue;
-  readonly range: tRange;
-  readonly step: number;
-  readonly connect: boolean;
-  readonly tooltip: boolean;
-  readonly scale: boolean;
+interface iCompleteConfig extends iObject {
+  orientation: tOrientation;
+  start: tValue;
+  range: tRange;
+  step: number;
+  connect: boolean;
+  tooltip: boolean;
+  scale: boolean;
   input?: tConfigInput;
 }
-interface iConfigModel {
+interface iConfigModel extends iObject {
   readonly start: tValue;
   readonly range: tRange;
   readonly step: number;
 }
-interface iConfigView {
+interface iConfigView extends iObject {
   readonly orientation: tOrientation,
   readonly start: tValue;
   readonly range: tRange;

@@ -1,14 +1,33 @@
-import SimpleRangeSlider from '../SimpleRangeSlider/SimpleRangeSlider';
+import Panel from './entity/Panel';
 
 class DemoPanel {
-  private container: JQuery;
+  $container: JQuery;
 
-  private config: iConfigUser;
+  config: iCompleteConfig;
 
-  constructor(container: JQuery, config: iConfigUser) {
-    this.container = container;
-    this.config = config;
-    const slider: SimpleRangeSlider = new SimpleRangeSlider(this.container, this.config);
+  panel: Panel;
+
+  constructor($container: JQuery) {
+    this.$container = $container;
+    this.config = this.getDefaultConfig();
+    this.panel = new Panel(this.config);
+    this.setPanel();
+  }
+
+  getDefaultConfig(): iCompleteConfig {
+    return {
+      orientation: 'horizontal',
+      start: [10],
+      range: [0, 100],
+      step: 10,
+      connect: true,
+      tooltip: true,
+      scale: true,
+    };
+  }
+
+  setPanel() {
+    this.$container.append(this.panel.mainContainers.$main);
   }
 }
 
@@ -16,8 +35,8 @@ export default DemoPanel;
 
 (function ($: JQueryStatic) {
   $.fn.extend({
-    DemoPanel(config: iConfigUser) {
-      return new DemoPanel(<JQuery> this, <iConfigUser> config);
+    DemoP() {
+      return new DemoPanel(<JQuery> this);
     },
   });
 }(jQuery));

@@ -40,9 +40,10 @@ class Drawing {
     return $result;
   }
 
-  getConfigInputElement(value: number): JQuery {
+  getConfigInputElement(value: number, index: number, name?: string): JQuery {
     const $input: JQuery = this.getDOMElement('input', 'config-input').val(value);
     $input.prop('type', 'text');
+    $input.prop('name', `${name}-${index}`);
 
     return $input;
   }
