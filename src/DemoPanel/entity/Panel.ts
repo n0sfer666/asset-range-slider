@@ -8,13 +8,13 @@ class Panel extends Drawing {
 
   isSinglePointer: boolean;
 
-  inputs: iDemoArrayElements;
+  inputs: iInputs;
 
-  containers: iDemoSingleElements;
+  containers: iContainers;
 
-  mainContainers: iDemoSingleElements;
+  mainContainers: iMainContainers;
 
-  titles: iDemoSingleElements;
+  titles: iTitles;
 
   $buttonPointerCountControl: JQuery;
 
@@ -39,7 +39,7 @@ class Panel extends Drawing {
     this.slider = new SimpleRangeSlider(this.mainContainers.$slider, this.config);
   }
 
-  getInputs(): iDemoArrayElements {
+  getInputs(): iInputs {
     return {
       $control: this.config.start.map((value, index) => this.getConfigInputElement(value, index)),
       $orientation: [
@@ -64,7 +64,7 @@ class Panel extends Drawing {
     };
   }
 
-  getContainers(): iDemoSingleElements {
+  getContainers(): iContainers {
     return {
       $control: this.getContainerElement(),
       $orientation: this.getContainerElement(),
@@ -77,7 +77,7 @@ class Panel extends Drawing {
     };
   }
 
-  getMainContainers(): iDemoSingleElements {
+  getMainContainers(): iMainContainers {
     return {
       $main: this.getContainerElement('main'),
       $slider: this.getContainerElement('slider'),
@@ -85,7 +85,7 @@ class Panel extends Drawing {
     };
   }
 
-  getTitles(): iDemoSingleElements {
+  getTitles(): iTitles {
     return {
       $main: this.getTextElement({ isTitle: true, text: 'Demo Panel' }),
       $slider: this.getTextElement({ isTitle: true, text: 'Slider' }),
@@ -107,7 +107,7 @@ class Panel extends Drawing {
         this.mainContainers[key].append(this.titles[key]);
       } else {
         this.containers[key].append(this.titles[key]);
-        this.inputs[key].forEach((inputElement) => {
+        this.inputs[key].forEach((inputElement: JQuery) => {
           const tagName = inputElement.prop('tagName');
           if (tagName === 'LABEL') {
             inputElement.find('input[type=radio]').on('click', this.handleRadioClick);
