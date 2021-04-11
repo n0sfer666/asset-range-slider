@@ -1,20 +1,31 @@
 import Connect from '../../SimpleRangeSlider/View/entities/Connect';
 
-function makeRandomNumber(min: number, max: number): number {
-  const tmpMin: number = Math.ceil(min);
-  const tmpMax: number = Math.floor(max);
-  return Math.round(Math.random() * (tmpMax - tmpMin + 1)) + tmpMin;
+const normalizingCoefficient: number = 1e2;
+function makeRandomNumber(startPosition?: number): number {
+  let randomNumber = Math.round(Math.random() * normalizingCoefficient) / normalizingCoefficient;
+  if (!startPosition || randomNumber > startPosition) {
+    return randomNumber;
+  }
+  while (randomNumber < startPosition) {
+    randomNumber = Math.round(Math.random() * normalizingCoefficient) / normalizingCoefficient;
+  }
+  return randomNumber;
 }
 
 describe('Connect.ts', () => {
-  const normalizingCoefficient: number = 1e-2;
-  const startPosition: number = makeRandomNumber(0, 10000);
-  const endPosition: number = makeRandomNumber(startPosition, 10000);
+  const startPosition: number = makeRandomNumber();
+  const endPosition: number = makeRandomNumber(startPosition);
+  const isSinglePointer: boolean = true;
+  const isNotSinglePointer: boolean = false;
   const connects: Connect[] = [
-    new Connect(0, endPosition, 'horizontal'),
-    new Connect(startPosition, endPosition, 'horizontal'),
-    new Connect(0, endPosition, 'vertical'),
-    new Connect(startPosition, endPosition, 'vertical'),
+    new Connect(0, endPosition, 'horizontal', isSinglePointer),
+    new Connect(startPosition, endPosition, 'horizontal', isSinglePointer),
+    new Connect(0, endPosition, 'vertical', isSinglePointer),
+    new Connect(startPosition, endPosition, 'vertical', isSinglePointer),
+    new Connect(0, endPosition, 'horizontal', isNotSinglePointer),
+    new Connect(startPosition, endPosition, 'horizontal', isNotSinglePointer),
+    new Connect(0, endPosition, 'vertical', isNotSinglePointer),
+    new Connect(startPosition, endPosition, 'vertical', isNotSinglePointer),
   ];
 
   test('getElement()', () => {
@@ -28,27 +39,27 @@ describe('Connect.ts', () => {
 
   test('setPosition(startPosition, endPosition)', () => {
     connects.forEach((connect) => {
-      const testStart: number = makeRandomNumber(0, 10000);
-      const testEnd: number = makeRandomNumber(testStart, 10000);
-      const start: number = Math.round(testStart * normalizingCoefficient);
-      const end: number = Math.round(testEnd * normalizingCoefficient);
+      const testStartPosition: number = connect.startPosition;
+      const testEndPosition: number = connect.endPosition;
+      const start: number = Math.round(testStartPosition * normalizingCoefficient);
+      const end: number = Math.round(testEndPosition * normalizingCoefficient);
       const CssValue: tCssValues[] = [{
         attribute: connect.orientation === 'horizontal' ? 'width' : 'height',
         value: `${end - start}%`,
       }];
-      if (testStart !== 0) {
+      if (!connect.isSinglePointer) {
         CssValue.push({
           attribute: connect.orientation === 'horizontal' ? 'left' : 'top',
           value: `${start}%`,
         });
       }
-      connect.setPosition(testStart, testEnd);
-      const expectCssValue: string | null = connect.$element.get(0).getAttribute('style');
-      const resultCssValue: string = CssValue.length === 1
+      connect.setPosition(connect.startPosition, connect.endPosition);
+      const expectCssValue: string | null = connect.$element[0].getAttribute('style');
+      const resultCssValue: string = connect.isSinglePointer
         ? `${CssValue[0].attribute}: ${CssValue[0].value};`
         : `${CssValue[0].attribute}: ${CssValue[0].value}; ${CssValue[1].attribute}: ${CssValue[1].value};`;
       expect(expectCssValue).toEqual(resultCssValue);
-      expect(connect.position).toEqual([testStart, testEnd]);
+      expect(connect.position).toEqual([testStartPosition, testEndPosition]);
     });
   });
 });
