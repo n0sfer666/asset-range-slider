@@ -195,6 +195,7 @@ class View {
       );
     }
     this.pointers[index].setPosition(positions[index]);
+    // console.log(this.pointers[index].position);
     this.activePointerIndex = index;
     this.positions = positions;
     this.values = values;
