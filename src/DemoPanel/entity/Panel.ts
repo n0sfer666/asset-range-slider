@@ -229,35 +229,32 @@ class Panel extends Drawing {
 
   handleButtonControlClick(event: JQuery.MouseEventBase) {
     const $target = $(event.target);
-    const isIncrease = this.isSinglePointer;
-    if (isIncrease) {
+    if (this.isSinglePointer) {
       const nextValue = this.config.start[0] + this.config.step;
       if (nextValue <= this.config.range[1]) {
-        this.inputs.$start.push(
-          this.getConfigInputElement(nextValue, 1, 'start')
-            .on('focusout', this.handleInputFocusout),
-        );
-        this.inputs.$start[1].insertBefore(this.$buttonPointerCountControl);
-        this.inputs.$control.push(
-          this.getConfigInputElement(nextValue, 1, 'control')
-            .on('focusout', this.handleInputFocusout),
-        );
-        this.inputs.$control[1].insertAfter(this.inputs.$control[0]);
         this.config.start.push(nextValue);
-        this.rebuildSlider();
         $target.text('-');
         this.isSinglePointer = false;
       }
     } else {
-      this.inputs.$start[1].remove();
-      this.inputs.$start.pop();
-      this.inputs.$control[1].remove();
-      this.inputs.$control.pop();
       this.config.start.pop();
-      this.rebuildSlider();
       $target.text('+');
       this.isSinglePointer = true;
     }
+    this.containers.$control.find('input[type=text]').remove();
+    this.containers.$start.find('input').remove();
+    this.inputs.$control = this.config.start.map(
+      (value, index) => this.getConfigInputElement(value, index)
+        .insertBefore(this.$inputCheckboxTooltip),
+    );
+    this.inputs.$start = this.config.start.map(
+      (value, index) => this.getConfigInputElement(value, index, 'start')
+        .insertBefore(this.$buttonPointerCountControl),
+    );
+    if (this.config.input) {
+      this.config.input.$value = this.inputs.$control;
+    }
+    this.rebuildSlider();
   }
 
   bindContext() {
