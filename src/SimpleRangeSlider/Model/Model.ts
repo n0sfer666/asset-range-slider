@@ -39,10 +39,10 @@ class Model {
 
   getNewValue(viewData: tViewData): number {
     const { index, position, value } = viewData;
-    if (position === 0) {
+    if (position === 0 || value === this.range[0]) {
       return this.range[0];
     }
-    if (position === 1) {
+    if (position === 1 || value === this.range[1]) {
       return this.range[1];
     }
     const newValue: number = value || this.getValueFromPosition(position || NaN);
@@ -65,10 +65,7 @@ class Model {
     const rightBoundary = this.value[index] + (this.step / 2);
     const isOutOfRange = newValue < this.range[0] || newValue > this.range[1];
     const isOutOfBoundary = newValue >= rightBoundary || newValue <= leftBoundary;
-    const resultValue = newValue > 0
-      ? (Math.ceil(newValue / this.step) * this.step)
-      : (Math.floor(newValue / this.step) * this.step);
-    const lastValue = this.value[index];
+    const resultValue = Math.round(newValue / this.step) * this.step;
 
     if (!isOutOfRange && isOutOfBoundary) {
       this.value[index] = resultValue;
