@@ -39,12 +39,6 @@ class Model {
 
   getNewValue(viewData: tViewData): number {
     const { index, position, value } = viewData;
-    // if (position === 0 || value === this.range[0]) {
-    //   return this.range[0];
-    // }
-    // if (position === 1 || value === this.range[1]) {
-    //   return this.range[1];
-    // }
     if (position) {
       if (position <= 0) {
         return this.range[0];
