@@ -8,39 +8,17 @@ function makeRandomNumber(min: number, max: number): number {
 
 describe('Model.ts', () => {
   let testModelData: tModelData = {
-    index: 0,
-    positions: [0],
-    values: [0],
+    index: -1e8,
+    positions: [-1e8],
+    values: [-1e8],
   };
   const normalizingCoefficient = 1e4;
   const testCallback: iModelCallback = (modelData: tModelData) => {
     testModelData = modelData;
   };
-  // const viewData: tViewData[] = [
-  //   {
-  //     position: makeRandomNumber(-10, 0),
-  //     index: makeRandomNumber(0, 1),
-  //   },
-  //   {
-  //     position: makeRandomNumber(0, 10),
-  //     index: makeRandomNumber(0, 1),
-  //   },
-  //   {
-  //     position: Math.round(Math.random() * normalizingCoefficient) / normalizingCoefficient,
-  //     index: makeRandomNumber(0, 1),
-  //   },
-  //   {
-  //     value: makeRandomNumber(-1e6, -1e5),
-  //     index: makeRandomNumber(0, 1),
-  //   },
-  //   {
-  //     value: makeRandomNumber(1e6, 1e5),
-  //     index: makeRandomNumber(0, 1),
-  //   }
-  // ]
   const testConfigs: iConfigModel[] = [
     {
-      range: [0, 100],
+      range: [-10, 100],
       start: [50],
       step: 1,
     },
@@ -93,32 +71,117 @@ describe('Model.ts', () => {
       const testPosition = Math.round(
         Math.random() * normalizingCoefficient,
       ) / normalizingCoefficient + makeRandomNumber(-1, 1);
-      const testValue = makeRandomNumber(range[0] * 1.5, range[1] * 1.5);
+      const testValue = makeRandomNumber(range[0] - 5, range[1] + 5);
       const testViewData: tViewData[] = [
         {
           position: testPosition,
-          index: makeRandomNumber(0, 1),
+          index: Math.round(Math.random()),
         },
         {
           value: testValue,
-          index: makeRandomNumber(0, 1),
+          index: Math.round(Math.random()),
         },
       ];
       testViewData.forEach((viewData) => {
         let expectResult: number = 0;
         const { index, position, value } = viewData;
-        if (position === 0) {
-          expectResult = range[0];
-        }
-        if (position === 1) {
-          expectResult = range[1];
-        }
         const newValue = value || modelInstance.getValueFromPosition(position || NaN);
-        const isTwoPointerSlider = modelInstance.value[1] !== undefined;
-        const rightBoundary = modelInstance.value[1] - modelInstance.step;
-        const leftBoundary = modelInstance.value[0] + modelInstance.step;
+        const isTwoPointerSlider = modelInstance.values[1] !== undefined;
+        const rightBoundary = modelInstance.values[1] - modelInstance.step;
+        const leftBoundary = modelInstance.values[0] + modelInstance.step;
         const isValueOfLeftPointerBiggerThanRight = newValue > rightBoundary;
         const isValueOfRightPointerSmallerThanLeft = newValue < leftBoundary;
+        if (index === 0 && isTwoPointerSlider) {
+          expectResult = isValueOfLeftPointerBiggerThanRight
+            ? rightBoundary
+            : newValue;
+        }
+        if (index === 1) {
+          expectResult = isValueOfRightPointerSmallerThanLeft
+            ? leftBoundary
+            : newValue;
+        }
+        if (index === 0 && !isTwoPointerSlider) {
+          expectResult = newValue;
+        }
+        if (position) {
+          if (position <= 0) {
+            expectResult = range[0];
+          }
+          if (position >= 1) {
+            expectResult = range[1];
+          }
+        }
+        if (value) {
+          if (value <= range[0]) {
+            expectResult = range[0];
+          }
+          if (value >= range[1]) {
+            expectResult = range[1];
+          }
+        }
+        const testResult = modelInstance.getNewValue(viewData);
+        expect(expectResult).toBe(testResult);
+      });
+    });
+  });
+
+  test('setValueAndPosition(newValue, index)', () => {
+    testModels.forEach((modelInstance) => {
+      const {
+        values, step, positions, range,
+      } = modelInstance;
+      const maxIndex = values.length - 1;
+      const randomIndex = Math.round(Math.random());
+      const index = randomIndex <= maxIndex ? randomIndex : maxIndex;
+      const newValue = makeRandomNumber(range[0] * 1.5, range[1] * 1.5);
+      const leftBoundary = values[index] - (step / 2);
+      const rightBoundary = values[index] + (step / 2);
+      const isOutOfRange = newValue < range[0] || newValue > range[1];
+      const isOutOfBoundary = newValue >= rightBoundary || newValue <= leftBoundary;
+      const expectValue = !isOutOfRange && isOutOfBoundary
+        ? Math.round(newValue / step) * step
+        : values[index];
+      const expectPosition = !isOutOfRange && isOutOfBoundary
+        ? modelInstance.getPositionFromValue(expectValue)
+        : positions[index];
+      modelInstance.setValueAndPosition(newValue, index);
+      expect(expectValue).toBe(modelInstance.values[index]);
+      expect(expectPosition).toBe(modelInstance.positions[index]);
+    });
+  });
+
+  test('updateByView(viewData)', () => {
+    testModels.forEach((modelInstance) => {
+      const { range, values } = modelInstance;
+      const testPosition = Math.round(
+        Math.random() * normalizingCoefficient,
+      ) / normalizingCoefficient + makeRandomNumber(-1, 1);
+      const testValue = makeRandomNumber(range[0] - 5, range[1] + 5);
+      const maxIndex = values.length - 1;
+      const randomIndex = Math.round(Math.random());
+      const testIndex = randomIndex <= maxIndex ? randomIndex : maxIndex;
+      const testViewData: tViewData[] = [
+        {
+          position: testPosition,
+          index: testIndex,
+        },
+        {
+          value: testValue,
+          index: testIndex,
+        },
+      ];
+      testViewData.forEach((viewData) => {
+        const { index } = viewData;
+        const newValue = modelInstance.getNewValue(viewData);
+        modelInstance.setValueAndPosition(newValue, index);
+        modelInstance.updateByView(viewData);
+        const expectResult: tModelData = {
+          positions: modelInstance.positions,
+          values: modelInstance.values,
+          index,
+        };
+        expect(expectResult).toEqual(testModelData);
       });
     });
   });

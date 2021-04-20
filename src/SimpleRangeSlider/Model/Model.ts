@@ -9,7 +9,7 @@ class Model {
 
   readonly range: tRange;
 
-  value: number[];
+  values: number[];
 
   step: number;
 
@@ -17,10 +17,10 @@ class Model {
 
   constructor(config: iConfigModel) {
     this.config = config;
-    this.value = this.config.start;
+    this.values = this.config.start;
     this.range = this.config.range;
     this.step = this.config.step;
-    this.positions = this.value.map((val) => this.getPositionFromValue(val));
+    this.positions = this.values.map((val) => this.getPositionFromValue(val));
   }
 
   subscribeOn(callback: iModelCallback) {
@@ -56,9 +56,9 @@ class Model {
       }
     }
     const newValue: number = value || this.getValueFromPosition(position || NaN);
-    const isTwoPointerSlider = !!this.value[1];
-    const rightBoundary = this.value[1] - this.step;
-    const leftBoundary = this.value[0] + this.step;
+    const isTwoPointerSlider = !!this.values[1];
+    const rightBoundary = this.values[1] - this.step;
+    const leftBoundary = this.values[0] + this.step;
     const isValueOfLeftPointerBiggerThanRight = newValue > rightBoundary;
     const isValueOfRightPointerSmallerThanLeft = newValue < leftBoundary;
     if (index === 0 && isTwoPointerSlider) {
@@ -71,14 +71,14 @@ class Model {
   }
 
   setValueAndPosition(newValue: number, index: number) {
-    const leftBoundary = this.value[index] - (this.step / 2);
-    const rightBoundary = this.value[index] + (this.step / 2);
+    const leftBoundary = this.values[index] - (this.step / 2);
+    const rightBoundary = this.values[index] + (this.step / 2);
     const isOutOfRange = newValue < this.range[0] || newValue > this.range[1];
     const isOutOfBoundary = newValue >= rightBoundary || newValue <= leftBoundary;
     const resultValue = Math.round(newValue / this.step) * this.step;
 
     if (!isOutOfRange && isOutOfBoundary) {
-      this.value[index] = resultValue;
+      this.values[index] = resultValue;
       this.positions[index] = this.getPositionFromValue(resultValue);
     }
   }
@@ -91,7 +91,7 @@ class Model {
     this.callbackList.forEach(
       (viewCallback: iModelCallback) => viewCallback({
         positions: this.positions,
-        values: this.value,
+        values: this.values,
         index,
       }),
     );
