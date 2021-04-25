@@ -34,12 +34,12 @@
 
 //   test('handleInputTextFocusout()', () => {
 //     const value = makeRandomNumber(1e6, 1e8);
-//     testInstance.setNewValue(value);
-//     testInstance.handleInputTextFocusout();
 //     const expectData: tInputTextData = {
 //       value,
-//       index: testInstance.index,
+//       index: testIndex,
 //     };
+//     testInstance.$element.val(value);
+//     testInstance.$element.focusout();
 //     expect(expectData).toEqual(testInputTextData);
 //   });
 // });
