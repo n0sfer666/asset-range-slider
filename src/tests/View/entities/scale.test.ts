@@ -104,6 +104,3 @@ describe('Scale.ts', () => {
     });
   });
 });
-test('test', () => {
-  expect(true).toBe(true);
-});
