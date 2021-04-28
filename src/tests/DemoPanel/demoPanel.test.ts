@@ -1,5 +1,5 @@
 import DemoPanel from '../../DemoPanel/DemoPanel';
-import Panel from '../../DemoPanel/entity/Panel';
+import Panel from '../../DemoPanel/entities/Panel';
 
 describe('DemoPanel.ts', () => {
   const $testContainer = $(document.createElement('div'));

@@ -1,4 +1,4 @@
-import Panel from './entity/Panel';
+import Panel from './entities/Panel';
 
 class DemoPanel {
   $container: JQuery;
