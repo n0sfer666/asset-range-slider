@@ -1,8 +1,8 @@
 class Drawing {
-  private getDOMElement(typeElement: string, className: string): JQuery {
-    const element: JQuery = jQuery(document.createElement(typeElement));
-    element.addClass(`demo-panel__${className}`);
-    return element;
+  getDOMElement(typeElement: string, className: string): JQuery {
+    const $element: JQuery = jQuery(document.createElement(typeElement));
+    $element.addClass(`demo-panel__${className}`);
+    return $element;
   }
 
   getContainerElement(typeContainer?: tContainer): JQuery {
@@ -43,7 +43,7 @@ class Drawing {
   getConfigInputElement(value: number, index: number, name?: string): JQuery {
     const $input: JQuery = this.getDOMElement('input', 'config-input').val(value);
     $input.prop('type', 'text');
-    $input.prop('name', `${name}-${index}`);
+    $input.prop('name', `${name || 'input'}-${index}`);
 
     return $input;
   }
