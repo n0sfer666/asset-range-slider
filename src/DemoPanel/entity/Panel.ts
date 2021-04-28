@@ -125,7 +125,7 @@ class Panel extends Drawing {
     });
     this.containers.$control.append(this.$inputCheckboxTooltip);
     this.config.input = {
-      $value: this.inputs.$control,
+      $values: this.inputs.$control,
       $tooltip: this.$inputCheckboxTooltip.find('input'),
     };
     this.mainContainers.$main.append(this.mainContainers.$slider, this.mainContainers.$config);
@@ -252,7 +252,7 @@ class Panel extends Drawing {
         .insertBefore(this.$buttonPointerCountControl),
     );
     if (this.config.input) {
-      this.config.input.$value = this.inputs.$control;
+      this.config.input.$values = this.inputs.$control;
     }
     this.rebuildSlider();
   }

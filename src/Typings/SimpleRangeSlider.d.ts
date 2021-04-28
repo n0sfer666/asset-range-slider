@@ -6,7 +6,7 @@ type tValue = [number] | [number, number];
 type tPosition = tValue;
 type tInputType = 'value' | 'tooltip'
 type tConfigInput = {
-  $value?: JQuery[],
+  $values?: JQuery[],
   $tooltip?: JQuery
 }
 type tCssValues = {

@@ -24,7 +24,7 @@ class View {
 
   scale?: Scale;
 
-  inputValue?: InputTextValue[];
+  inputValues?: InputTextValue[];
 
   inputTooltip?: InputCheckboxTooltip;
 
@@ -48,7 +48,7 @@ class View {
     this.bindContext();
     this.$sliderContainer = this.getSliderElement(false);
     this.$slider = this.getSliderElement(true);
-    this.pointers = this.positions.map((pos, index) => this.getPointer(pos, index));
+    this.pointers = this.positions.map((position, index) => this.getPointer(position, index));
     this.tooltips = this.config.tooltip
       ? this.values.map((value) => this.getTooltip(value))
       : undefined;
@@ -65,10 +65,10 @@ class View {
 
   getSliderElement(isContainer: boolean) {
     const className = isContainer ? 'slider' : 'slider-container';
-    const element: JQuery = jQuery(document.createElement('div'));
-    element.addClass(`simple-range-slider__${className}`);
-    element.addClass(`simple-range-slider__${className}_${this.config.orientation}`);
-    return element;
+    const $element: JQuery = jQuery(document.createElement('div'));
+    $element.addClass(`simple-range-slider__${className}`);
+    $element.addClass(`simple-range-slider__${className}_${this.config.orientation}`);
+    return $element;
   }
 
   getPointer(position: number, index: number): Pointer {
@@ -81,18 +81,18 @@ class View {
     return new Tooltip(value, this.config.orientation);
   }
 
-  getConnect(pointer: Pointer[]): Connect {
-    if (pointer.length === 1) {
+  getConnect(pointers: Pointer[]): Connect {
+    if (pointers.length === 1) {
       return new Connect(
         0,
-        pointer[0].position,
+        pointers[0].position,
         this.config.orientation,
         this.isSinglePointer,
       );
     }
     return new Connect(
-      pointer[0].position,
-      pointer[1].position,
+      pointers[0].position,
+      pointers[1].position,
       this.config.orientation,
       this.isSinglePointer,
     );
@@ -106,8 +106,8 @@ class View {
 
   initInputs() {
     if (this.config.input) {
-      if (this.config.input.$value) {
-        this.inputValue = this.config.input.$value.map(($inputValue, index) => {
+      if (this.config.input.$values) {
+        this.inputValues = this.config.input.$values.map(($inputValue, index) => {
           const instance = new InputTextValue($inputValue, this.config.start[index], index);
           instance.subscribeOn(this.updateByInputText);
           return instance;
@@ -163,7 +163,7 @@ class View {
 
   updateByScale(scaleData: tScaleData) {
     const { position } = scaleData;
-    if (this.positions.length === 1) {
+    if (this.isSinglePointer) {
       this.positions[0] = position;
       this.activePointerIndex = 0;
     } else {
@@ -182,8 +182,8 @@ class View {
   updateByModel(modelData: tModelData) {
     const { index, positions, values } = modelData;
     this.switchActivePointer();
-    if (this.inputValue) {
-      this.inputValue[index].setNewValue(values[index]);
+    if (this.inputValues) {
+      this.inputValues[index].setNewValue(values[index]);
     }
     if (this.tooltips) {
       this.tooltips[index].setValue(values[index]);
