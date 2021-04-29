@@ -1,5 +1,5 @@
-import './style/main.css';
-import './style/demoPanel.css';
+import './style/main.scss';
+import './style/demoPanel.scss';
 import DemoPanel from './DemoPanel/DemoPanel';
 
 class Main {

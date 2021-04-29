@@ -25,7 +25,7 @@ module.exports = {
         use: 'ts-loader?configFile=tsconfig.webpack.json',
       },
       {
-        test: /\.css$/,
+        test: /\.scss$/,
         use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
