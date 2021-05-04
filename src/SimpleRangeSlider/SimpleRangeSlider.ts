@@ -42,27 +42,13 @@ class SimpleRangeSlider {
 
   getCompleteConfig(userConfig: iConfigUser, defaultConfig: iCompleteConfig): iCompleteConfig {
     return {
-      orientation: userConfig.orientation === undefined
-        ? defaultConfig.orientation
-        : userConfig.orientation,
-      start: userConfig.start === undefined
-        ? defaultConfig.start
-        : userConfig.start,
-      range: userConfig.range === undefined
-        ? defaultConfig.range
-        : userConfig.range,
-      step: userConfig.step === undefined
-        ? defaultConfig.step
-        : userConfig.step,
-      connect: userConfig.connect === undefined
-        ? defaultConfig.connect
-        : userConfig.connect,
-      tooltip: userConfig.tooltip === undefined
-        ? defaultConfig.tooltip
-        : userConfig.tooltip,
-      scale: userConfig.scale === undefined
-        ? defaultConfig.scale
-        : userConfig.scale,
+      orientation: userConfig.orientation || defaultConfig.orientation,
+      start: userConfig.start || defaultConfig.start,
+      range: userConfig.range || defaultConfig.range,
+      step: userConfig.step || defaultConfig.step,
+      connect: userConfig.connect || defaultConfig.connect,
+      tooltip: userConfig.tooltip || defaultConfig.tooltip,
+      scale: userConfig.scale || defaultConfig.scale,
       input: userConfig.input,
     };
   }
