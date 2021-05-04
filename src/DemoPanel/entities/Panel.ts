@@ -102,20 +102,20 @@ class Panel extends Drawing {
   }
 
   initPanel() {
-    $.each(this.titles, (key, element) => {
+    $.each(this.titles, (key) => {
       if (this.mainContainers[key]) {
         this.mainContainers[key].append(this.titles[key]);
       } else {
         this.containers[key].append(this.titles[key]);
-        this.inputs[key].forEach((inputElement: JQuery) => {
-          const tagName = inputElement.prop('tagName');
+        this.inputs[key].forEach(($input: JQuery) => {
+          const tagName = $input.prop('tagName');
           if (tagName === 'LABEL') {
-            inputElement.find('input[type=radio]').on('click', this.handleRadioClick);
+            $input.find('input[type=radio]').on('click', this.handleRadioClick);
           }
-          if (tagName === 'INPUT') {
-            inputElement.on('focusout', this.handleInputFocusout);
+          if (tagName === 'INPUT' && key !== '$control') {
+            $input.on('focusout', this.handleInputFocusout);
           }
-          this.containers[key].append(inputElement);
+          this.containers[key].append($input);
         });
         this.mainContainers.$config.append(this.containers[key]);
       }
@@ -143,6 +143,7 @@ class Panel extends Drawing {
       const name = $target.prop('name');
       if (name === 'orientation') {
         this.config[name] = $target.parent().text();
+        this.isHorizontal = this.config.orientation === 'horizontal';
       } else {
         this.config[name] = $target.parent().text() === 'enable';
       }
@@ -159,26 +160,24 @@ class Panel extends Drawing {
     switch (name) {
       case 'start': {
         if (this.isSinglePointer) {
-          const isStartOutOfRange = value < this.config.range[0] || value > this.config.range[1];
-          if (!isStartOutOfRange) {
+          const isOutOfRange = value < this.config.range[0] || value > this.config.range[1];
+          if (!isOutOfRange) {
             this.config[name][index] = value;
             this.rebuildSlider();
           } else {
-            console.error('wrong value');
             $target.val(this.config.start[index]);
           }
         } else if (this.config.start[1]) {
-          const isStartOutOfRange = index === 0
+          const isOutOfRange = index === 0
             ? value < this.config.range[0] || value > this.config.start[1]
             : value < this.config.start[0] || value > this.config.range[1];
-          const isEqualAnotherStart = index === 0
+          const isEqualOtherStart = index === 0
             ? value === this.config.start[1]
             : value === this.config.start[0];
-          if (!isStartOutOfRange && !isEqualAnotherStart) {
+          if (!isOutOfRange && !isEqualOtherStart) {
             this.config[name][index] = value;
             this.rebuildSlider();
           } else {
-            console.error('wrong value');
             $target.val(this.config[name][index]);
           }
         }
@@ -196,7 +195,6 @@ class Panel extends Drawing {
             this.config[name][index] = value;
             this.rebuildSlider();
           } else {
-            console.error('wrong value');
             $target.val(this.config[name][index]);
           }
         } else {
@@ -210,15 +208,21 @@ class Panel extends Drawing {
             this.config[name][index] = value;
             this.rebuildSlider();
           } else {
-            console.error('wrong value');
             $target.val(this.config[name][index]);
           }
         }
         break;
       }
       case 'step': {
-        this.config.step = value;
-        this.rebuildSlider();
+        const { range } = this.config;
+        const oneTenthOfRange = Math.ceil((Math.abs(range[0]) + Math.abs(range[1])) / 10);
+        const isCorrectStep = value < oneTenthOfRange && value > 0;
+        if (isCorrectStep) {
+          this.config.step = value;
+          this.rebuildSlider();
+        } else {
+          $target.val(this.config.step);
+        }
         break;
       }
       default: {
