@@ -1,4 +1,3 @@
-import Model from '../../SimpleRangeSlider/Model/Model';
 import Connect from '../../SimpleRangeSlider/View/entities/Connect';
 import InputCheckboxTooltip from '../../SimpleRangeSlider/View/entities/inputs/InputCheckboxTooltip';
 import InputTextValue from '../../SimpleRangeSlider/View/entities/inputs/InputTextValue';
@@ -43,7 +42,7 @@ describe('View.ts', () => {
   $body.append($testContainer);
   if (testConfig.input) {
     if (testConfig.input.$values) {
-      testConfig.input.$values.forEach(($value) => $body.append($value));
+      testConfig.input.$values.forEach(($value: JQuery) => $body.append($value));
     }
     if (testConfig.input.$tooltip) {
       $body.append(testConfig.input.$tooltip);

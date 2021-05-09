@@ -22,17 +22,7 @@ module.exports = {
     '@typescript-eslint',
   ],
   rules: {
-    'no-console': ['off'],
     'import/extensions': ['off'],
-    'no-unused-vars': ['off'],
     'no-undef': ['off'],
-    'func-names': ['off'],
-    'class-methods-use-this': ['off'],
-    'prefer-destructuring': ['error', {
-      array: false,
-      object: true,
-    }, {
-      enforceForRenamedProperties: false,
-    }],
   },
 };

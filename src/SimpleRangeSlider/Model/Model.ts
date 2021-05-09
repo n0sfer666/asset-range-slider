@@ -1,8 +1,6 @@
 class Model {
   readonly normalizingCoefficient: number = 1e4;
 
-  config: iConfigModel;
-
   callbackList: iModelCallback[] = [];
 
   positions: number[];
@@ -16,10 +14,10 @@ class Model {
   activePointerIndex: number = 0;
 
   constructor(config: iConfigModel) {
-    this.config = config;
-    this.values = this.config.start;
-    this.range = this.config.range;
-    this.step = this.config.step;
+    const { range, start, step } = config;
+    this.values = start;
+    this.range = range;
+    this.step = step;
     this.positions = this.values.map((val) => this.getPositionFromValue(val));
   }
 

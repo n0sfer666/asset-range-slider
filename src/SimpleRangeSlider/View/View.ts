@@ -41,8 +41,9 @@ class View {
   constructor($container: JQuery, config: iConfigView, positions: number[]) {
     this.$container = $container;
     this.config = config;
-    this.values = this.config.start;
-    this.range = this.config.range;
+    const { start, range } = config;
+    this.values = start;
+    this.range = range;
     this.positions = positions;
     this.isSinglePointer = this.values.length === 1;
     this.bindContext();

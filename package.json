@@ -31,7 +31,9 @@
   },
   "scripts": {
     "start": "webpack serve",
-    "test": "jest --runInBand"
+    "test": "jest --runInBand",
+    "lint": "eslint src/**/*.ts --ignore-pattern *.d.ts",
+    "lint:fix": "eslint src/**/*.ts --ignore-pattern *.d.ts --fix"
   },
   "repository": {
     "type": "git",

@@ -34,8 +34,8 @@ describe('Model.ts', () => {
 
   test('getPositionFromValue(value)', () => {
     testModels.forEach((modelInstance, index) => {
+      const { range } = modelInstance;
       const testPositions = testConfigs[index].start.map((value) => {
-        const { range } = testConfigs[index];
         const result = (value - range[0]) / (range[1] - range[0]);
         return Math.round(result * normalizingCoefficient) / normalizingCoefficient;
       });
@@ -47,9 +47,9 @@ describe('Model.ts', () => {
   });
 
   test('getValueFromPosition(value)', () => {
-    testModels.forEach((modelInstance, index) => {
+    testModels.forEach((modelInstance) => {
+      const { range } = modelInstance;
       const testValues = modelInstance.positions.map((position) => {
-        const { range } = testConfigs[index];
         const result = (position * (range[1] - range[0]) + range[0]);
         return Math.round(result);
       });
@@ -80,6 +80,7 @@ describe('Model.ts', () => {
       testViewData.forEach((viewData) => {
         let expectResult: number = 0;
         const { index, position, value } = viewData;
+        const [rangeStart, rangeEnd] = range;
         const newValue = value || modelInstance.getValueFromPosition(position || NaN);
         const isTwoPointerSlider = modelInstance.values[1] !== undefined;
         const rightBoundary = modelInstance.values[1] - modelInstance.step;
@@ -101,18 +102,18 @@ describe('Model.ts', () => {
         }
         if (position) {
           if (position <= 0) {
-            expectResult = range[0];
+            expectResult = rangeStart;
           }
           if (position >= 1) {
-            expectResult = range[1];
+            expectResult = rangeEnd;
           }
         }
         if (value) {
           if (value <= range[0]) {
-            expectResult = range[0];
+            expectResult = rangeStart;
           }
           if (value >= range[1]) {
-            expectResult = range[1];
+            expectResult = rangeEnd;
           }
         }
         const testResult = modelInstance.getNewValue(viewData);

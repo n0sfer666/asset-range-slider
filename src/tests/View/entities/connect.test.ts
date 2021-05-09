@@ -17,16 +17,15 @@ describe('Connect.ts', () => {
   const startPosition: number = makeRandomNumber();
   const endPosition: number = makeRandomNumber(startPosition);
   const isSinglePointer: boolean = true;
-  const isNotSinglePointer: boolean = false;
   const connects: Connect[] = [
     new Connect(0, endPosition, 'horizontal', isSinglePointer),
     new Connect(startPosition, endPosition, 'horizontal', isSinglePointer),
     new Connect(0, endPosition, 'vertical', isSinglePointer),
     new Connect(startPosition, endPosition, 'vertical', isSinglePointer),
-    new Connect(0, endPosition, 'horizontal', isNotSinglePointer),
-    new Connect(startPosition, endPosition, 'horizontal', isNotSinglePointer),
-    new Connect(0, endPosition, 'vertical', isNotSinglePointer),
-    new Connect(startPosition, endPosition, 'vertical', isNotSinglePointer),
+    new Connect(0, endPosition, 'horizontal', !isSinglePointer),
+    new Connect(startPosition, endPosition, 'horizontal', !isSinglePointer),
+    new Connect(0, endPosition, 'vertical', !isSinglePointer),
+    new Connect(startPosition, endPosition, 'vertical', !isSinglePointer),
   ];
 
   test('getElement()', () => {
@@ -40,8 +39,8 @@ describe('Connect.ts', () => {
 
   test('setPosition(startPosition, endPosition)', () => {
     connects.forEach((connect) => {
-      const testStartPosition: number = connect.startPosition;
-      const testEndPosition: number = connect.endPosition;
+      const testStartPosition: number = makeRandomNumber();
+      const testEndPosition: number = makeRandomNumber(testStartPosition);
       const start: number = Math.round(testStartPosition * normalizingCoefficient);
       const end: number = Math.round(testEndPosition * normalizingCoefficient);
       const CssValue: tCssValues[] = [{

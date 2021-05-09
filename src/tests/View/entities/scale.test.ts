@@ -10,7 +10,7 @@ describe('Scale.ts', () => {
   const testInstances: Scale[] = orientations.map(
     (orientation) => new Scale(range, orientation),
   );
-  const { valuePipsNumber, emptyPipsNumber } = testInstances[0];
+  const [{ valuePipsNumber, emptyPipsNumber }] = testInstances;
   let testScaleData: tScaleData = {
     position: -1e8,
   };
@@ -29,11 +29,9 @@ describe('Scale.ts', () => {
     $expectElementWithModifier.addClass(`${className}__${elementName}`)
       .addClass(`${className}__${elementName}_${modifierName}`);
 
-    testInstances.forEach((instance) => {
-      expect($expectElement).toEqual(instance.getElement(elementName));
-      expect($expectElementWithModifier)
-        .toEqual(instance.getElement(elementName, modifierName));
-    });
+    expect($expectElement).toEqual(Scale.getElement(elementName));
+    expect($expectElementWithModifier)
+      .toEqual(Scale.getElement(elementName, modifierName));
   });
 
   test('getValues()', () => {
@@ -52,8 +50,8 @@ describe('Scale.ts', () => {
   test('getEmptyPips()', () => {
     const $expectEmptyPips: JQuery[] = [];
     for (let i = 0; i < emptyPipsNumber; i += 1) {
-      const $emptyDash = testInstances[0].getElement('scale-pip-dash', 'empty');
-      $expectEmptyPips.push(testInstances[0].getElement('scale-pip').append($emptyDash));
+      const $emptyDash = Scale.getElement('scale-pip-dash', 'empty');
+      $expectEmptyPips.push(Scale.getElement('scale-pip').append($emptyDash));
     }
     testInstances.forEach((instance) => {
       expect($expectEmptyPips).toEqual(instance.getEmptyPips());
@@ -63,12 +61,12 @@ describe('Scale.ts', () => {
   test('getValuePips()', () => {
     testInstances.forEach((instance) => {
       const $expectValuePips: JQuery[] = instance.values.map((value) => {
-        const $dash = instance.getElement('scale-pip-dash');
-        const $pipValue = instance.getElement('scale-pip-value').text(value);
+        const $dash = Scale.getElement('scale-pip-dash');
+        const $pipValue = Scale.getElement('scale-pip-value').text(value);
         if (instance.orientation === 'vertical') {
-          return instance.getElement('scale-pip').append($pipValue, $dash);
+          return Scale.getElement('scale-pip').append($pipValue, $dash);
         }
-        return instance.getElement('scale-pip').append($dash, $pipValue);
+        return Scale.getElement('scale-pip').append($dash, $pipValue);
       });
       expect($expectValuePips).toEqual(instance.getValuePips());
     });
