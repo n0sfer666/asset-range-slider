@@ -1,5 +1,7 @@
+// eslint-disable-next-line camelcase
+__webpack_base_uri__ = 'http://localhost:9090';
 const Webpack = require('webpack');
-const Copy = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   stats: 'errors-only',
@@ -21,6 +23,10 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.pug$/,
+        use: ['pug-loader'],
+      },
+      {
         test: /\.ts$/,
         use: 'ts-loader?configFile=tsconfig.webpack.json',
       },
@@ -36,13 +42,17 @@ module.exports = {
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
     }),
-    new Copy({
-      patterns: [
-        {
-          from: 'src/page/',
-          to: '',
-        },
-      ],
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: './src/page/index.pug',
     }),
+    // new Copy({
+    //   patterns: [
+    //     {
+    //       from: 'src/page/',
+    //       to: '',
+    //     },
+    //   ],
+    // }),
   ],
 };

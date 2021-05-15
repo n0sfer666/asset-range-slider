@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-unused-vars */
 // types
 type tOrientation = 'horizontal' | 'vertical';
 type tCssClasses = 'slider' | 'tumbler' | 'connect' | 'tooltip';
@@ -86,4 +88,7 @@ interface iInputTextCallback {
 }
 interface iModelCallback {
   (modelData: tModelData): void
+}
+interface JQuery {
+  simpleRangeSlider(config: iConfigUser): JQuery
 }
