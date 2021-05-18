@@ -18,27 +18,13 @@ describe('SimpleRangeSlider.ts', () => {
     scale: true,
   };
   const testCompleteConfig: iCompleteConfig = {
-    orientation: testConfig.orientation === undefined
-      ? testDefaultConfig.orientation
-      : testConfig.orientation,
-    start: testConfig.start === undefined
-      ? testDefaultConfig.start
-      : testConfig.start,
-    range: testConfig.range === undefined
-      ? testDefaultConfig.range
-      : testConfig.range,
-    step: testConfig.step === undefined
-      ? testDefaultConfig.step
-      : testConfig.step,
-    connect: testConfig.connect === undefined
-      ? testDefaultConfig.connect
-      : testConfig.connect,
-    tooltip: testConfig.tooltip === undefined
-      ? testDefaultConfig.tooltip
-      : testConfig.tooltip,
-    scale: testConfig.scale === undefined
-      ? testDefaultConfig.scale
-      : testConfig.scale,
+    orientation: testConfig.orientation || testDefaultConfig.orientation,
+    start: testConfig.start || testDefaultConfig.start,
+    range: testConfig.range || testDefaultConfig.range,
+    step: testConfig.step || testDefaultConfig.step,
+    connect: testConfig.connect || testDefaultConfig.connect,
+    tooltip: testConfig.tooltip || testDefaultConfig.tooltip,
+    scale: testConfig.scale || testDefaultConfig.scale,
     input: testConfig.input,
   };
   const testModelConfig: iConfigModel = {
