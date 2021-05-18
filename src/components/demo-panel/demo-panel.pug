@@ -1,0 +1,21 @@
+include ../radio-block/radio-block
+include ../text-input-block/text-input-block
+include ../control-button/control-button
+
+mixin demo-panel()
+  .demo-panel
+    .demo-panel__slider
+      h2.demo-panel__title Slider:
+      .js-slider
+    .demo-panel__config
+      h2.demo-panel__title Config:
+      .demo-panel__button
+        +control-button
+      +text-input-block({name: 'control'})
+      +text-input-block({name: 'range'})
+      +text-input-block({name: 'start'})
+      +text-input-block({name: 'step'})
+      +radio-block({name: 'orientation'})
+      +radio-block({name: 'tooltip'})
+      +radio-block({name: 'scale'})
+      +radio-block({name: 'connect'})
