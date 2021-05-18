@@ -44,15 +44,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: './src/page/index.pug',
+      template: './src/pages/index.pug',
     }),
-    // new Copy({
-    //   patterns: [
-    //     {
-    //       from: 'src/page/',
-    //       to: '',
-    //     },
-    //   ],
-    // }),
   ],
 };

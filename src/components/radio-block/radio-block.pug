@@ -1,0 +1,11 @@
+mixin radio-block({name = 'change-me'})
+  -
+    const texts = name === 'orientation' || name === 'Orientation'
+      ? ['horizontal', 'vertical']
+      : ['enable', 'disable'];
+  div.radio-block
+    h3.radio-block__title #{name}
+    each text in texts
+      label.radio-block__label
+        input(type = 'radio', class = 'radio-block__radio', name = name)
+        span.radio-block__label-text #{text}
