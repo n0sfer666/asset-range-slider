@@ -1,0 +1,40 @@
+.text-input-block {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border: 2px dotted #bc9cff;
+  padding: 5px;
+  box-sizing: border-box;
+
+  &__title {
+    width: 100%;
+    margin-bottom: 8px;
+    font-size: 15px;
+  }
+
+  &__input {
+    width: 80px;
+    height: 20px;
+    border: 1px dotted blue;
+    border-radius: 5px;
+  }
+
+  &__label {
+    cursor: pointer;
+    display: inline-block;
+
+    &-text {
+      vertical-align: 35%;
+      font-size: 15px;
+      line-height: 15px;
+    }
+  }
+
+  &__checkbox {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+  }
+}
