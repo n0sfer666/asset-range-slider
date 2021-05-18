@@ -3,9 +3,9 @@ import SimpleRangeSlider from './SimpleRangeSlider/SimpleRangeSlider';
 function importAll(r: any) {
   r.keys().forEach(r);
 }
-
 importAll(require.context('./style', true, /\.scss/));
 importAll(require.context('./components', true, /\.scss/));
+
 // eslint-disable-next-line func-names
 (function ($: JQueryStatic) {
   $.fn.extend({
