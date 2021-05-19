@@ -3,11 +3,11 @@ include ../text-input-block/text-input-block
 include ../control-button/control-button
 
 mixin demo-panel()
-  .demo-panel
+  .demo-panel.js-demo-panel
     .demo-panel__slider
       h2.demo-panel__title Slider:
       .js-slider
-    .demo-panel__config
+    .demo-panel__config.js-demo-panel__config
       h2.demo-panel__title Config:
       .demo-panel__button
         +control-button

@@ -1,3 +1,4 @@
+import DemoPanel from './components/demo-panel/demo-panel';
 import SimpleRangeSlider from './SimpleRangeSlider/SimpleRangeSlider';
 
 function importAll(r: any) {
@@ -18,4 +19,9 @@ importAll(require.context('./components', true, /\.scss/));
 }(jQuery));
 
 jQuery(document).ready(() => {
+  const demoPanel: DemoPanel[] = [];
+  const $demoPanels = $('.js-demo-panel');
+  $.each($demoPanels, (_, element) => {
+    demoPanel.push(new DemoPanel($(element)));
+  });
 });

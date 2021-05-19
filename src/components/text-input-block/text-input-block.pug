@@ -4,10 +4,10 @@ mixin text-input-block({name = 'control'})
     const isRange = name === 'range'
   .text-input-block
     h3.text-input-block__title #{name}
-    input(type = 'text', class = 'text-input-block__input', name = `${name}-0`)
+    input(type = 'text', class = 'text-input-block__input js-text-input-block__input', name = `${name}-0`)
     if (isRange)
-      input(type = 'text', class = 'text-input-block__input', name = `${name}-1`)
+      input(type = 'text', class = 'text-input-block__input js-text-input-block__input', name = `${name}-1`)
     if (isControl)
       label.text-input-block__label
-        input(type='checkbox', class = 'text-input-block__checkbox')
+        input(type='checkbox', class = 'text-input-block__checkbox js-text-input-block__checkbox', name = 'tooltip')
         span.text-input-block__label-text show/hidden tooltip(s)
