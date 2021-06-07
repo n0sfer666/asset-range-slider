@@ -29,6 +29,7 @@ class SimpleRangeSlider {
     );
     this.view = new View(this.$container, viewConfig, positions);
     this.presenter = new Presenter(this.view, this.model);
+    this.config = completeConfig;
   }
 
   static getDefaultConfig(): iCompleteConfig {

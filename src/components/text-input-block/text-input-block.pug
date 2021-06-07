@@ -2,12 +2,14 @@ mixin text-input-block({name = 'control'})
   -
     const isControl = name === 'control'
     const isRange = name === 'range'
-  .text-input-block
+    const className = 'text-input-block'
+    const blockClassName = isControl ? `${className} ${className}_isControl js-${className}` : `${className} js-${className}`
+  div(class = blockClassName, data-configuration-name = name)
     h3.text-input-block__title #{name}
-    input(type = 'text', class = 'text-input-block__input js-text-input-block__input', name = `${name}-0`)
+    input(type = 'text', class = `${className}__input js-${className}__input`, name = name, data-index = 0)
     if (isRange)
-      input(type = 'text', class = 'text-input-block__input js-text-input-block__input', name = `${name}-1`)
+      input(type = 'text', class = `${className}__input js-${className}__input`, name = name, data-index = 1)
     if (isControl)
       label.text-input-block__label
-        input(type='checkbox', class = 'text-input-block__checkbox js-text-input-block__checkbox', name = 'tooltip')
+        input(type='checkbox', class = `${className}__checkbox js-${className}__checkbox`, name = 'tooltip')
         span.text-input-block__label-text show/hidden tooltip(s)
