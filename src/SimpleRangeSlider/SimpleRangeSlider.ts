@@ -53,9 +53,9 @@ class SimpleRangeSlider {
       start: userConfig.start || defaultConfig.start,
       range: userConfig.range || defaultConfig.range,
       step: userConfig.step || defaultConfig.step,
-      connect: userConfig.connect || defaultConfig.connect,
-      tooltip: userConfig.tooltip || defaultConfig.tooltip,
-      scale: userConfig.scale || defaultConfig.scale,
+      connect: userConfig.connect === undefined ? defaultConfig.connect : userConfig.connect,
+      tooltip: userConfig.tooltip === undefined ? defaultConfig.tooltip : userConfig.tooltip,
+      scale: userConfig.scale === undefined ? defaultConfig.scale : userConfig.scale,
       input: userConfig.input,
     };
   }
