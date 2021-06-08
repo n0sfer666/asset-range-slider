@@ -63,8 +63,7 @@ class RadioBlock {
   rebuildSlider() {
     this.$sliderContainer.empty();
     this.sliderConfig[this.configurationName] = this.configurationValue;
-    const config: iConfigUser = this.sliderConfig;
-    this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, config);
+    this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, this.sliderConfig);
   }
 }
 
