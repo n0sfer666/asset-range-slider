@@ -67,6 +67,10 @@ class Pointer {
       : event.clientY - elementOffset.top;
   }
 
+  getNormalizePosition(position: number): number {
+    return (Math.round(position * this.normalizingCoefficient) / this.normalizingCoefficient);
+  }
+
   handlePointerMouseDown(event: JQuery.MouseEventBase) {
     event.preventDefault();
     this.shift = this.getShift(event);
@@ -89,14 +93,7 @@ class Pointer {
       : event.clientY;
     const newPosition: number = cursorPosition - this.shift - this.boundingClientRect;
     const newPositionInPercent: number = newPosition / this.containerOffsetSize;
-    if (newPositionInPercent > 1) {
-      this.position = 1;
-    } else if (newPositionInPercent < 0) {
-      this.position = 0;
-    } else {
-      this.position = Math.round(newPositionInPercent * this.normalizingCoefficient)
-        / this.normalizingCoefficient;
-    }
+    this.position = this.getNormalizePosition(newPositionInPercent);
     this.callbackList.forEach((callback) => callback({
       index: this.index,
       position: this.position,

@@ -11,6 +11,8 @@ class Model {
 
   step: number;
 
+  isSinglePointer: boolean
+
   activePointerIndex: number = 0;
 
   constructor(config: iConfigModel) {
@@ -18,6 +20,7 @@ class Model {
     this.values = start;
     this.range = range;
     this.step = step;
+    this.isSinglePointer = start.length === 1;
     this.positions = this.values.map((val) => this.getPositionFromValue(val));
   }
 
@@ -37,29 +40,28 @@ class Model {
 
   getNewValue(viewData: tViewData): number {
     const { index, position, value } = viewData;
-    if (position) {
-      if (position <= 0.0000001) {
+    if (position !== undefined) {
+      if (position <= 0) {
         return this.range[0];
       }
       if (position >= 1) {
         return this.range[1];
       }
     }
-    if (value) {
+    if (value !== undefined) {
       if (value <= this.range[0]) {
-        return this.range[0] === 0 ? 0 : this.range[0];
+        return this.range[0];
       }
       if (value >= this.range[1]) {
-        return this.range[1] === 0 ? 0 : this.range[1];
+        return this.range[1];
       }
     }
     const newValue: number = value || this.getValueFromPosition(position || 0);
-    const isTwoPointerSlider = !!this.values[1];
     const rightBoundary = this.values[1] - this.step;
     const leftBoundary = this.values[0] + this.step;
     const isValueOfLeftPointerBiggerThanRight = newValue > rightBoundary;
     const isValueOfRightPointerSmallerThanLeft = newValue < leftBoundary;
-    if (index === 0 && isTwoPointerSlider) {
+    if (index === 0 && !this.isSinglePointer) {
       return isValueOfLeftPointerBiggerThanRight ? rightBoundary : newValue;
     }
     if (index === 1) {
