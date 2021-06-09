@@ -7,6 +7,8 @@ class SimpleRangeSlider {
 
   config: iConfigUser;
 
+  completeConfig: iCompleteConfig;
+
   view: View;
 
   model: Model;
@@ -17,19 +19,19 @@ class SimpleRangeSlider {
     this.$container = $container;
     this.config = config;
     const defaultConfig: iCompleteConfig = SimpleRangeSlider.getDefaultConfig();
-    const completeConfig: iCompleteConfig = SimpleRangeSlider.getCompleteConfig(
+    this.completeConfig = SimpleRangeSlider.getCompleteConfig(
       this.config,
       defaultConfig,
     );
-    const modelConfig: iConfigModel = SimpleRangeSlider.getModelConfig(completeConfig);
-    const viewConfig: iConfigView = SimpleRangeSlider.getViewConfig(completeConfig);
+    const modelConfig: iConfigModel = SimpleRangeSlider.getModelConfig(this.completeConfig);
+    const viewConfig: iConfigView = SimpleRangeSlider.getViewConfig(this.completeConfig);
     this.model = new Model(modelConfig);
-    const positions: number[] = completeConfig.start.map(
+    const positions: number[] = this.completeConfig.start.map(
       (value) => this.model.getPositionFromValue(value),
     );
     this.view = new View(this.$container, viewConfig, positions);
     this.presenter = new Presenter(this.view, this.model);
-    this.config = completeConfig;
+    this.config = this.completeConfig;
   }
 
   static getDefaultConfig(): iCompleteConfig {

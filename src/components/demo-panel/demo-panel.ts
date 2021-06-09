@@ -1,4 +1,5 @@
 import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
+import ControlButton from '../control-button/control-button';
 import RadioBlock from '../radio-block/radio-block';
 import TextInput from '../text-input-block/text-input-block';
 
@@ -8,6 +9,8 @@ class DemoPanel {
   readonly textInputBlockClass = 'text-input-block'
 
   readonly radioBlockClass = 'radio-block'
+
+  readonly controlButtonBlockClass = 'control-button'
 
   $mainContainer: JQuery
 
@@ -25,13 +28,20 @@ class DemoPanel {
 
   radioBlocks: RadioBlock[] = []
 
+  controlButton: ControlButton
+
   constructor($container: JQuery) {
     this.$mainContainer = $container;
     this.$sliderContainer = this.$mainContainer.find(`.js-${this.mainBlockClass}__slider`);
     this.$configContainer = this.$mainContainer.find(`.js-${this.mainBlockClass}__config`);
+    const $control = this.$configContainer.find(`.js-${this.textInputBlockClass}__input[name="control"]`);
+    const $values: JQuery[] = [];
+    $.each($control, (_, element) => {
+      $values.push($(element));
+    });
     this.sliderConfig = {
       input: {
-        $values: [this.$configContainer.find(`.js-${this.textInputBlockClass}__input[name="control"]`)],
+        $values,
         $tooltip: this.$configContainer.find(`.js-${this.textInputBlockClass}__checkbox[name="tooltip"`),
       },
     };
@@ -59,6 +69,12 @@ class DemoPanel {
         ),
       );
     });
+    this.controlButton = new ControlButton(
+      $(`.js-${this.controlButtonBlockClass}`),
+      $(`.js-${this.textInputBlockClass}__input[name="start"][data-index="1"]`),
+      this.controlButtonBlockClass,
+      this.sliderInstance,
+    );
   }
 }
 

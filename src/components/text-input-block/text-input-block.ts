@@ -9,7 +9,7 @@ class TextInput {
 
   $sliderContainer: JQuery
 
-  sliderConfig: iObject
+  sliderConfig: iCompleteConfig
 
   isSinglePointer: boolean
 
@@ -29,12 +29,15 @@ class TextInput {
     this.blockClass = blockClass;
     this.sliderInstance = sliderInstance;
     this.$sliderContainer = sliderInstance.$container;
-    this.sliderConfig = this.sliderInstance.config;
+    this.sliderConfig = this.sliderInstance.completeConfig;
     this.isSinglePointer = isSinglePointer;
     this.$mainContainer.find(`.js-${this.blockClass}__input`).each((_, element) => {
       this.inputs.push($(element));
     });
     this.configurationName = $container.data('configuration-name');
+    if (this.configurationName === 'start') {
+      this.inputs[1].hide();
+    }
     this.configurationValue = sliderInstance.config[this.configurationName];
     this.inputs.forEach((input, index) => {
       $(input).val(
@@ -55,7 +58,8 @@ class TextInput {
     switch (this.configurationName) {
       case 'step': {
         const isTooBigStep = value > Math.round((Math.abs(range[0]) + Math.abs(range[1])) / 10);
-        if (!isTooBigStep) {
+        const isZero = value === 0;
+        if (!isTooBigStep && !isZero) {
           this.sliderConfig.step = value;
           this.rebuildSlider();
         } else {
@@ -74,10 +78,10 @@ class TextInput {
             $target.val();
           }
         } else {
-          const isOutOfRange = index === 0
+          const isOutOfRange = start[1]
             ? value < range[0] || value > start[1]
             : value < start[0] || value > range[1];
-          const isEqualOtherStart = index === 0
+          const isEqualOtherStart = start[1]
             ? value === start[1]
             : value === start[0];
           if (!isOutOfRange && !isEqualOtherStart) {

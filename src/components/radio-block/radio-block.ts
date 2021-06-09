@@ -9,7 +9,7 @@ class RadioBlock {
 
   $sliderContainer: JQuery
 
-  sliderConfig: iObject
+  sliderConfig: iCompleteConfig
 
   configurationName: string
 
@@ -22,7 +22,7 @@ class RadioBlock {
     this.blockClass = blockClass;
     this.sliderInstance = sliderInstance;
     this.$sliderContainer = sliderInstance.$container;
-    this.sliderConfig = this.sliderInstance.config;
+    this.sliderConfig = this.sliderInstance.completeConfig;
     this.configurationName = this.$mainContainer.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
     this.$mainContainer.find(`.js-${blockClass}__label`).each((_, element) => {
