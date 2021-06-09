@@ -27,10 +27,8 @@ class InputTextValue {
 
   handleInputTextFocusout() {
     const value: number = Number(this.$element.val());
-    this.callbackList.forEach((callback) => callback({
-      value,
-      index: this.index,
-    }));
+    const { index } = this;
+    this.callbackList.forEach((callback) => callback({ value, index }));
   }
 
   bindContext() {

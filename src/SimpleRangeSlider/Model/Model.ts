@@ -38,7 +38,7 @@ class Model {
   getNewValue(viewData: tViewData): number {
     const { index, position, value } = viewData;
     if (position) {
-      if (position <= 0) {
+      if (position <= 0.0000001) {
         return this.range[0];
       }
       if (position >= 1) {
@@ -47,13 +47,13 @@ class Model {
     }
     if (value) {
       if (value <= this.range[0]) {
-        return this.range[0];
+        return this.range[0] === 0 ? 0 : this.range[0];
       }
       if (value >= this.range[1]) {
-        return this.range[1];
+        return this.range[1] === 0 ? 0 : this.range[1];
       }
     }
-    const newValue: number = value || this.getValueFromPosition(position || NaN);
+    const newValue: number = value || this.getValueFromPosition(position || 0);
     const isTwoPointerSlider = !!this.values[1];
     const rightBoundary = this.values[1] - this.step;
     const leftBoundary = this.values[0] + this.step;
