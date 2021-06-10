@@ -1,7 +1,7 @@
 class Pointer {
-  readonly $container: JQuery;
-
   readonly normalizingCoefficient: number = 1e4;
+
+  $container: JQuery;
 
   $document: JQuery.PlainObject;
 

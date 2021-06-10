@@ -1,15 +1,15 @@
 class Model {
   readonly normalizingCoefficient: number = 1e4;
 
+  readonly range: tRange;
+
+  readonly step: number;
+
   callbackList: iModelCallback[] = [];
 
   positions: number[];
 
-  readonly range: tRange;
-
   values: number[];
-
-  step: number;
 
   isSinglePointer: boolean
 
