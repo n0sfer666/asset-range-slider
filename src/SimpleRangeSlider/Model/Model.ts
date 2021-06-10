@@ -40,23 +40,25 @@ class Model {
 
   getNewValue(viewData: tViewData): number {
     const { index, position, value } = viewData;
-    if (position !== undefined) {
+    let newValue = 0;
+    if (position || position === 0) {
       if (position <= 0) {
         return this.range[0];
       }
       if (position >= 1) {
         return this.range[1];
       }
+      newValue = this.getValueFromPosition(position);
     }
-    if (value !== undefined) {
+    if (value || value === 0) {
       if (value <= this.range[0]) {
         return this.range[0];
       }
       if (value >= this.range[1]) {
         return this.range[1];
       }
+      newValue = value;
     }
-    const newValue: number = value || this.getValueFromPosition(position || 0);
     const rightBoundary = this.values[1] - this.step;
     const leftBoundary = this.values[0] + this.step;
     const isValueOfLeftPointerBiggerThanRight = newValue > rightBoundary;
@@ -73,11 +75,10 @@ class Model {
   setValueAndPosition(newValue: number, index: number) {
     const leftBoundary = this.values[index] - (this.step / 2);
     const rightBoundary = this.values[index] + (this.step / 2);
-    const isOutOfRange = newValue < this.range[0] || newValue > this.range[1];
     const isOutOfBoundary = newValue >= rightBoundary || newValue <= leftBoundary;
     const resultValue = Math.round(newValue / this.step) * this.step;
 
-    if (!isOutOfRange && isOutOfBoundary) {
+    if (isOutOfBoundary) {
       this.values[index] = resultValue;
       this.positions[index] = this.getPositionFromValue(resultValue);
     }
