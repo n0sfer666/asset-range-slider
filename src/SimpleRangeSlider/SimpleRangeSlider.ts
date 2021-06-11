@@ -31,7 +31,6 @@ class SimpleRangeSlider {
     );
     this.view = new View(this.$container, viewConfig, positions);
     this.presenter = new Presenter(this.view, this.model);
-    this.config = this.completeConfig;
   }
 
   static getDefaultConfig(): iCompleteConfig {
@@ -80,6 +79,19 @@ class SimpleRangeSlider {
       scale: completeConfig.scale,
       input: completeConfig.input,
     };
+  }
+
+  rebuildSlider(config: iCompleteConfig) {
+    this.$container.empty();
+    this.completeConfig = config;
+    const modelConfig: iConfigModel = SimpleRangeSlider.getModelConfig(this.completeConfig);
+    const viewConfig: iConfigView = SimpleRangeSlider.getViewConfig(this.completeConfig);
+    this.model = new Model(modelConfig);
+    const positions: number[] = this.completeConfig.start.map(
+      (value) => this.model.getPositionFromValue(value),
+    );
+    this.view = new View(this.$container, viewConfig, positions);
+    this.presenter = new Presenter(this.view, this.model);
   }
 }
 

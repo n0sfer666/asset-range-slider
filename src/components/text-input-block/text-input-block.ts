@@ -38,7 +38,7 @@ class TextInput {
     if (this.configurationName === 'start' && isSinglePointer) {
       this.inputs[1].hide();
     }
-    this.configurationValue = sliderInstance.config[this.configurationName];
+    this.configurationValue = sliderInstance.completeConfig[this.configurationName];
     this.inputs.forEach((input, index) => {
       $(input).val(
         Array.isArray(this.configurationValue)
@@ -61,7 +61,7 @@ class TextInput {
         const isZero = value === 0;
         if (!isTooBigStep && !isZero) {
           this.sliderConfig.step = value;
-          this.rebuildSlider();
+          this.sliderInstance.rebuildSlider(this.sliderConfig);
         } else {
           this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.step);
         }
@@ -72,7 +72,7 @@ class TextInput {
           const isOutOfRange = value < range[0] || value > range[1];
           if (!isOutOfRange) {
             this.sliderConfig.start[index] = value;
-            this.rebuildSlider();
+            this.sliderInstance.rebuildSlider(this.sliderConfig);
           } else {
             this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
             $target.val();
@@ -86,7 +86,7 @@ class TextInput {
             : value === start[0];
           if (!isOutOfRange && !isEqualOtherStart) {
             this.sliderConfig.start[index] = value;
-            this.rebuildSlider();
+            this.sliderInstance.rebuildSlider(this.sliderConfig);
           } else {
             this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
           }
@@ -103,7 +103,7 @@ class TextInput {
             : value < start[0];
           if (!isOutOfStart && !isEqualOtherRange) {
             this.sliderConfig.range[index] = value;
-            this.rebuildSlider();
+            this.sliderInstance.rebuildSlider(this.sliderConfig);
           } else {
             this.blinkInputAndReturnPreviousValue($target, range[index]);
           }
@@ -113,7 +113,7 @@ class TextInput {
             : value < start[index];
           if (!isOutOfStart && !isEqualOtherRange) {
             this.sliderConfig.range[index] = value;
-            this.rebuildSlider();
+            this.sliderInstance.rebuildSlider(this.sliderConfig);
           } else {
             this.blinkInputAndReturnPreviousValue($target, range[index]);
           }
@@ -133,11 +133,6 @@ class TextInput {
 
   bindContext() {
     this.handleInputFocusOut = this.handleInputFocusOut.bind(this);
-  }
-
-  rebuildSlider() {
-    this.$sliderContainer.empty();
-    this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, this.sliderConfig);
   }
 
   // eslint-disable-next-line class-methods-use-this

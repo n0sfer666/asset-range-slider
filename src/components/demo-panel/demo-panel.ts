@@ -46,7 +46,7 @@ class DemoPanel {
       },
     };
     this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, this.sliderConfig);
-    this.sliderConfig = this.sliderInstance.config;
+    this.sliderConfig = this.sliderInstance.completeConfig;
     this.isSinglePointer = this.sliderConfig.start?.length === 1;
     $(`.js-${this.textInputBlockClass}`).each((_, element) => {
       if (!$(element).hasClass(`${this.textInputBlockClass}_isControl`)) {

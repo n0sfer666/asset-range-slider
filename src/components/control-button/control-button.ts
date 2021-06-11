@@ -50,7 +50,7 @@ class ControlButton {
         if (start[1]) {
           this.$secondStart.show().val(start[1]);
         }
-        this.rebuildSlider();
+        this.sliderInstance.rebuildSlider(this.sliderConfig);
         this.$text.text('remove pointer');
       }
     } else {
@@ -60,7 +60,7 @@ class ControlButton {
         this.sliderConfig.input.$values[1].hide();
       }
       this.$secondStart.hide().val('');
-      this.rebuildSlider();
+      this.sliderInstance.rebuildSlider(this.sliderConfig);
       this.$text.text('add pointer');
     }
   }
@@ -71,11 +71,6 @@ class ControlButton {
 
   bindHandlers() {
     this.$container.on('click', this.handleButtonClick);
-  }
-
-  rebuildSlider() {
-    this.$sliderContainer.empty();
-    this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, this.sliderConfig);
   }
 }
 

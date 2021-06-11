@@ -45,25 +45,19 @@ class RadioBlock {
       : $target.data('text') === 'enable';
     if (value !== this.configurationValue) {
       this.configurationValue = value;
-      this.rebuildSlider();
+      this.sliderConfig[this.configurationName] = this.configurationValue;
+      this.sliderInstance.rebuildSlider(this.sliderConfig);
     }
   }
 
   bindContext() {
     this.handleRadioClick = this.handleRadioClick.bind(this);
-    this.rebuildSlider = this.rebuildSlider.bind(this);
   }
 
   bindHandlers() {
     this.radioBlocks.forEach(($element) => {
       $element.on('click', this.handleRadioClick);
     });
-  }
-
-  rebuildSlider() {
-    this.$sliderContainer.empty();
-    this.sliderConfig[this.configurationName] = this.configurationValue;
-    this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, this.sliderConfig);
   }
 }
 
