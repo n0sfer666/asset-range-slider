@@ -55,73 +55,78 @@ class TextInput {
     const { range, start } = this.sliderConfig;
     const value = Number($target.val());
     const index = Number($target.data('index'));
-    switch (this.configurationName) {
-      case 'step': {
-        const isTooBigStep = value > Math.round((Math.abs(range[0]) + Math.abs(range[1])) / 10);
-        const isZero = value === 0;
-        if (!isTooBigStep && !isZero) {
-          this.sliderConfig.step = value;
-          this.sliderInstance.rebuildSlider(this.sliderConfig);
-        } else {
-          this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.step);
+    const isNotEqualPrevious = Array.isArray(this.configurationValue)
+      ? value !== this.configurationValue[index]
+      : value !== this.configurationValue;
+    if (isNotEqualPrevious) {
+      switch (this.configurationName) {
+        case 'step': {
+          const isTooBigStep = value > Math.round((Math.abs(range[0]) + Math.abs(range[1])) / 10);
+          const isZero = value === 0;
+          if (!isTooBigStep && !isZero) {
+            this.sliderConfig.step = value;
+            this.sliderInstance.rebuildSlider(this.sliderConfig);
+          } else {
+            this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.step);
+          }
+          break;
         }
-        break;
-      }
-      case 'start': {
-        if (this.isSinglePointer) {
-          const isOutOfRange = value < range[0] || value > range[1];
-          if (!isOutOfRange) {
-            this.sliderConfig.start[index] = value;
-            this.sliderInstance.rebuildSlider(this.sliderConfig);
+        case 'start': {
+          if (this.isSinglePointer) {
+            const isOutOfRange = value < range[0] || value > range[1];
+            if (!isOutOfRange) {
+              this.sliderConfig.start[index] = value;
+              this.sliderInstance.rebuildSlider(this.sliderConfig);
+            } else {
+              this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
+              $target.val();
+            }
           } else {
-            this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
-            $target.val();
+            const isOutOfRange = start[1]
+              ? value < range[0] || value > start[1]
+              : value < start[0] || value > range[1];
+            const isEqualOtherStart = start[1]
+              ? value === start[1]
+              : value === start[0];
+            if (!isOutOfRange && !isEqualOtherStart) {
+              this.sliderConfig.start[index] = value;
+              this.sliderInstance.rebuildSlider(this.sliderConfig);
+            } else {
+              this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
+            }
           }
-        } else {
-          const isOutOfRange = start[1]
-            ? value < range[0] || value > start[1]
-            : value < start[0] || value > range[1];
-          const isEqualOtherStart = start[1]
-            ? value === start[1]
-            : value === start[0];
-          if (!isOutOfRange && !isEqualOtherStart) {
-            this.sliderConfig.start[index] = value;
-            this.sliderInstance.rebuildSlider(this.sliderConfig);
-          } else {
-            this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
-          }
+          break;
         }
-        break;
-      }
-      case 'range': {
-        const isEqualOtherRange = index === 0
-          ? value === range[1]
-          : value === range[0];
-        if (this.isSinglePointer) {
-          const isOutOfStart = index === 0
-            ? value > start[0]
-            : value < start[0];
-          if (!isOutOfStart && !isEqualOtherRange) {
-            this.sliderConfig.range[index] = value;
-            this.sliderInstance.rebuildSlider(this.sliderConfig);
+        case 'range': {
+          const isEqualOtherRange = index === 0
+            ? value === range[1]
+            : value === range[0];
+          if (this.isSinglePointer) {
+            const isOutOfStart = index === 0
+              ? value > start[0]
+              : value < start[0];
+            if (!isOutOfStart && !isEqualOtherRange) {
+              this.sliderConfig.range[index] = value;
+              this.sliderInstance.rebuildSlider(this.sliderConfig);
+            } else {
+              this.blinkInputAndReturnPreviousValue($target, range[index]);
+            }
           } else {
-            this.blinkInputAndReturnPreviousValue($target, range[index]);
+            const isOutOfStart = index === 0
+              ? value > start[index]
+              : value < start[index];
+            if (!isOutOfStart && !isEqualOtherRange) {
+              this.sliderConfig.range[index] = value;
+              this.sliderInstance.rebuildSlider(this.sliderConfig);
+            } else {
+              this.blinkInputAndReturnPreviousValue($target, range[index]);
+            }
           }
-        } else {
-          const isOutOfStart = index === 0
-            ? value > start[index]
-            : value < start[index];
-          if (!isOutOfStart && !isEqualOtherRange) {
-            this.sliderConfig.range[index] = value;
-            this.sliderInstance.rebuildSlider(this.sliderConfig);
-          } else {
-            this.blinkInputAndReturnPreviousValue($target, range[index]);
-          }
+          break;
         }
-        break;
+        default:
+          break;
       }
-      default:
-        break;
     }
   }
 
