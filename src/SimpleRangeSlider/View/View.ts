@@ -107,8 +107,8 @@ class View {
 
   initInputs() {
     if (this.config.input) {
-      if (this.config.input.$values) {
-        const { $values } = this.config.input;
+      const { $values, $tooltip } = this.config.input;
+      if ($values) {
         this.inputValues = this.config.start.map((startValue, index) => {
           const instance = new InputTextValue($values[index], startValue, index);
           instance.subscribeOn(this.updateByInputText);
@@ -119,8 +119,8 @@ class View {
           $values[1].hide();
         }
       }
-      if (this.config.input.$tooltip && this.tooltips) {
-        this.inputTooltip = new InputCheckboxTooltip(this.config.input.$tooltip, this.tooltips);
+      if ($tooltip && this.tooltips) {
+        this.inputTooltip = new InputCheckboxTooltip($tooltip, this.tooltips);
       }
     }
   }
