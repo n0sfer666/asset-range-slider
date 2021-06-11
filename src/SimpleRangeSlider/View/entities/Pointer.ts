@@ -94,10 +94,8 @@ class Pointer {
     const newPosition: number = cursorPosition - this.shift - this.boundingClientRect;
     const newPositionInPercent: number = newPosition / this.containerOffsetSize;
     this.position = this.getNormalizePosition(newPositionInPercent);
-    this.callbackList.forEach((callback) => callback({
-      index: this.index,
-      position: this.position,
-    }));
+    const { index, position } = this;
+    this.callbackList.forEach((callback) => callback({ index, position }));
   }
 
   handlePointerMouseUp() {

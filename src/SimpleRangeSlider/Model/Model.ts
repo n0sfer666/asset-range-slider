@@ -89,12 +89,9 @@ class Model {
     this.activePointerIndex = index;
     const newValue = this.getNewValue(viewData);
     this.setValueAndPosition(newValue, index);
+    const { positions, values } = this;
     this.callbackList.forEach(
-      (viewCallback: iModelCallback) => viewCallback({
-        positions: this.positions,
-        values: this.values,
-        index,
-      }),
+      (viewCallback: iModelCallback) => viewCallback({ positions, values, index }),
     );
   }
 }

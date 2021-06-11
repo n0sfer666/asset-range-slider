@@ -179,10 +179,8 @@ class View {
       });
       this.activePointerIndex = difference[0] < difference[1] ? 0 : 1;
     }
-    this.callbackList.forEach((modelCallback) => modelCallback({
-      index: this.activePointerIndex,
-      position,
-    }));
+    const index = this.activePointerIndex;
+    this.callbackList.forEach((modelCallback) => modelCallback({ index, position }));
   }
 
   updateByModel(modelData: tModelData) {

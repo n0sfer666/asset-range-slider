@@ -102,8 +102,9 @@ class Scale {
     const targetValue: number = Number($(event.target).text());
     this.values.forEach((value, index) => {
       if (value === targetValue) {
+        const position = this.positions[index];
         this.callbackList.forEach((callback) => {
-          callback({ position: this.positions[index] });
+          callback({ position });
         });
       }
     });
