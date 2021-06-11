@@ -35,7 +35,7 @@ class TextInput {
       this.inputs.push($(element));
     });
     this.configurationName = $container.data('configuration-name');
-    if (this.configurationName === 'start') {
+    if (this.configurationName === 'start' && isSinglePointer) {
       this.inputs[1].hide();
     }
     this.configurationValue = sliderInstance.config[this.configurationName];

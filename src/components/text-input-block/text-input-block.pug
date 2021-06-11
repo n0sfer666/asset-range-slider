@@ -8,10 +8,9 @@ mixin text-input-block({name = 'control'})
   div(class = blockClassName, data-configuration-name = name)
     h3.text-input-block__title #{name}
     input(type = 'text', class = `${className}__input js-${className}__input`, name = name, data-index = 0)
-    if (isRange || isStart)
+    if (isRange || isStart || isControl)
       input(type = 'text', class = `${className}__input js-${className}__input`, name = name, data-index = 1)
-    if (isControl)
-      input(type = 'text', class = `${className}__input js-${className}__input`, name = name, data-index = 1)
-      label.text-input-block__label
-        input(type='checkbox', class = `${className}__checkbox js-${className}__checkbox`, name = 'tooltip')
-        span.text-input-block__label-text show/hidden tooltip(s)
+      if (isControl)
+        label.text-input-block__label
+          input(type='checkbox', class = `${className}__checkbox js-${className}__checkbox`, name = 'tooltip')
+          span.text-input-block__label-text show/hidden tooltip(s)
