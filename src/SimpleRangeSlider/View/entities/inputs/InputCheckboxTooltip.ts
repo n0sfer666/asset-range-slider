@@ -10,6 +10,7 @@ class InputCheckboxTooltip {
     this.tooltips = tooltips;
     this.$element.prop('checked', true);
     this.bindContext();
+    this.unbindHandler();
     this.bindHandlers();
   }
 
@@ -24,6 +25,10 @@ class InputCheckboxTooltip {
 
   bindHandlers() {
     this.$element.on('change', this.handleTooltipCheckboxChange);
+  }
+
+  unbindHandler() {
+    this.$element.off('change');
   }
 }
 

@@ -13,6 +13,7 @@ class InputTextValue {
     this.index = index;
     this.setNewValue(this.value);
     this.bindContext();
+    this.unbindHandler();
     this.bindHandler();
   }
 
@@ -37,6 +38,10 @@ class InputTextValue {
 
   bindHandler() {
     this.$element.on('focusout', this.handleInputTextFocusout);
+  }
+
+  unbindHandler() {
+    this.$element.off('focusout');
   }
 }
 
