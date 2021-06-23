@@ -3,3 +3,4 @@ function importAll(r: any) {
 }
 importAll(require.context('./style', true, /\.scss/));
 importAll(require.context('./components', true, /\.scss/));
+importAll(require.context('./components', true, /-init\.ts/));
