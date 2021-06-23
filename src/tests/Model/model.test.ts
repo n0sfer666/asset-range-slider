@@ -133,12 +133,11 @@ describe('Model.ts', () => {
       const newValue = makeRandomNumber(range[0] * 1.5, range[1] * 1.5);
       const leftBoundary = values[index] - (step / 2);
       const rightBoundary = values[index] + (step / 2);
-      const isOutOfRange = newValue < range[0] || newValue > range[1];
       const isOutOfBoundary = newValue >= rightBoundary || newValue <= leftBoundary;
-      const expectValue = !isOutOfRange && isOutOfBoundary
+      const expectValue = isOutOfBoundary
         ? Math.round(newValue / step) * step
         : values[index];
-      const expectPosition = !isOutOfRange && isOutOfBoundary
+      const expectPosition = isOutOfBoundary
         ? modelInstance.getPositionFromValue(expectValue)
         : positions[index];
       modelInstance.setValueAndPosition(newValue, index);

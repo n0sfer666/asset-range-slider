@@ -53,7 +53,7 @@ describe('Connect.ts', () => {
           value: `${start}%`,
         });
       }
-      connect.setPosition(connect.startPosition, connect.endPosition);
+      connect.setPosition(testStartPosition, testEndPosition);
       const expectCssValue: string | null = connect.$element[0].getAttribute('style');
       const resultCssValue: string = connect.isSinglePointer
         ? `${CssValue[0].attribute}: ${CssValue[0].value};`

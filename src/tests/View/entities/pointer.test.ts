@@ -116,20 +116,14 @@ describe('Pointer.ts', () => {
           : testEvent.clientY;
         const newPosition = cursorPosition - pointer.shift - pointer.boundingClientRect;
         const newPositionInPercent = newPosition / pointer.containerOffsetSize;
-        let position: number;
-        if (newPositionInPercent > 1) {
-          position = 1;
-        } else if (newPositionInPercent < 0) {
-          position = 0;
-        } else {
-          position = Math.round(newPositionInPercent * normalizingCoefficient)
-            / normalizingCoefficient;
-        }
+        const position = pointer.getNormalizePosition(newPositionInPercent);
         const expectData: tPointerData = {
           index: pointer.index,
           position,
         };
         pointer.handlePointerMove(testEvent);
+        console.log(expectData);
+        console.log(testPointerData);
         expect(expectData).toEqual(testPointerData);
       });
     });
