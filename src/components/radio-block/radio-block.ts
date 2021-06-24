@@ -1,7 +1,7 @@
 import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
 
 class RadioBlock {
-  readonly blockClass: string
+  readonly blockClass: string = 'radio-block'
 
   $mainContainer: JQuery
 
@@ -17,16 +17,15 @@ class RadioBlock {
 
   radioBlocks: JQuery[] = []
 
-  constructor($container: JQuery, blockClass: string, sliderInstance: SimpleRangeSlider) {
+  constructor($container: JQuery, sliderInstance: SimpleRangeSlider) {
     this.$mainContainer = $container;
-    this.blockClass = blockClass;
     this.sliderInstance = sliderInstance;
     this.$sliderContainer = sliderInstance.$container;
     this.sliderConfig = this.sliderInstance.completeConfig;
     this.configurationName = this.$mainContainer.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
-    this.$mainContainer.find(`.js-${blockClass}__label`).each((_, element) => {
-      this.radioBlocks.push($(element).find(`.js-${blockClass}__radio`));
+    this.$mainContainer.find(`.js-${this.blockClass}__label`).each((_, element) => {
+      this.radioBlocks.push($(element).find(`.js-${this.blockClass}__radio`));
     });
     this.radioBlocks.forEach(($element) => {
       const text = this.configurationName === 'orientation'

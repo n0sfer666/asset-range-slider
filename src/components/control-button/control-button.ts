@@ -1,6 +1,8 @@
 import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
 
 class ControlButton {
+  readonly blockClass: string = 'control-button'
+
   $container: JQuery
 
   $sliderContainer: JQuery
@@ -8,8 +10,6 @@ class ControlButton {
   $text: JQuery
 
   $secondStart: JQuery
-
-  blockClass: string
 
   sliderInstance: SimpleRangeSlider
 
@@ -20,13 +20,11 @@ class ControlButton {
   constructor(
     $container: JQuery,
     $secondStart: JQuery,
-    blockClass: string,
     sliderInstance: SimpleRangeSlider,
   ) {
-    this.blockClass = blockClass;
     this.$container = $container;
     this.$secondStart = $secondStart;
-    this.$text = $container.find(`.js-${blockClass}__text`);
+    this.$text = $container.find(`.js-${this.blockClass}__text`);
     this.sliderInstance = sliderInstance;
     this.$sliderContainer = sliderInstance.$container;
     this.sliderConfig = sliderInstance.completeConfig;

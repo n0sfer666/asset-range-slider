@@ -1,7 +1,7 @@
 import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
 
 class TextInput {
-  readonly blockClass: string
+  readonly blockClass: string = 'text-input-block';
 
   $mainContainer: JQuery
 
@@ -21,12 +21,10 @@ class TextInput {
 
   constructor(
     $container: JQuery,
-    blockClass: string,
     sliderInstance: SimpleRangeSlider,
     isSinglePointer: boolean,
   ) {
     this.$mainContainer = $container;
-    this.blockClass = blockClass;
     this.sliderInstance = sliderInstance;
     this.$sliderContainer = sliderInstance.$container;
     this.sliderConfig = this.sliderInstance.completeConfig;
