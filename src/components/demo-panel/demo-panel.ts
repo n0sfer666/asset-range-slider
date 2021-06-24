@@ -1,7 +1,10 @@
 import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
 import ControlButton from '../control-button/control-button';
+import getControlButton from '../control-button/getControlButton';
+import getRadioBlocks from '../radio-block/getRadioBlocks';
 import RadioBlock from '../radio-block/radio-block';
 import TextInput from '../text-input-block/text-input-block';
+import getTextInputBlocks from '../text-input-block/text-input-block-init';
 
 class DemoPanel {
   readonly blockClass = 'demo-panel'
@@ -42,30 +45,28 @@ class DemoPanel {
     this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, this.sliderConfig);
     this.sliderConfig = this.sliderInstance.completeConfig;
     this.isSinglePointer = this.sliderConfig.start?.length === 1;
-    $('.js-text-input-block').each((_, element) => {
-      if (!$(element).hasClass('text-input-block_isControl')) {
-        this.textInputBlocks.push(
-          new TextInput(
-            $(element),
-            this.sliderInstance,
-            this.isSinglePointer,
-          ),
-        );
-      }
-    });
-    $('.js-radio-block').each((_, element) => {
-      this.radioBlocks.push(
-        new RadioBlock(
-          $(element),
-          this.sliderInstance,
-        ),
-      );
-    });
-    this.controlButton = new ControlButton(
-      $('.js-control-button'),
-      $('.js-text-input-block__input[name="start"][data-index="1"]'),
+    this.textInputBlocks = getTextInputBlocks(
+      this.$configContainer,
+      this.sliderInstance,
+      this.isSinglePointer,
+    );
+    this.radioBlocks = getRadioBlocks(this.$configContainer, this.sliderInstance);
+    this.controlButton = getControlButton(
+      this.$configContainer,
+      this.getSecondStart(),
       this.sliderInstance,
     );
+  }
+
+  getSecondStart(): JQuery {
+    let secondStart: JQuery = $(document.createElement('div'));
+    this.textInputBlocks.forEach((textInput) => {
+      if (textInput.configurationName === 'start') {
+        // eslint-disable-next-line prefer-destructuring
+        secondStart = textInput.inputs[1];
+      }
+    });
+    return secondStart;
   }
 }
 
