@@ -24,6 +24,12 @@ class RadioBlock {
     this.sliderConfig = this.sliderInstance.completeConfig;
     this.configurationName = this.$mainContainer.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
+    this.initRadioBlocks();
+    this.bindContext();
+    this.bindHandlers();
+  }
+
+  initRadioBlocks() {
     this.$mainContainer.find(`.js-${this.blockClass}__label`).each((_, element) => {
       this.radioBlocks.push($(element).find(`.js-${this.blockClass}__radio`));
     });
@@ -33,8 +39,6 @@ class RadioBlock {
         : $element.data('text') === 'enable';
       $element.prop('checked', text === this.configurationValue);
     });
-    this.bindContext();
-    this.bindHandlers();
   }
 
   handleRadioClick(event: JQuery.MouseEventBase) {
