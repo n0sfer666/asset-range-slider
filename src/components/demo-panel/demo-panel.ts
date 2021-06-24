@@ -32,7 +32,7 @@ class DemoPanel {
 
   constructor($container: JQuery) {
     this.$mainContainer = $container;
-    this.$sliderContainer = this.$mainContainer.find(`.js-${this.mainBlockClass}__slider`);
+    this.$sliderContainer = this.$mainContainer.find(`.js-${this.mainBlockClass}__slider-container`);
     this.$configContainer = this.$mainContainer.find(`.js-${this.mainBlockClass}__config`);
     const $control = this.$configContainer.find(`.js-${this.textInputBlockClass}__input[name="control"]`);
     const $values: JQuery[] = [];
