@@ -29,14 +29,20 @@ class TextInput {
     this.$sliderContainer = sliderInstance.$container;
     this.sliderConfig = this.sliderInstance.completeConfig;
     this.isSinglePointer = isSinglePointer;
+    this.configurationName = $container.data('configuration-name');
+    this.initInputs();
+    this.bindContext();
+    this.bindHandlers();
+  }
+
+  initInputs() {
     this.$mainContainer.find(`.js-${this.blockClass}__input`).each((_, element) => {
       this.inputs.push($(element));
     });
-    this.configurationName = $container.data('configuration-name');
-    if (this.configurationName === 'start' && isSinglePointer) {
+    if (this.configurationName === 'start' && this.isSinglePointer) {
       this.inputs[1].hide();
     }
-    this.configurationValue = sliderInstance.completeConfig[this.configurationName];
+    this.configurationValue = this.sliderInstance.completeConfig[this.configurationName];
     this.inputs.forEach((input, index) => {
       $(input).val(
         Array.isArray(this.configurationValue)
@@ -44,8 +50,6 @@ class TextInput {
           : this.configurationValue,
       );
     });
-    this.bindContext();
-    this.bindHandlers();
   }
 
   handleInputFocusOut(event: JQuery.FocusOutEvent) {
