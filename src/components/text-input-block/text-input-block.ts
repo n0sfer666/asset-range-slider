@@ -30,6 +30,7 @@ class TextInput {
     this.sliderConfig = this.sliderInstance.completeConfig;
     this.isSinglePointer = isSinglePointer;
     this.configurationName = $container.data('configuration-name');
+    this.configurationValue = this.sliderInstance.completeConfig[this.configurationName];
     this.initInputs();
     this.bindContext();
     this.bindHandlers();
@@ -42,7 +43,6 @@ class TextInput {
     if (this.configurationName === 'start' && this.isSinglePointer) {
       this.inputs[1].hide();
     }
-    this.configurationValue = this.sliderInstance.completeConfig[this.configurationName];
     this.inputs.forEach((input, index) => {
       $(input).val(
         Array.isArray(this.configurationValue)
