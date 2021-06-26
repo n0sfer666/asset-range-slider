@@ -33,8 +33,8 @@ class RadioBlock {
     const radioBlocks: JQuery[] = [];
     this.$mainContainer.find(`.js-${this.blockClass}__label`).each((_, element) => {
       const $radio = $(element).find(`.js-${this.blockClass}__radio`);
-      const text = this.getText($radio);
-      $radio.prop('checked', text === this.configurationValue);
+      const value = this.getText($radio);
+      $radio.prop('checked', value === this.configurationValue);
       radioBlocks.push($radio);
     });
     return radioBlocks;
