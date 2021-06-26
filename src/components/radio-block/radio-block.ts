@@ -24,33 +24,36 @@ class RadioBlock {
     this.sliderConfig = this.sliderInstance.completeConfig;
     this.configurationName = this.$mainContainer.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
-    this.initRadioBlocks();
+    this.radioBlocks = this.getRadioBlocks();
     this.bindContext();
     this.bindHandlers();
   }
 
-  initRadioBlocks() {
+  getRadioBlocks(): JQuery[] {
+    const radioBlocks: JQuery[] = [];
     this.$mainContainer.find(`.js-${this.blockClass}__label`).each((_, element) => {
-      this.radioBlocks.push($(element).find(`.js-${this.blockClass}__radio`));
+      const $radio = $(element).find(`.js-${this.blockClass}__radio`);
+      const text = this.getText($radio);
+      $radio.prop('checked', text === this.configurationValue);
+      radioBlocks.push($radio);
     });
-    this.radioBlocks.forEach(($element) => {
-      const text = this.configurationName === 'orientation'
-        ? $element.data('text')
-        : $element.data('text') === 'enable';
-      $element.prop('checked', text === this.configurationValue);
-    });
+    return radioBlocks;
   }
 
   handleRadioClick(event: JQuery.MouseEventBase) {
     const $target = $(event.target);
-    const value = this.configurationName === 'orientation'
-      ? $target.data('text')
-      : $target.data('text') === 'enable';
+    const value = this.getText($target);
     if (value !== this.configurationValue) {
       this.configurationValue = value;
       this.sliderConfig[this.configurationName] = this.configurationValue;
       this.sliderInstance.rebuildSlider(this.sliderConfig);
     }
+  }
+
+  getText($radio: JQuery): string | boolean {
+    return this.configurationName === 'orientation'
+      ? $radio.data('text')
+      : $radio.data('text') === 'enable';
   }
 
   bindContext() {
