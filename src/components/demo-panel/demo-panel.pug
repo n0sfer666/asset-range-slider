@@ -2,8 +2,8 @@ include ../radio-block/radio-block
 include ../text-input-block/text-input-block
 include ../control-button/control-button
 
-mixin demo-panel()
-  .demo-panel.js-demo-panel
+mixin demo-panel({orientation = 'horizontal', start = '[10]', range = '[0, 100]', step = '1', connect = 'true', tooltip = 'true', scale = 'true'})
+  div(class = 'demo-panel js-demo-panel', data-orientation = orientation, data-start = start, data-range = range, data-step = step, data-connect = connect, data-tooltip = tooltip, data-scale = scale)
     .demo-panel__slider
       h2.demo-panel__title Slider:
       .demo-panel__slider-container.js-demo-panel__slider-container

@@ -31,20 +31,10 @@ class DemoPanel {
     this.$mainContainer = $container;
     this.$sliderContainer = this.$mainContainer.find(`.js-${this.blockClass}__slider-container`);
     this.$configContainer = this.$mainContainer.find(`.js-${this.blockClass}__config`);
-    const $control = this.$configContainer.find('.js-text-input-block__input[name="control"]');
-    const $values: JQuery[] = [];
-    $.each($control, (_, element) => {
-      $values.push($(element));
-    });
-    this.sliderConfig = {
-      input: {
-        $values,
-        $tooltip: this.$configContainer.find('.js-text-input-block__checkbox[name="tooltip"'),
-      },
-    };
+    this.sliderConfig = this.getSliderConfig(this.$mainContainer);
     this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, this.sliderConfig);
     this.sliderConfig = this.sliderInstance.completeConfig;
-    this.isSinglePointer = this.sliderConfig.start?.length === 1;
+    this.isSinglePointer = this.sliderInstance.completeConfig.start.length === 1;
     this.textInputBlocks = getTextInputBlocks(
       this.$configContainer,
       this.sliderInstance,
@@ -56,6 +46,27 @@ class DemoPanel {
       this.getSecondStart(),
       this.sliderInstance,
     );
+  }
+
+  getSliderConfig($container: JQuery): iConfigUser {
+    const $control = this.$configContainer.find('.js-text-input-block__input[name="control"]');
+    const $values: JQuery[] = [];
+    $.each($control, (_, element) => {
+      $values.push($(element));
+    });
+    return {
+      input: {
+        $values,
+        $tooltip: this.$configContainer.find('.js-text-input-block__checkbox[name="tooltip"'),
+      },
+      orientation: $container.data('orientation'),
+      range: JSON.parse(`[${$container.data('range')}]`),
+      start: JSON.parse(`[${$container.data('start')}]`),
+      step: Number($container.data('step')),
+      tooltip: !!$container.data('tooltip'),
+      scale: !!$container.data('scale'),
+      connect: !!$container.data('connect'),
+    };
   }
 
   getSecondStart(): JQuery {
