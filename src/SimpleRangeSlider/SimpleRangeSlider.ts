@@ -5,7 +5,7 @@ import View from './View/View';
 class SimpleRangeSlider {
   $container: JQuery;
 
-  config: iConfigUser;
+  userConfig: iConfigUser;
 
   completeConfig: iCompleteConfig;
 
@@ -17,19 +17,14 @@ class SimpleRangeSlider {
 
   constructor($container: JQuery, config: iConfigUser) {
     this.$container = $container;
-    this.config = config;
+    this.userConfig = config;
     const defaultConfig: iCompleteConfig = SimpleRangeSlider.getDefaultConfig();
-    this.completeConfig = SimpleRangeSlider.getCompleteConfig(
-      this.config,
-      defaultConfig,
-    );
-    const modelConfig: iConfigModel = SimpleRangeSlider.getModelConfig(this.completeConfig);
-    const viewConfig: iConfigView = SimpleRangeSlider.getViewConfig(this.completeConfig);
-    this.model = new Model(modelConfig);
+    this.completeConfig = this.getCompleteConfig(defaultConfig);
+    this.model = new Model(this.getModelConfig());
     const positions: number[] = this.completeConfig.start.map(
       (value) => this.model.getPositionFromValue(value),
     );
-    this.view = new View(this.$container, viewConfig, positions);
+    this.view = new View(this.$container, this.getViewConfig(), positions);
     this.presenter = new Presenter(this.view, this.model);
   }
 
@@ -45,52 +40,30 @@ class SimpleRangeSlider {
     };
   }
 
-  static getCompleteConfig(
-    userConfig: iConfigUser,
-    defaultConfig: iCompleteConfig,
-  ): iCompleteConfig {
+  getCompleteConfig(defaultConfig: iCompleteConfig): iCompleteConfig {
+    return <iCompleteConfig> { ...(this.userConfig || defaultConfig) };
+  }
+
+  getModelConfig(): iConfigModel {
     return {
-      orientation: userConfig.orientation || defaultConfig.orientation,
-      start: userConfig.start || defaultConfig.start,
-      range: userConfig.range || defaultConfig.range,
-      step: userConfig.step || defaultConfig.step,
-      connect: userConfig.connect === undefined ? defaultConfig.connect : userConfig.connect,
-      tooltip: userConfig.tooltip === undefined ? defaultConfig.tooltip : userConfig.tooltip,
-      scale: userConfig.scale === undefined ? defaultConfig.scale : userConfig.scale,
-      input: userConfig.input,
+      start: this.completeConfig.start,
+      range: this.completeConfig.range,
+      step: this.completeConfig.step,
     };
   }
 
-  static getModelConfig(completeConfig: iCompleteConfig): iConfigModel {
-    return {
-      start: completeConfig.start,
-      range: completeConfig.range,
-      step: completeConfig.step,
-    };
-  }
-
-  static getViewConfig(completeConfig: iCompleteConfig): iConfigView {
-    return {
-      orientation: completeConfig.orientation,
-      start: completeConfig.start,
-      range: completeConfig.range,
-      tooltip: completeConfig.tooltip,
-      connect: completeConfig.connect,
-      scale: completeConfig.scale,
-      input: completeConfig.input,
-    };
+  getViewConfig(): iConfigView {
+    return <iConfigView> { ...this.completeConfig };
   }
 
   rebuildSlider(config: iCompleteConfig) {
     this.$container.empty();
     this.completeConfig = config;
-    const modelConfig: iConfigModel = SimpleRangeSlider.getModelConfig(this.completeConfig);
-    const viewConfig: iConfigView = SimpleRangeSlider.getViewConfig(this.completeConfig);
-    this.model = new Model(modelConfig);
+    this.model = new Model(this.getModelConfig());
     const positions: number[] = this.completeConfig.start.map(
       (value) => this.model.getPositionFromValue(value),
     );
-    this.view = new View(this.$container, viewConfig, positions);
+    this.view = new View(this.$container, this.getViewConfig(), positions);
     this.presenter = new Presenter(this.view, this.model);
   }
 }
