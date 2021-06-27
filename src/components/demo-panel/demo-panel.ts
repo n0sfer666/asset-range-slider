@@ -4,7 +4,8 @@ import getControlButton from '../control-button/getControlButton';
 import getRadioBlocks from '../radio-block/getRadioBlocks';
 import RadioBlock from '../radio-block/radio-block';
 import TextInput from '../text-input-block/text-input-block';
-import getTextInputBlocks from '../text-input-block/text-input-block-init';
+import getTextInputBlocks from '../text-input-block/getTextInputBlocks';
+import getControlInput from '../text-input-block/getControlInput';
 
 class DemoPanel {
   readonly blockClass = 'demo-panel'
@@ -49,16 +50,8 @@ class DemoPanel {
   }
 
   getSliderConfig($container: JQuery): iConfigUser {
-    const $control = this.$configContainer.find('.js-text-input-block__input[name="control"]');
-    const $values: JQuery[] = [];
-    $.each($control, (_, element) => {
-      $values.push($(element));
-    });
     return {
-      input: {
-        $values,
-        $tooltip: this.$configContainer.find('.js-text-input-block__checkbox[name="tooltip"'),
-      },
+      input: getControlInput(this.$configContainer),
       orientation: $container.data('orientation'),
       range: JSON.parse(`[${$container.data('range')}]`),
       start: JSON.parse(`[${$container.data('start')}]`),

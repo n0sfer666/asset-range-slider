@@ -122,8 +122,6 @@ describe('Pointer.ts', () => {
           position,
         };
         pointer.handlePointerMove(testEvent);
-        console.log(expectData);
-        console.log(testPointerData);
         expect(expectData).toEqual(testPointerData);
       });
     });
