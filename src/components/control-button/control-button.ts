@@ -24,13 +24,17 @@ class ControlButton {
   ) {
     this.$container = $container;
     this.$secondStart = $secondStart;
-    this.$text = $container.find(`.js-${this.blockClass}__text`);
+    this.$text = this.get$text(this.$container);
     this.sliderInstance = sliderInstance;
-    this.$sliderContainer = sliderInstance.$container;
     this.sliderConfig = sliderInstance.completeConfig;
     this.isSinglePointer = this.sliderConfig.start.length === 1;
+    this.$text.text(this.isSinglePointer ? 'add pointer' : 'remove pointer');
     this.bindContext();
     this.bindHandlers();
+  }
+
+  get$text($container: JQuery) {
+    return $container.find(`.js-${this.blockClass}__text`);
   }
 
   handleButtonClick() {
