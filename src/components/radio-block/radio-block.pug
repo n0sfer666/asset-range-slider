@@ -3,9 +3,11 @@ mixin radio-block({name = 'change-me'})
     const texts = name === 'orientation' || name === 'Orientation'
       ? ['horizontal', 'vertical']
       : ['enable', 'disable'];
+    const randomNumber = Math.round(Math.random() * 1e4)
+    const inputName = `${name}-${randomNumber}`
   div(class = ' radio-block js-radio-block', data-configuration-name = name)
     h3.radio-block__title #{name}
     each text in texts
       label(class = 'radio-block__label js-radio-block__label')
-        input(type = 'radio', class = 'radio-block__radio js-radio-block__radio', name = name, data-text = text)
+        input(type = 'radio', class = 'radio-block__radio js-radio-block__radio', name = inputName, data-text = text)
         span.radio-block__label-text #{text}

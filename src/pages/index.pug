@@ -8,3 +8,23 @@ html
   body
     div(style = 'padding: 10px;')
       +demo-panel({})
+    div(style = 'padding: 10px;')
+      +demo-panel({
+        orientation: 'vertical',
+        start: '[-50, 50]',
+        range: '[-100, 100]',
+        step: '10',
+        connect: 'false',
+        tooltip: 'false',
+        scale: 'false',
+        })
+      div(style = 'padding: 10px;')
+      +demo-panel({
+        orientation: 'vertical',
+        start: '[-500, 500]',
+        range: '[-1000, 1000]',
+        step: '100',
+        connect: 'true',
+        tooltip: 'true',
+        scale: 'true',
+        })
