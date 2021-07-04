@@ -6,9 +6,9 @@ html
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     meta(http-equiv='X-UA-Compatible', content='ie=edge')
   body
-    div(style = 'padding: 10px;')
+    .wrapper
       +demo-panel({})
-    div(style = 'padding: 10px;')
+    .wrapper
       +demo-panel({
         orientation: 'vertical',
         start: '[-50, 50]',
@@ -18,7 +18,7 @@ html
         tooltip: 'false',
         scale: 'false',
         })
-      div(style = 'padding: 10px;')
+    .wrapper
       +demo-panel({
         orientation: 'vertical',
         start: '[-500, 500]',
