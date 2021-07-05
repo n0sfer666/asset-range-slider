@@ -23,5 +23,6 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/object-curly-spacing': 'off',
+    'prefer-destructuring': ['error', { 'object': true, 'array': false }],
   },
 };
