@@ -4,7 +4,7 @@ module.exports = {
     es6: true,
   },
   extends: [
-    'airbnb-base',
+    'airbnb-typescript/base',
     'plugin:import/typescript',
     'plugin:fsd/all',
   ],
@@ -14,15 +14,14 @@ module.exports = {
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2018,
     sourceType: 'module',
+    project: ['./tsconfig.json'],
   },
   plugins: [
     'import',
     '@typescript-eslint',
   ],
   rules: {
-    'import/extensions': ['off'],
-    'no-undef': ['off'],
+    '@typescript-eslint/object-curly-spacing': 'off',
   },
 };
