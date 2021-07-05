@@ -9,7 +9,7 @@ class RadioBlock {
 
   $sliderContainer: JQuery;
 
-  sliderConfig: iCompleteConfig;
+  sliderConfig: CompleteConfigList;
 
   configurationName: string;
 

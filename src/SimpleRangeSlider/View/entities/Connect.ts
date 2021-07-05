@@ -3,7 +3,7 @@ class Connect {
 
   endPosition: number;
 
-  orientation: tOrientation;
+  orientation: ConfigOrientation;
 
   isSinglePointer: boolean;
 
@@ -16,7 +16,7 @@ class Connect {
   constructor(
     startPosition: number,
     endPosition: number,
-    orientation: tOrientation,
+    orientation: ConfigOrientation,
     isSinglePointer: boolean,
   ) {
     this.startPosition = startPosition;
@@ -38,7 +38,7 @@ class Connect {
   setPosition(startPosition: number, endPosition: number) {
     const start: number = Math.round(startPosition * this.normalizingCoefficient);
     const end: number = Math.round(endPosition * this.normalizingCoefficient);
-    const cssValues: tCssValues[] = [{
+    const cssValues: PointerCssValues[] = [{
       attribute: this.orientation === 'horizontal' ? 'width' : 'height',
       value: `${end - start}%`,
     }];

@@ -5,12 +5,12 @@ describe('InputTextValue.ts', () => {
   const $testElement = $(document.createElement('input')).prop('type', 'text');
   const testValue = makeRandomNumber(-1e4, 1e4);
   const testIndex = Math.round(Math.random());
-  let testInputTextData: tInputTextData = {
+  let tesInputTextData: InputTextData = {
     value: -1e8,
     index: -1e8,
   };
-  const testCallback: iInputTextCallback = (inputTextData) => {
-    testInputTextData = inputTextData;
+  const testCallback: InputTextCallback = (inputTextData) => {
+    tesInputTextData = inputTextData;
   };
   const testInstance = new InputTextValue($testElement, testValue, testIndex);
 
@@ -29,12 +29,12 @@ describe('InputTextValue.ts', () => {
 
   test('handleInputTextFocusout()', () => {
     const value = makeRandomNumber(1e6, 1e8);
-    const expectData: tInputTextData = {
+    const expectData: InputTextData = {
       value,
       index: testIndex,
     };
     testInstance.$element.val(value);
     testInstance.$element.focusout();
-    expect(expectData).toEqual(testInputTextData);
+    expect(expectData).toEqual(tesInputTextData);
   });
 });

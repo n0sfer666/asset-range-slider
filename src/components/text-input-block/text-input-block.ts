@@ -9,7 +9,7 @@ class TextInput {
 
   $sliderContainer: JQuery;
 
-  sliderConfig: iCompleteConfig;
+  sliderConfig: CompleteConfigList;
 
   isSinglePointer: boolean;
 

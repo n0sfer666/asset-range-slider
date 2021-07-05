@@ -2,16 +2,16 @@ import Model from '../../SimpleRangeSlider/Model/Model';
 import makeRandomNumber from '../makeRandomNumber';
 
 describe('Model.ts', () => {
-  let testModelData: tModelData = {
+  let tesModelData: ModelData = {
     index: -1e8,
     positions: [-1e8],
     values: [-1e8],
   };
   const normalizingCoefficient = 1e4;
-  const testCallback: iModelCallback = (modelData: tModelData) => {
-    testModelData = modelData;
+  const testCallback: ModelCallback = (modelData: ModelData) => {
+    tesModelData = modelData;
   };
-  const testConfigs: iConfigModel[] = [
+  const testConfigs: ConfigModelList[] = [
     {
       range: [-10, 100],
       start: [50],
@@ -67,7 +67,7 @@ describe('Model.ts', () => {
         Math.random() * normalizingCoefficient,
       ) / normalizingCoefficient + makeRandomNumber(-1, 1);
       const testValue = makeRandomNumber(range[0] - 5, range[1] + 5);
-      const testViewData: tViewData[] = [
+      const tesViewData: ViewData[] = [
         {
           position: testPosition,
           index: Math.round(Math.random()),
@@ -77,7 +77,7 @@ describe('Model.ts', () => {
           index: Math.round(Math.random()),
         },
       ];
-      testViewData.forEach((viewData) => {
+      tesViewData.forEach((viewData) => {
         let expectResult: number = 0;
         const { index, position, value } = viewData;
         const [rangeStart, rangeEnd] = range;
@@ -156,7 +156,7 @@ describe('Model.ts', () => {
       const maxIndex = values.length - 1;
       const randomIndex = Math.round(Math.random());
       const testIndex = randomIndex <= maxIndex ? randomIndex : maxIndex;
-      const testViewData: tViewData[] = [
+      const tesViewData: ViewData[] = [
         {
           position: testPosition,
           index: testIndex,
@@ -166,17 +166,17 @@ describe('Model.ts', () => {
           index: testIndex,
         },
       ];
-      testViewData.forEach((viewData) => {
+      tesViewData.forEach((viewData) => {
         const { index } = viewData;
         const newValue = modelInstance.getNewValue(viewData);
         modelInstance.setValueAndPosition(newValue, index);
         modelInstance.updateByView(viewData);
-        const expectResult: tModelData = {
+        const expectResult: ModelData = {
           positions: modelInstance.positions,
           values: modelInstance.values,
           index,
         };
-        expect(expectResult).toEqual(testModelData);
+        expect(expectResult).toEqual(tesModelData);
       });
     });
   });

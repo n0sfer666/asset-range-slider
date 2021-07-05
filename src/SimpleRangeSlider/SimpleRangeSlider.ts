@@ -5,9 +5,9 @@ import View from './View/View';
 class SimpleRangeSlider {
   $container: JQuery;
 
-  userConfig: iConfigUser;
+  userConfig: ConfigUserList;
 
-  readonly defaultConfig: iCompleteConfig = {
+  readonly defaultConfig: CompleteConfigList = {
     orientation: 'horizontal',
     start: [10],
     range: [0, 100],
@@ -17,7 +17,7 @@ class SimpleRangeSlider {
     scale: true,
   };
 
-  completeConfig: iCompleteConfig;
+  completeConfig: CompleteConfigList;
 
   view: View;
 
@@ -25,7 +25,7 @@ class SimpleRangeSlider {
 
   presenter: Presenter;
 
-  constructor($container: JQuery, config: iConfigUser) {
+  constructor($container: JQuery, config: ConfigUserList) {
     this.$container = $container;
     this.userConfig = config;
     this.completeConfig = this.getCompleteConfig();
@@ -37,20 +37,20 @@ class SimpleRangeSlider {
     this.presenter = new Presenter(this.view, this.model);
   }
 
-  getCompleteConfig(): iCompleteConfig {
-    return <iCompleteConfig> { ...this.defaultConfig, ...this.userConfig };
+  getCompleteConfig(): CompleteConfigList {
+    return <CompleteConfigList> { ...this.defaultConfig, ...this.userConfig };
   }
 
-  getModelConfig(): iConfigModel {
+  getModelConfig(): ConfigModelList {
     const { start, range, step } = this.completeConfig;
     return { start, range, step };
   }
 
-  getViewConfig(): iConfigView {
-    return <iConfigView> { ...this.completeConfig };
+  getViewConfig(): ConfigViewList {
+    return <ConfigViewList> { ...this.completeConfig };
   }
 
-  rebuildSlider(config: iCompleteConfig) {
+  rebuildSlider(config: CompleteConfigList) {
     this.$container.empty();
     this.completeConfig = config;
     this.model = new Model(this.getModelConfig());

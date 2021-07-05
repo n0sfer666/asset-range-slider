@@ -5,11 +5,11 @@ describe('Pointer.ts', () => {
   const className = 'simple-range-slider__pointer';
   const normalizingCoefficient: number = 1e4;
   const $document = $(document);
-  let testPointerData: tPointerData = {
+  let tesPointerData: PointerData = {
     index: -1,
     position: -1,
   };
-  const orientations: tOrientation[] = ['horizontal', 'vertical', 'horizontal', 'vertical'];
+  const orientations: ConfigOrientation[] = ['horizontal', 'vertical', 'horizontal', 'vertical'];
   const indexes: number[] = [0, 0, 1, 1];
   const pointers: Pointer[] = orientations.map((orientation, index) => {
     const position: number = Math.round(Math.random() * normalizingCoefficient)
@@ -55,12 +55,12 @@ describe('Pointer.ts', () => {
   describe('event methods', () => {
     pointers.forEach((pointer) => {
       const { $element } = pointer;
-      const testCallback: iPointerCallback = (pointerData: tPointerData) => {
-        testPointerData = pointerData;
+      const testCallback: PointerCallback = (pointerData: PointerData) => {
+        tesPointerData = pointerData;
       };
 
       pointer.subscribeOn(testCallback);
-      const testCallbackList: iPointerCallback[] = [testCallback];
+      const testCallbackList: PointerCallback[] = [testCallback];
 
       test('subscribeOn(callback)', () => {
         expect(testCallbackList).toEqual(pointer.callbackList);
@@ -117,12 +117,12 @@ describe('Pointer.ts', () => {
         const newPosition = cursorPosition - pointer.shift - pointer.boundingClientRect;
         const newPositionInPercent = newPosition / pointer.containerOffsetSize;
         const position = pointer.getNormalizePosition(newPositionInPercent);
-        const expectData: tPointerData = {
+        const expectData: PointerData = {
           index: pointer.index,
           position,
         };
         pointer.handlePointerMove(testEvent);
-        expect(expectData).toEqual(testPointerData);
+        expect(expectData).toEqual(tesPointerData);
       });
     });
   });

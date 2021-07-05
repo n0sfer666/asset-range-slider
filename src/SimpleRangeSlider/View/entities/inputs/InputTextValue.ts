@@ -5,7 +5,7 @@ class InputTextValue {
 
   index: number;
 
-  callbackList: iInputTextCallback[] = [];
+  callbackList: InputTextCallback[] = [];
 
   constructor($element: JQuery, value: number, index: number) {
     this.$element = $element;
@@ -22,7 +22,7 @@ class InputTextValue {
     this.value = value;
   }
 
-  subscribeOn(callback: iInputTextCallback) {
+  subscribeOn(callback: InputTextCallback) {
     this.callbackList.push(callback);
   }
 

@@ -43,7 +43,7 @@ describe('Connect.ts', () => {
       const testEndPosition: number = makeRandomNumber(testStartPosition);
       const start: number = Math.round(testStartPosition * normalizingCoefficient);
       const end: number = Math.round(testEndPosition * normalizingCoefficient);
-      const CssValue: tCssValues[] = [{
+      const CssValue: PointerCssValues[] = [{
         attribute: connect.orientation === 'horizontal' ? 'width' : 'height',
         value: `${end - start}%`,
       }];

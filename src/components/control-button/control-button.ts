@@ -5,15 +5,13 @@ class ControlButton {
 
   $container: JQuery;
 
-  $sliderContainer: JQuery;
-
   $text: JQuery;
 
   $secondStart: JQuery;
 
   sliderInstance: SimpleRangeSlider;
 
-  sliderConfig: iCompleteConfig;
+  sliderConfig: CompleteConfigList;
 
   isSinglePointer: boolean;
 

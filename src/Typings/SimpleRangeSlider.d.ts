@@ -1,94 +1,88 @@
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-unused-vars */
-// types
-type tOrientation = 'horizontal' | 'vertical';
-type tCssClasses = 'slider' | 'tumbler' | 'connect' | 'tooltip';
-type tRange = [number, number];
-type tValue = [number] | [number, number];
-type tPosition = tValue;
-type tInputType = 'value' | 'tooltip';
-type tConfigInput = {
+type ConfigOrientation = 'horizontal' | 'vertical';
+type ConfigRange = [number, number];
+type PointerValue = [number] | [number, number];
+type PointerPosition = PointerValue;
+type ConfigInputs = {
   $values?: JQuery[],
   $tooltip?: JQuery
 };
-type tCssValues = {
+type PointerCssValues = {
   attribute: string,
   value: string
 };
-type tViewData = {
+type ViewData = {
   position?: number,
   value?: number,
   index: number
 };
-type tPointerData = {
+type PointerData = {
   position: number,
   index: number
 };
-type tScaleData = {
+type ScaleData = {
   position: number,
 };
-type tInputTextData = {
+type InputTextData = {
   value: number,
   index: number
 };
-type tModelData = {
+type ModelData = {
   values: number[],
   positions: number[],
   index: number
 };
-// interfaces
-interface iObject {
+interface ObjectKeyString {
   [key: string]: any;
 }
-interface iConfigUser extends iObject {
-  readonly orientation?: tOrientation;
-  readonly start?: tValue;
-  readonly range?: tRange;
+interface ConfigUserList extends ObjectKeyString {
+  readonly orientation?: ConfigOrientation;
+  readonly start?: PointerValue;
+  readonly range?: ConfigRange;
   readonly step?: number;
   readonly connect?: boolean;
   readonly tooltip?: boolean;
   readonly scale?: boolean;
-  input?: tConfigInput;
+  input?: ConfigInputs;
 }
-interface iCompleteConfig extends iObject {
-  orientation: tOrientation;
-  start: tValue;
-  range: tRange;
+interface CompleteConfigList extends ObjectKeyString {
+  orientation: ConfigOrientation;
+  start: PointerValue;
+  range: ConfigRange;
   step: number;
   connect: boolean;
   tooltip: boolean;
   scale: boolean;
-  input?: tConfigInput;
+  input?: ConfigInputs;
 }
-interface iConfigModel extends iObject {
-  readonly start: tValue;
-  readonly range: tRange;
+interface ConfigModelList extends ObjectKeyString {
+  readonly start: PointerValue;
+  readonly range: ConfigRange;
   readonly step: number;
 }
-interface iConfigView extends iObject {
-  readonly orientation: tOrientation,
-  readonly start: tValue;
-  readonly range: tRange;
+interface ConfigViewList extends ObjectKeyString {
+  readonly orientation: ConfigOrientation,
+  readonly start: PointerValue;
+  readonly range: ConfigRange;
   readonly connect: boolean;
   readonly tooltip: boolean;
   readonly scale: boolean;
-  readonly input?: tConfigInput;
+  readonly input?: ConfigInputs;
 }
-interface iViewCallback {
-  (viewData: tViewData): void
+interface ViewCallback {
+  (viewData: ViewData): void
 }
-interface iPointerCallback {
-  (pointerData: tPointerData): void
+interface PointerCallback {
+  (pointerData: PointerData): void
 }
-interface iScaleCallback {
-  (scaleData: tScaleData): void
+interface ScaleCallback {
+  (scaleData: ScaleData): void
 }
-interface iInputTextCallback {
-  (inputTextData: tInputTextData): void
+interface InputTextCallback {
+  (inputTextData: InputTextData): void
 }
-interface iModelCallback {
-  (modelData: tModelData): void
+interface ModelCallback {
+  (modelData: ModelData): void
 }
 interface JQuery {
-  simpleRangeSlider(config: iConfigUser): JQuery
+  simpleRangeSlider(config: ConfigUserList): JQuery
 }

@@ -1,4 +1,4 @@
-function getControlInput($container: JQuery): tConfigInput {
+function getControlInput($container: JQuery): ConfigInputs {
   const $control = $container.find('.js-text-input-block__input[name="control"]');
   const $values: JQuery[] = [];
   $.each($control, (_, element) => {

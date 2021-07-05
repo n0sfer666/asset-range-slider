@@ -1,11 +1,11 @@
 class Tooltip {
   value: number;
 
-  orientation: tOrientation;
+  orientation: ConfigOrientation;
 
   $element: JQuery;
 
-  constructor(value: number, orientation: tOrientation) {
+  constructor(value: number, orientation: ConfigOrientation) {
     this.value = value;
     this.orientation = orientation;
     this.$element = this.getElement();

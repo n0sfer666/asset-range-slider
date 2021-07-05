@@ -16,7 +16,7 @@ class DemoPanel {
 
   sliderInstance: SimpleRangeSlider;
 
-  sliderConfig: iConfigUser;
+  sliderConfig: ConfigUserList;
 
   $configContainer: JQuery;
 
@@ -49,7 +49,7 @@ class DemoPanel {
     );
   }
 
-  getSliderConfig($container: JQuery): iConfigUser {
+  getSliderConfig($container: JQuery): ConfigUserList {
     return {
       input: getControlInput(this.$configContainer),
       orientation: $container.data('orientation'),

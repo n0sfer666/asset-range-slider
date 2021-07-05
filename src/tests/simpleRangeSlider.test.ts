@@ -3,7 +3,7 @@ import SimpleRangeSlider from '../SimpleRangeSlider/SimpleRangeSlider';
 describe('SimpleRangeSlider.ts', () => {
   const $testContainer: JQuery = $(document.createElement('div'));
   $(document.body).append($testContainer);
-  const testConfig: iConfigUser = {
+  const testConfig: ConfigUserList = {
     orientation: 'vertical',
     range: [-1000, 1000],
     start: [-100, 500],
@@ -17,7 +17,7 @@ describe('SimpleRangeSlider.ts', () => {
   });
 
   test('getCompleteConfig(userConfig, defaultConfig)', () => {
-    const testCompleteConfig: iCompleteConfig = <iCompleteConfig> {
+    const testCompleteConfig: CompleteConfigList = <CompleteConfigList> {
       ...testInstance.defaultConfig, ...testInstance.userConfig,
     };
     expect(testInstance.getCompleteConfig())
@@ -26,7 +26,7 @@ describe('SimpleRangeSlider.ts', () => {
 
   test('getModelConfig(completeConfig)', () => {
     const { start, range, step } = testInstance.completeConfig;
-    const testModelConfig: iConfigModel = <iConfigModel> {
+    const testModelConfig: ConfigModelList = <ConfigModelList> {
       start, range, step,
     };
     expect(testInstance.getModelConfig())
@@ -37,7 +37,7 @@ describe('SimpleRangeSlider.ts', () => {
     const {
       start, range, step, orientation, scale, connect, tooltip, input,
     } = testInstance.completeConfig;
-    const testViewConfig: iConfigView = {
+    const testViewConfig: ConfigViewList = {
       start, range, step, orientation, scale, connect, tooltip, input,
     };
     expect(testInstance.getViewConfig())
@@ -45,7 +45,7 @@ describe('SimpleRangeSlider.ts', () => {
   });
 
   test('rebuildSlider(config)', () => {
-    const testNewConfig: iCompleteConfig = {
+    const testNewConfig: CompleteConfigList = {
       orientation: 'horizontal',
       range: [-100, 100],
       start: [10],

@@ -2,20 +2,20 @@ import Scale from '../../../SimpleRangeSlider/View/entities/Scale';
 import makeRandomNumber from '../../makeRandomNumber';
 
 describe('Scale.ts', () => {
-  const range: tRange = [
+  const range: ConfigRange = [
     makeRandomNumber(-1e5, 0),
     makeRandomNumber(1, 1e5),
   ];
-  const orientations: tOrientation[] = ['horizontal', 'vertical'];
+  const orientations: ConfigOrientation[] = ['horizontal', 'vertical'];
   const testInstances: Scale[] = orientations.map(
     (orientation) => new Scale(range, orientation),
   );
   const [{ valuePipsNumber, emptyPipsNumber }] = testInstances;
-  let testScaleData: tScaleData = {
+  let tesScaleData: ScaleData = {
     position: -1e8,
   };
-  const testCallback: iScaleCallback = (scaleData: tScaleData) => {
-    testScaleData = scaleData;
+  const testCallback: ScaleCallback = (scaleData: ScaleData) => {
+    tesScaleData = scaleData;
   };
   const className = 'simple-range-slider';
 
@@ -97,7 +97,7 @@ describe('Scale.ts', () => {
       const { $valuePips, positions } = instance;
       $valuePips.forEach(($pip, index) => {
         $pip.click();
-        expect(positions[index]).toBe(testScaleData.position);
+        expect(positions[index]).toBe(tesScaleData.position);
       });
     });
   });

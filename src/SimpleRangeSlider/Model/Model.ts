@@ -1,11 +1,11 @@
 class Model {
   readonly normalizingCoefficient: number = 1e4;
 
-  readonly range: tRange;
+  readonly range: ConfigRange;
 
   readonly step: number;
 
-  callbackList: iModelCallback[] = [];
+  callbackList: ModelCallback[] = [];
 
   positions: number[];
 
@@ -15,7 +15,7 @@ class Model {
 
   activePointerIndex: number = 0;
 
-  constructor(config: iConfigModel) {
+  constructor(config: ConfigModelList) {
     const { range, start, step } = config;
     this.values = start;
     this.range = range;
@@ -24,7 +24,7 @@ class Model {
     this.positions = this.values.map((val) => this.getPositionFromValue(val));
   }
 
-  subscribeOn(callback: iModelCallback) {
+  subscribeOn(callback: ModelCallback) {
     this.callbackList.push(callback);
   }
 
@@ -38,7 +38,7 @@ class Model {
     return Math.round(result);
   }
 
-  getNewValue(viewData: tViewData): number {
+  getNewValue(viewData: ViewData): number {
     const { index, position, value } = viewData;
     let newValue = 0;
     if (position || position === 0) {
@@ -84,14 +84,14 @@ class Model {
     }
   }
 
-  updateByView(viewData: tViewData) {
+  updateByView(viewData: ViewData) {
     const { index } = viewData;
     this.activePointerIndex = index;
     const newValue = this.getNewValue(viewData);
     this.setValueAndPosition(newValue, index);
     const { positions, values } = this;
     this.callbackList.forEach(
-      (viewCallback: iModelCallback) => viewCallback({ positions, values, index }),
+      (viewCallback: ModelCallback) => viewCallback({ positions, values, index }),
     );
   }
 }

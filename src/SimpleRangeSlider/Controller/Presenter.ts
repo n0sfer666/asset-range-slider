@@ -9,10 +9,10 @@ class Presenter {
   constructor(view: View, model: Model) {
     this.view = view;
     this.model = model;
-    this.view.subscribeOn((viewData: tViewData) => {
+    this.view.subscribeOn((viewData: ViewData) => {
       this.model.updateByView(viewData);
     });
-    this.model.subscribeOn((modelData: tModelData) => {
+    this.model.subscribeOn((modelData: ModelData) => {
       this.view.updateByModel(modelData);
     });
   }

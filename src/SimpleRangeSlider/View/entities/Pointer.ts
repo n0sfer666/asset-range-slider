@@ -5,7 +5,7 @@ class Pointer {
 
   $document: JQuery.PlainObject;
 
-  orientation: tOrientation;
+  orientation: ConfigOrientation;
 
   position: number;
 
@@ -13,7 +13,7 @@ class Pointer {
 
   $element: JQuery;
 
-  callbackList: iPointerCallback[] = [];
+  callbackList: PointerCallback[] = [];
 
   shift: number = 0;
 
@@ -23,7 +23,7 @@ class Pointer {
 
   className: string = 'simple-range-slider__pointer';
 
-  constructor($container: JQuery, orientation: tOrientation, position: number, index: number) {
+  constructor($container: JQuery, orientation: ConfigOrientation, position: number, index: number) {
     this.$container = $container;
     this.$document = $(document);
     this.orientation = orientation;
@@ -50,7 +50,7 @@ class Pointer {
     }
   }
 
-  subscribeOn(callback: iPointerCallback) {
+  subscribeOn(callback: PointerCallback) {
     this.callbackList.push(callback);
   }
 

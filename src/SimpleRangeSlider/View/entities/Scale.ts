@@ -5,15 +5,15 @@ class Scale {
 
   $element: JQuery;
 
-  range: tRange;
+  range: ConfigRange;
 
-  orientation: tOrientation;
+  orientation: ConfigOrientation;
 
   $emptyPips: JQuery[] = [];
 
   $valuePips: JQuery[] = [];
 
-  callbackList: iScaleCallback[] = [];
+  callbackList: ScaleCallback[] = [];
 
   diapason: number;
 
@@ -21,7 +21,7 @@ class Scale {
 
   positions: number[] = [];
 
-  constructor(range: tRange, orientation: tOrientation) {
+  constructor(range: ConfigRange, orientation: ConfigOrientation) {
     this.orientation = orientation;
     this.range = range;
     this.diapason = this.range[1] - this.range[0];
@@ -110,7 +110,7 @@ class Scale {
     });
   }
 
-  subscribeOn(callback: iScaleCallback) {
+  subscribeOn(callback: ScaleCallback) {
     this.callbackList.push(callback);
   }
 

@@ -8,7 +8,7 @@ import Tooltip from './entities/Tooltip';
 class View {
   $container: JQuery;
 
-  config: iConfigView;
+  config: ConfigViewList;
 
   $sliderContainer: JQuery;
 
@@ -28,17 +28,17 @@ class View {
 
   inputTooltip?: InputCheckboxTooltip;
 
-  callbackList: iViewCallback[] = [];
+  callbackList: ViewCallback[] = [];
 
   positions: number[];
 
   values: number[];
 
-  range: tRange;
+  range: ConfigRange;
 
   activePointerIndex: number = 0;
 
-  constructor($container: JQuery, config: iConfigView, positions: number[]) {
+  constructor($container: JQuery, config: ConfigViewList, positions: number[]) {
     this.$container = $container;
     this.config = config;
     const { start, range } = config;
@@ -60,7 +60,7 @@ class View {
     this.switchActivePointer();
   }
 
-  subscribeOn(callback: iViewCallback) {
+  subscribeOn(callback: ViewCallback) {
     this.callbackList.push(callback);
   }
 
@@ -155,19 +155,19 @@ class View {
     );
   }
 
-  updateByPointer(pointerData: tPointerData) {
+  updateByPointer(pointerData: PointerData) {
     const { position, index } = pointerData;
     this.activePointerIndex = index;
     this.callbackList.forEach((modelCallback) => modelCallback({ index, position }));
   }
 
-  updateByInputText(inputTextData: tInputTextData) {
+  updateByInputText(inputTextData: InputTextData) {
     const { index, value } = inputTextData;
     this.activePointerIndex = index;
     this.callbackList.forEach((modelCallback) => modelCallback({ index, value }));
   }
 
-  updateByScale(scaleData: tScaleData) {
+  updateByScale(scaleData: ScaleData) {
     const { position } = scaleData;
     if (this.isSinglePointer) {
       this.positions[0] = position;
@@ -183,7 +183,7 @@ class View {
     this.callbackList.forEach((modelCallback) => modelCallback({ index, position }));
   }
 
-  updateByModel(modelData: tModelData) {
+  updateByModel(modelData: ModelData) {
     const { index, positions, values } = modelData;
     this.switchActivePointer();
     if (this.inputValues) {

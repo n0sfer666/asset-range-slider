@@ -11,13 +11,13 @@ describe('View.ts', () => {
   const normalizingCoefficient = 1e4;
   const $body = $(document.body);
   const getRandomBoolean = () => Math.round(Math.random()) === 1;
-  const getPositionFromValue = (values: number[], range: tRange) => values.map((value) => {
+  const getPositionFromValue = (values: number[], range: ConfigRange) => values.map((value) => {
     const result = (value - range[0]) / (range[1] - range[0]);
     return Math.round(result * normalizingCoefficient) / normalizingCoefficient;
   });
   const randomBoolean = getRandomBoolean();
   const $testContainer = $(document.createElement('div'));
-  const testConfig: iConfigView = {
+  const testConfig: ConfigViewList = {
     connect: getRandomBoolean(),
     scale: getRandomBoolean(),
     tooltip: getRandomBoolean(),
@@ -52,15 +52,15 @@ describe('View.ts', () => {
   const testPositions = getPositionFromValue(testConfig.start, testConfig.range);
   const testInstance = new View($testContainer, testConfig, testPositions);
 
-  let testViewData: tViewData = {
+  let tesViewData: ViewData = {
     index: -1,
     position: -1,
     value: -1e5,
   };
 
   test('subscribeOn(callback)', () => {
-    const testViewCallback: iViewCallback = (viewData: tViewData) => {
-      testViewData = viewData;
+    const testViewCallback: ViewCallback = (viewData: ViewData) => {
+      tesViewData = viewData;
     };
     testInstance.subscribeOn(testViewCallback);
     expect(testViewCallback).toEqual(testInstance.callbackList[0]);
@@ -154,34 +154,34 @@ describe('View.ts', () => {
   test('updateByPointer(pointerData)', () => {
     const position = Math.round(Math.random() * normalizingCoefficient) / normalizingCoefficient;
     const index = Math.round(Math.random());
-    const expectPointerData: tPointerData = {
+    const expecPointerData: PointerData = {
       position,
       index,
     };
-    testInstance.updateByPointer(expectPointerData);
-    expect(expectPointerData.index).toEqual(testViewData.index);
-    expect(expectPointerData.position).toEqual(testViewData.position);
+    testInstance.updateByPointer(expecPointerData);
+    expect(expecPointerData.index).toEqual(tesViewData.index);
+    expect(expecPointerData.position).toEqual(tesViewData.position);
   });
 
   test('updateByInputText(inputTextData)', () => {
     const { range } = testConfig;
     const value = makeRandomNumber(range[0], range[1]);
     const index = Math.round(Math.random());
-    const testInputTextData: tInputTextData = {
+    const tesInputTextData: InputTextData = {
       value,
       index,
     };
-    testInstance.updateByInputText(testInputTextData);
+    testInstance.updateByInputText(tesInputTextData);
     expect(testInstance.activePointerIndex).toBe(index);
-    expect(testInputTextData.value).toBe(testViewData.value);
-    expect(testInputTextData.index).toBe(testViewData.index);
+    expect(tesInputTextData.value).toBe(tesViewData.value);
+    expect(tesInputTextData.index).toBe(tesViewData.index);
   });
 
   test('updateByScale(scaleData)', () => {
     const { isSinglePointer, positions } = testInstance;
     let index = -1;
     const position = Math.round(Math.random() * normalizingCoefficient) / normalizingCoefficient;
-    const testScaleData: tScaleData = {
+    const tesScaleData: ScaleData = {
       position,
     };
     if (isSinglePointer) {
@@ -193,9 +193,9 @@ describe('View.ts', () => {
         return Math.abs(result);
       });
       index = difference[0] < difference[1] ? 0 : 1;
-      testInstance.updateByScale(testScaleData);
-      expect(index).toBe(testViewData.index);
-      expect(position).toBe(testViewData.position);
+      testInstance.updateByScale(tesScaleData);
+      expect(index).toBe(tesViewData.index);
+      expect(position).toBe(tesViewData.position);
     }
   });
 
@@ -210,7 +210,7 @@ describe('View.ts', () => {
       ? [makeRandomNumber(-1e3, 1e3)]
       : [makeRandomNumber(-1e3, -1), makeRandomNumber(0, 1e3)];
     const positions = getPositionFromValue(values, testConfig.range);
-    const testModelData: tModelData = {
+    const tesModelData: ModelData = {
       index, positions, values,
     };
     const inputValueSetNewValue = inputValues
@@ -223,7 +223,7 @@ describe('View.ts', () => {
       ? jest.spyOn(connect, 'setPosition')
       : jest.fn();
     const pointerSetPosition = jest.spyOn(pointers[index], 'setPosition');
-    testInstance.updateByModel(testModelData);
+    testInstance.updateByModel(tesModelData);
     if (inputValues) {
       expect(inputValueSetNewValue).toHaveBeenCalled();
       inputValueSetNewValue.mockRestore();
