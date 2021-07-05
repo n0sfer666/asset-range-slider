@@ -30,8 +30,8 @@ class DemoPanel {
 
   constructor($container: JQuery) {
     this.$mainContainer = $container;
-    this.$sliderContainer = this.$mainContainer.find(`.js-${this.blockClass}__slider-container`);
-    this.$configContainer = this.$mainContainer.find(`.js-${this.blockClass}__config`);
+    this.$sliderContainer = this.getContainer('slider-container');
+    this.$configContainer = this.getContainer('config');
     this.sliderConfig = this.getSliderConfig(this.$mainContainer);
     this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, this.sliderConfig);
     this.sliderConfig = this.sliderInstance.completeConfig;
@@ -47,6 +47,10 @@ class DemoPanel {
       this.getSecondStart(),
       this.sliderInstance,
     );
+  }
+
+  getContainer(type: 'slider-container' | 'config'): JQuery {
+    return this.$mainContainer.find(`.js-${this.blockClass}__${type}`);
   }
 
   getSliderConfig($container: JQuery): ConfigUserList {
