@@ -15,7 +15,7 @@ class SimpleRangeSlider {
     connect: true,
     tooltip: true,
     scale: true,
-  }
+  };
 
   completeConfig: iCompleteConfig;
 

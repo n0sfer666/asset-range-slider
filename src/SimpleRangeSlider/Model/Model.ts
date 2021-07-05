@@ -11,7 +11,7 @@ class Model {
 
   values: number[];
 
-  isSinglePointer: boolean
+  isSinglePointer: boolean;
 
   activePointerIndex: number = 0;
 

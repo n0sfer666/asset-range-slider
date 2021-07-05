@@ -8,25 +8,25 @@ import getTextInputBlocks from '../text-input-block/getTextInputBlocks';
 import getControlInput from '../text-input-block/getControlInput';
 
 class DemoPanel {
-  readonly blockClass = 'demo-panel'
+  readonly blockClass = 'demo-panel';
 
-  $mainContainer: JQuery
+  $mainContainer: JQuery;
 
-  $sliderContainer: JQuery
+  $sliderContainer: JQuery;
 
-  sliderInstance: SimpleRangeSlider
+  sliderInstance: SimpleRangeSlider;
 
-  sliderConfig: iConfigUser
+  sliderConfig: iConfigUser;
 
-  $configContainer: JQuery
+  $configContainer: JQuery;
 
-  isSinglePointer: boolean
+  isSinglePointer: boolean;
 
-  textInputBlocks: TextInput[] = []
+  textInputBlocks: TextInput[] = [];
 
-  radioBlocks: RadioBlock[] = []
+  radioBlocks: RadioBlock[] = [];
 
-  controlButton: ControlButton
+  controlButton: ControlButton;
 
   constructor($container: JQuery) {
     this.$mainContainer = $container;

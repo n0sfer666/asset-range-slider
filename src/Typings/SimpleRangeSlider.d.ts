@@ -6,36 +6,36 @@ type tCssClasses = 'slider' | 'tumbler' | 'connect' | 'tooltip';
 type tRange = [number, number];
 type tValue = [number] | [number, number];
 type tPosition = tValue;
-type tInputType = 'value' | 'tooltip'
+type tInputType = 'value' | 'tooltip';
 type tConfigInput = {
   $values?: JQuery[],
   $tooltip?: JQuery
-}
+};
 type tCssValues = {
   attribute: string,
   value: string
-}
+};
 type tViewData = {
   position?: number,
   value?: number,
   index: number
-}
+};
 type tPointerData = {
   position: number,
   index: number
-}
+};
 type tScaleData = {
   position: number,
-}
+};
 type tInputTextData = {
   value: number,
   index: number
-}
+};
 type tModelData = {
   values: number[],
   positions: number[],
   index: number
-}
+};
 // interfaces
 interface iObject {
   [key: string]: any;

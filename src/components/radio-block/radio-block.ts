@@ -1,21 +1,21 @@
 import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
 
 class RadioBlock {
-  readonly blockClass: string = 'radio-block'
+  readonly blockClass: string = 'radio-block';
 
-  $mainContainer: JQuery
+  $mainContainer: JQuery;
 
-  sliderInstance: SimpleRangeSlider
+  sliderInstance: SimpleRangeSlider;
 
-  $sliderContainer: JQuery
+  $sliderContainer: JQuery;
 
-  sliderConfig: iCompleteConfig
+  sliderConfig: iCompleteConfig;
 
-  configurationName: string
+  configurationName: string;
 
-  configurationValue: boolean | string
+  configurationValue: boolean | string;
 
-  radioBlocks: JQuery[] = []
+  radioBlocks: JQuery[] = [];
 
   constructor($container: JQuery, sliderInstance: SimpleRangeSlider) {
     this.$mainContainer = $container;

@@ -3,21 +3,21 @@ import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
 class TextInput {
   readonly blockClass: string = 'text-input-block';
 
-  $mainContainer: JQuery
+  $mainContainer: JQuery;
 
-  sliderInstance: SimpleRangeSlider
+  sliderInstance: SimpleRangeSlider;
 
-  $sliderContainer: JQuery
+  $sliderContainer: JQuery;
 
-  sliderConfig: iCompleteConfig
+  sliderConfig: iCompleteConfig;
 
-  isSinglePointer: boolean
+  isSinglePointer: boolean;
 
-  inputs: JQuery[] = []
+  inputs: JQuery[] = [];
 
-  configurationName: string
+  configurationName: string;
 
-  configurationValue: number | number[]
+  configurationValue: number | number[];
 
   constructor(
     $container: JQuery,

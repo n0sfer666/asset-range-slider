@@ -1,21 +1,21 @@
 import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
 
 class ControlButton {
-  readonly blockClass: string = 'control-button'
+  readonly blockClass: string = 'control-button';
 
-  $container: JQuery
+  $container: JQuery;
 
-  $sliderContainer: JQuery
+  $sliderContainer: JQuery;
 
-  $text: JQuery
+  $text: JQuery;
 
-  $secondStart: JQuery
+  $secondStart: JQuery;
 
-  sliderInstance: SimpleRangeSlider
+  sliderInstance: SimpleRangeSlider;
 
-  sliderConfig: iCompleteConfig
+  sliderConfig: iCompleteConfig;
 
-  isSinglePointer: boolean
+  isSinglePointer: boolean;
 
   constructor(
     $container: JQuery,
