@@ -16,8 +16,6 @@ class DemoPanel {
 
   sliderInstance: SimpleRangeSlider;
 
-  sliderConfig: ConfigUserList;
-
   $configContainer: JQuery;
 
   isSinglePointer: boolean;
@@ -32,9 +30,10 @@ class DemoPanel {
     this.$mainContainer = $container;
     this.$sliderContainer = this.getContainer('slider-container');
     this.$configContainer = this.getContainer('config');
-    this.sliderConfig = this.getSliderConfig(this.$mainContainer);
-    this.sliderInstance = new SimpleRangeSlider(this.$sliderContainer, this.sliderConfig);
-    this.sliderConfig = this.sliderInstance.completeConfig;
+    this.sliderInstance = new SimpleRangeSlider(
+      this.$sliderContainer,
+      this.getSliderConfig(this.$mainContainer),
+    );
     this.isSinglePointer = this.sliderInstance.completeConfig.start.length === 1;
     this.textInputBlocks = getTextInputBlocks(
       this.$configContainer,
@@ -50,27 +49,23 @@ class DemoPanel {
   }
 
   getContainer(type: 'slider-container' | 'config'): JQuery {
-    return this.$mainContainer.find(`.js-${this.blockClass}__${type}`);
+    return this.$mainContainer.find(`.js-${this.blockClass}__${type}`) || undefined;
   }
 
   getSliderConfig($container: JQuery): ConfigUserList {
-    return {
+    const config: ConfigUserList = {
       input: getControlInput(this.$configContainer),
-      orientation: $container.data('orientation'),
-      range: JSON.parse(`[${$container.data('range')}]`),
-      start: JSON.parse(`[${$container.data('start')}]`),
-      step: Number($container.data('step')),
-      tooltip: !!$container.data('tooltip'),
-      scale: !!$container.data('scale'),
-      connect: !!$container.data('connect'),
     };
+    $.each($container.data(), (key, value) => {
+      config[key] = value;
+    });
+    return config;
   }
 
   getSecondStart(): JQuery {
     let secondStart: JQuery = $(document.createElement('div'));
     this.textInputBlocks.forEach((textInput) => {
       if (textInput.configurationName === 'start') {
-        // eslint-disable-next-line prefer-destructuring
         secondStart = textInput.inputs[1];
       }
     });

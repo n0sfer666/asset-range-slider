@@ -7,7 +7,14 @@ html
     meta(http-equiv='X-UA-Compatible', content='ie=edge')
   body
     .wrapper
-      +demo-panel({})
+      +demo-panel({wrongParam: '-1'})
+    .wrapper
+      +demo-panel({
+        orientation: 'vertical',
+        start: '[-500, 500]',
+        range: '[-1000, 1000]',
+        step: '100',
+        })
     .wrapper
       +demo-panel({
         orientation: 'vertical',
@@ -17,14 +24,4 @@ html
         connect: 'false',
         tooltip: 'false',
         scale: 'false',
-        })
-    .wrapper
-      +demo-panel({
-        orientation: 'vertical',
-        start: '[-500, 500]',
-        range: '[-1000, 1000]',
-        step: '100',
-        connect: 'true',
-        tooltip: 'true',
-        scale: 'true',
         })
