@@ -10,7 +10,7 @@ import SimpleRangeSlider from './SimpleRangeSlider';
       const configKeys: string[] = Object.keys(completeConfig);
       const indexOfInput = configKeys.indexOf('input');
       if (indexOfInput !== -1) {
-        configKeys.splice(configKeys.indexOf('input'));
+        configKeys.splice(indexOfInput);
       }
       configKeys.forEach((key) => {
         $container.data(key, completeConfig[key]);
