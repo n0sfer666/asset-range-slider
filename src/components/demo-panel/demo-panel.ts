@@ -40,7 +40,11 @@ class DemoPanel {
       this.sliderConfig,
       this.isSinglePointer,
     );
-    // this.radioBlocks = getRadioBlocks(this.$configContainer, this.sliderInstance);
+    this.radioBlocks = getRadioBlocks(
+      this.$configContainer,
+      this.$sliderContainer,
+      this.sliderConfig,
+    );
     // this.controlButton = getControlButton(
     //   this.$configContainer,
     //   this.getSecondStart(),

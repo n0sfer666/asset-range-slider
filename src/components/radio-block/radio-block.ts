@@ -1,11 +1,9 @@
-import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
+import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
 class RadioBlock {
   readonly blockClass: string = 'radio-block';
 
   $mainContainer: JQuery;
-
-  sliderInstance: SimpleRangeSlider;
 
   $sliderContainer: JQuery;
 
@@ -17,11 +15,10 @@ class RadioBlock {
 
   radioBlocks: JQuery[] = [];
 
-  constructor($container: JQuery, sliderInstance: SimpleRangeSlider) {
+  constructor($container: JQuery, $sliderContainer: JQuery, sliderConfig: CompleteConfigList) {
     this.$mainContainer = $container;
-    this.sliderInstance = sliderInstance;
-    this.$sliderContainer = sliderInstance.$container;
-    this.sliderConfig = this.sliderInstance.completeConfig;
+    this.$sliderContainer = $sliderContainer;
+    this.sliderConfig = sliderConfig;
     this.configurationName = this.$mainContainer.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
     this.radioBlocks = this.getRadioBlocks();
@@ -46,7 +43,7 @@ class RadioBlock {
     if (value !== this.configurationValue) {
       this.configurationValue = value;
       this.sliderConfig[this.configurationName] = this.configurationValue;
-      this.sliderInstance.rebuildSlider(this.sliderConfig);
+      this.rebuildSlider(this.sliderConfig);
     }
   }
 
@@ -54,6 +51,11 @@ class RadioBlock {
     return this.configurationName === 'orientation'
       ? $radio.data('text')
       : $radio.data('text') === 'enable';
+  }
+
+  rebuildSlider(config: CompleteConfigList) {
+    this.$sliderContainer.empty();
+    this.$sliderContainer.simpleRangeSlider(<ConfigUserList> config);
   }
 
   bindContext() {
