@@ -1,11 +1,9 @@
-import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
+import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
 class TextInput {
   readonly blockClass: string = 'text-input-block';
 
   $mainContainer: JQuery;
-
-  sliderInstance: SimpleRangeSlider;
 
   $sliderContainer: JQuery;
 
@@ -21,16 +19,16 @@ class TextInput {
 
   constructor(
     $container: JQuery,
-    sliderInstance: SimpleRangeSlider,
+    $sliderContainer: JQuery,
+    sliderConfig: CompleteConfigList,
     isSinglePointer: boolean,
   ) {
     this.$mainContainer = $container;
-    this.sliderInstance = sliderInstance;
-    this.$sliderContainer = sliderInstance.$container;
-    this.sliderConfig = this.sliderInstance.completeConfig;
+    this.$sliderContainer = $sliderContainer;
+    this.sliderConfig = sliderConfig;
     this.isSinglePointer = isSinglePointer;
     this.configurationName = $container.data('configuration-name');
-    this.configurationValue = this.sliderInstance.completeConfig[this.configurationName];
+    this.configurationValue = this.sliderConfig[this.configurationName];
     this.initInputs();
     this.bindContext();
     this.bindHandlers();
@@ -67,7 +65,7 @@ class TextInput {
           const isZero = value === 0;
           if (!isTooBigStep && !isZero) {
             this.sliderConfig.step = value;
-            this.sliderInstance.rebuildSlider(this.sliderConfig);
+            this.rebuildSlider(this.sliderConfig);
           } else {
             this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.step);
           }
@@ -78,7 +76,7 @@ class TextInput {
             const isOutOfRange = value < range[0] || value > range[1];
             if (!isOutOfRange) {
               this.sliderConfig.start[index] = value;
-              this.sliderInstance.rebuildSlider(this.sliderConfig);
+              this.rebuildSlider(this.sliderConfig);
             } else {
               this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
               $target.val();
@@ -92,7 +90,7 @@ class TextInput {
               : value === start[0];
             if (!isOutOfRange && !isEqualOtherStart) {
               this.sliderConfig.start[index] = value;
-              this.sliderInstance.rebuildSlider(this.sliderConfig);
+              this.rebuildSlider(this.sliderConfig);
             } else {
               this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
             }
@@ -109,7 +107,7 @@ class TextInput {
               : value < start[0];
             if (!isOutOfStart && !isEqualOtherRange) {
               this.sliderConfig.range[index] = value;
-              this.sliderInstance.rebuildSlider(this.sliderConfig);
+              this.rebuildSlider(this.sliderConfig);
             } else {
               this.blinkInputAndReturnPreviousValue($target, range[index]);
             }
@@ -119,7 +117,7 @@ class TextInput {
               : value < start[index];
             if (!isOutOfStart && !isEqualOtherRange) {
               this.sliderConfig.range[index] = value;
-              this.sliderInstance.rebuildSlider(this.sliderConfig);
+              this.rebuildSlider(this.sliderConfig);
             } else {
               this.blinkInputAndReturnPreviousValue($target, range[index]);
             }
@@ -140,6 +138,11 @@ class TextInput {
 
   bindContext() {
     this.handleInputFocusOut = this.handleInputFocusOut.bind(this);
+  }
+
+  rebuildSlider(config: CompleteConfigList) {
+    this.$sliderContainer.empty();
+    this.$sliderContainer.simpleRangeSlider(<ConfigUserList> config);
   }
 
   // eslint-disable-next-line class-methods-use-this

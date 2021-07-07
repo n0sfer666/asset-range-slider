@@ -1,9 +1,10 @@
-import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
+import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 import TextInput from './text-input-block';
 
 function getTextInputBlocks(
   $mainContainer: JQuery,
-  sliderInstance: SimpleRangeSlider,
+  $sliderContainer: JQuery,
+  sliderConfig: CompleteConfigList,
   isSinglePointer: boolean,
 ): TextInput[] {
   const textInputBlocks: TextInput[] = [];
@@ -12,7 +13,8 @@ function getTextInputBlocks(
       textInputBlocks.push(
         new TextInput(
           $(element),
-          sliderInstance,
+          $sliderContainer,
+          sliderConfig,
           isSinglePointer,
         ),
       );

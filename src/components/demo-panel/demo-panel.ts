@@ -1,4 +1,4 @@
-import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
+import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 import ControlButton from '../control-button/control-button';
 import getControlButton from '../control-button/getControlButton';
 import getRadioBlocks from '../radio-block/getRadioBlocks';
@@ -14,9 +14,9 @@ class DemoPanel {
 
   $sliderContainer: JQuery;
 
-  sliderInstance: SimpleRangeSlider;
-
   $configContainer: JQuery;
+
+  sliderConfig: CompleteConfigList;
 
   isSinglePointer: boolean;
 
@@ -24,42 +24,50 @@ class DemoPanel {
 
   radioBlocks: RadioBlock[] = [];
 
-  controlButton: ControlButton;
+  // controlButton: ControlButton;
 
   constructor($container: JQuery) {
     this.$mainContainer = $container;
     this.$sliderContainer = this.getContainer('slider-container');
     this.$configContainer = this.getContainer('config');
-    this.sliderInstance = new SimpleRangeSlider(
-      this.$sliderContainer,
-      this.getSliderConfig(this.$mainContainer),
-    );
-    this.isSinglePointer = this.sliderInstance.completeConfig.start.length === 1;
+    const config: ConfigUserList = this.getSliderConfig();
+    this.$sliderContainer.simpleRangeSlider(config);
+    this.sliderConfig = this.getCompleteSliderConfig(config.input);
+    this.isSinglePointer = this.sliderConfig.start.length === 1;
     this.textInputBlocks = getTextInputBlocks(
       this.$configContainer,
-      this.sliderInstance,
+      this.$sliderContainer,
+      this.sliderConfig,
       this.isSinglePointer,
     );
-    this.radioBlocks = getRadioBlocks(this.$configContainer, this.sliderInstance);
-    this.controlButton = getControlButton(
-      this.$configContainer,
-      this.getSecondStart(),
-      this.sliderInstance,
-    );
+    // this.radioBlocks = getRadioBlocks(this.$configContainer, this.sliderInstance);
+    // this.controlButton = getControlButton(
+    //   this.$configContainer,
+    //   this.getSecondStart(),
+    //   this.sliderInstance,
+    // );
   }
 
   getContainer(type: 'slider-container' | 'config'): JQuery {
     return this.$mainContainer.find(`.js-${this.blockClass}__${type}`) || undefined;
   }
 
-  getSliderConfig($container: JQuery): ConfigUserList {
+  getSliderConfig(): ConfigUserList {
     const config: ConfigUserList = {
       input: getControlInput(this.$configContainer),
     };
-    $.each($container.data(), (key, value) => {
+    $.each(this.$mainContainer.data(), (key, value) => {
       config[key] = value;
     });
     return config;
+  }
+
+  getCompleteSliderConfig(input?: ConfigInputs): CompleteConfigList {
+    const config: ConfigUserList = { input };
+    $.each(this.$sliderContainer.data(), (key, value) => {
+      config[key] = value;
+    });
+    return <CompleteConfigList> config;
   }
 
   getSecondStart(): JQuery {
