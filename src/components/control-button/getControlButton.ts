@@ -1,15 +1,18 @@
-import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
 import ControlButton from './control-button';
 
 function getControlButton(
   $mainContainer: JQuery,
   $secondStart: JQuery,
-  sliderInstance: SimpleRangeSlider,
+  $sliderContainer: JQuery,
+  sliderConfig: CompleteConfigList,
+  isSinglePointer: boolean,
 ): ControlButton {
   return new ControlButton(
     $mainContainer.find('.js-control-button'),
     $secondStart,
-    sliderInstance,
+    $sliderContainer,
+    sliderConfig,
+    isSinglePointer,
   );
 }
 

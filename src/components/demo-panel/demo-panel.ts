@@ -24,7 +24,7 @@ class DemoPanel {
 
   radioBlocks: RadioBlock[] = [];
 
-  // controlButton: ControlButton;
+  controlButton: ControlButton;
 
   constructor($container: JQuery) {
     this.$mainContainer = $container;
@@ -45,11 +45,13 @@ class DemoPanel {
       this.$sliderContainer,
       this.sliderConfig,
     );
-    // this.controlButton = getControlButton(
-    //   this.$configContainer,
-    //   this.getSecondStart(),
-    //   this.sliderInstance,
-    // );
+    this.controlButton = getControlButton(
+      this.$configContainer,
+      this.getSecondStart(),
+      this.$sliderContainer,
+      this.sliderConfig,
+      this.isSinglePointer,
+    );
   }
 
   getContainer(type: 'slider-container' | 'config'): JQuery {
