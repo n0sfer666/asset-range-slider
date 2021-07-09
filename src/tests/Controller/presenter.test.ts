@@ -1,6 +1,5 @@
 import Presenter from '../../SimpleRangeSlider/Controller/Presenter';
 import Model from '../../SimpleRangeSlider/Model/Model';
-import Pointer from '../../SimpleRangeSlider/View/entities/Pointer';
 import View from '../../SimpleRangeSlider/View/View';
 
 describe('Presenter.ts', () => {
