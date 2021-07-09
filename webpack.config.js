@@ -1,4 +1,3 @@
-// eslint-disable-next-line camelcase
 __webpack_base_uri__ = 'http://localhost:9090';
 const Webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
