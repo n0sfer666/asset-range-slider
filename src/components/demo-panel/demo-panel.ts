@@ -34,17 +34,7 @@ class DemoPanel {
     this.$sliderContainer.simpleRangeSlider(config);
     this.sliderConfig = this.getCompleteSliderConfig(config.input);
     this.isSinglePointer = this.sliderConfig.start.length === 1;
-    this.textInputBlocks = getTextInputBlocks(
-      this.$configContainer,
-      this.$sliderContainer,
-      this.sliderConfig,
-      this.isSinglePointer,
-    );
-    this.radioBlocks = getRadioBlocks(
-      this.$configContainer,
-      this.$sliderContainer,
-      this.sliderConfig,
-    );
+    this.initBlocks();
     this.controlButton = getControlButton(
       this.$configContainer,
       this.getSecondStart(),
@@ -84,6 +74,20 @@ class DemoPanel {
       }
     });
     return secondStart;
+  }
+
+  initBlocks() {
+    this.textInputBlocks = getTextInputBlocks(
+      this.$configContainer,
+      this.$sliderContainer,
+      this.sliderConfig,
+      this.isSinglePointer,
+    );
+    this.radioBlocks = getRadioBlocks(
+      this.$configContainer,
+      this.$sliderContainer,
+      this.sliderConfig,
+    );
   }
 }
 

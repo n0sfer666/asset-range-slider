@@ -46,15 +46,11 @@ class View {
     this.range = range;
     this.positions = positions;
     this.isSinglePointer = this.values.length === 1;
-    this.bindContext();
     this.$sliderContainer = this.getSliderElement(false);
     this.$slider = this.getSliderElement(true);
     this.pointers = this.positions.map((position, index) => this.getPointer(position, index));
-    this.tooltips = this.config.tooltip
-      ? this.values.map((value) => this.getTooltip(value))
-      : undefined;
-    this.connect = this.config.connect ? this.getConnect(this.pointers) : undefined;
-    this.scale = this.config.scale ? this.getScale() : undefined;
+    this.bindContext();
+    this.initEntities();
     this.initInputs();
     this.drawSlider();
     this.switchActivePointer();
@@ -103,6 +99,14 @@ class View {
     const scaleInstance = new Scale(this.config.range, this.config.orientation);
     scaleInstance.subscribeOn(this.updateByScale);
     return scaleInstance;
+  }
+
+  initEntities() {
+    this.tooltips = this.config.tooltip
+      ? this.values.map((value) => this.getTooltip(value))
+      : undefined;
+    this.connect = this.config.connect ? this.getConnect(this.pointers) : undefined;
+    this.scale = this.config.scale ? this.getScale() : undefined;
   }
 
   initInputs() {
