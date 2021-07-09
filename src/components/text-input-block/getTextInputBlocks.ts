@@ -9,7 +9,7 @@ function getTextInputBlocks(
 ): TextInput[] {
   const textInputBlocks: TextInput[] = [];
   $mainContainer.find('.js-text-input-block').each((_, element) => {
-    if (!$(element).hasClass('text-input-block_isControl')) {
+    if (!$(element).hasClass('text-input-block_with-control')) {
       textInputBlocks.push(
         new TextInput(
           $(element),

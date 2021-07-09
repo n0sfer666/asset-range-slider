@@ -4,7 +4,7 @@ mixin text-input-block({name = 'control'})
     const isStart = name === 'start'
     const isRange = name === 'range'
     const className = 'text-input-block'
-    const blockClassName = isControl ? `${className} ${className}_isControl js-${className}` : `${className} js-${className}`
+    const blockClassName = isControl ? `${className} ${className}_with-control js-${className}` : `${className} js-${className}`
   div(class = blockClassName, data-configuration-name = name)
     h3.text-input-block__title #{name}
     input(type = 'text', class = `${className}__input ${className}__input_normal  js-${className}__input`, name = name, data-index = 0)
