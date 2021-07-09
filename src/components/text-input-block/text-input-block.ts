@@ -150,7 +150,7 @@ class TextInput {
     $input.addClass(`${this.blockClass}__input_wrong`);
     setTimeout(() => {
       $input.addClass(`${this.blockClass}__input_normal`);
-    $input.removeClass(`${this.blockClass}__input_wrong`);
+      $input.removeClass(`${this.blockClass}__input_wrong`);
     }, 250);
     $input.val(previousValue);
   }
