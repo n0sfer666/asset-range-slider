@@ -18,8 +18,15 @@
   &__input {
     width: 80px;
     height: 20px;
-    border: 1px dotted blue;
     border-radius: 5px;
+
+    &_normal {
+      border: 1px dotted blue;
+    }
+
+    &_wrong {
+      border: 2px solid red;
+    }
   }
 
   &__label {

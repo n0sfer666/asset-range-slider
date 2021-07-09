@@ -145,11 +145,12 @@ class TextInput {
     this.$sliderContainer.simpleRangeSlider(<ConfigUserList> config);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   blinkInputAndReturnPreviousValue($input: JQuery, previousValue: number) {
-    $input.css('border', '2px solid red');
+    $input.removeClass(`${this.blockClass}__input_normal`);
+    $input.addClass(`${this.blockClass}__input_wrong`);
     setTimeout(() => {
-      $input.css('border', '');
+      $input.addClass(`${this.blockClass}__input_normal`);
+    $input.removeClass(`${this.blockClass}__input_wrong`);
     }, 250);
     $input.val(previousValue);
   }
