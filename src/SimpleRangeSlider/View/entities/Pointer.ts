@@ -24,6 +24,7 @@ class Pointer {
   className: string = 'simple-range-slider__pointer';
 
   constructor($container: JQuery, orientation: ConfigOrientation, position: number, index: number) {
+    this.bindContext();
     this.$container = $container;
     this.$document = $(document);
     this.orientation = orientation;
@@ -31,7 +32,6 @@ class Pointer {
     this.index = index;
     this.$element = this.getElement();
     this.setPosition(this.position);
-    this.bindContext();
     this.bindHandler();
   }
 

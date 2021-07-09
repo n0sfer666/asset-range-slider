@@ -20,6 +20,7 @@ class ControlButton {
     sliderConfig: CompleteConfigList,
     isSinglePointer: boolean,
   ) {
+    this.bindContext();
     this.$container = $container;
     this.$secondStart = $secondStart;
     this.$sliderContainer = $sliderContainer;
@@ -27,7 +28,6 @@ class ControlButton {
     this.isSinglePointer = isSinglePointer;
     this.$text = this.get$text(this.$container);
     this.$text.text(this.isSinglePointer ? 'add pointer' : 'remove pointer');
-    this.bindContext();
     this.bindHandlers();
   }
 

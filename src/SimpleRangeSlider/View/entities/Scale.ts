@@ -22,6 +22,7 @@ class Scale {
   positions: number[] = [];
 
   constructor(range: ConfigRange, orientation: ConfigOrientation) {
+    this.bindContext();
     this.orientation = orientation;
     this.range = range;
     this.diapason = this.range[1] - this.range[0];
@@ -31,7 +32,6 @@ class Scale {
     this.$emptyPips = this.getEmptyPips();
     this.$valuePips = this.getValuePips();
     this.drawPips();
-    this.bindContext();
     this.bindHandler();
   }
 

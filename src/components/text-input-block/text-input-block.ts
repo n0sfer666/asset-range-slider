@@ -23,6 +23,7 @@ class TextInput {
     sliderConfig: CompleteConfigList,
     isSinglePointer: boolean,
   ) {
+    this.bindContext();
     this.$mainContainer = $container;
     this.$sliderContainer = $sliderContainer;
     this.sliderConfig = sliderConfig;
@@ -30,7 +31,6 @@ class TextInput {
     this.configurationName = $container.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
     this.initInputs();
-    this.bindContext();
     this.bindHandlers();
   }
 

@@ -39,6 +39,7 @@ class View {
   activePointerIndex: number = 0;
 
   constructor($container: JQuery, config: ConfigViewList, positions: number[]) {
+    this.bindContext();
     this.$container = $container;
     this.config = config;
     const { start, range } = config;
@@ -49,7 +50,6 @@ class View {
     this.$sliderContainer = this.getSliderElement(false);
     this.$slider = this.getSliderElement(true);
     this.pointers = this.positions.map((position, index) => this.getPointer(position, index));
-    this.bindContext();
     this.initEntities();
     this.initInputs();
     this.drawSlider();

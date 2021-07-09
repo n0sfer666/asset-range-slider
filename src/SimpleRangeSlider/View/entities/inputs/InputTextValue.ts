@@ -8,11 +8,11 @@ class InputTextValue {
   callbackList: InputTextCallback[] = [];
 
   constructor($element: JQuery, value: number, index: number) {
+    this.bindContext();
     this.$element = $element;
     this.value = value;
     this.index = index;
     this.setNewValue(this.value);
-    this.bindContext();
     this.unbindHandler();
     this.bindHandler();
   }

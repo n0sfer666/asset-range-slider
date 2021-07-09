@@ -16,13 +16,13 @@ class RadioBlock {
   radioBlocks: JQuery[] = [];
 
   constructor($container: JQuery, $sliderContainer: JQuery, sliderConfig: CompleteConfigList) {
+    this.bindContext();
     this.$mainContainer = $container;
     this.$sliderContainer = $sliderContainer;
     this.sliderConfig = sliderConfig;
     this.configurationName = this.$mainContainer.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
     this.radioBlocks = this.getRadioBlocks();
-    this.bindContext();
     this.bindHandlers();
   }
 

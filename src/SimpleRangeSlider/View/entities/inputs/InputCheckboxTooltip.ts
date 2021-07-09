@@ -6,10 +6,10 @@ class InputCheckboxTooltip {
   tooltips: Tooltip[];
 
   constructor($element: JQuery, tooltips: Tooltip[]) {
+    this.bindContext();
     this.$element = $element;
     this.tooltips = tooltips;
     this.$element.prop('checked', true);
-    this.bindContext();
     this.unbindHandler();
     this.bindHandlers();
   }
