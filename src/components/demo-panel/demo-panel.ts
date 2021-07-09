@@ -30,9 +30,10 @@ class DemoPanel {
     this.$mainContainer = $container;
     this.$sliderContainer = this.getContainer('slider-container');
     this.$configContainer = this.getContainer('config');
-    const config: ConfigUserList = this.getSliderConfig();
-    this.$sliderContainer.simpleRangeSlider(config);
-    this.sliderConfig = this.getCompleteSliderConfig(config.input);
+    const input: ConfigInputs = getControlInput(this.$configContainer);
+    this.$sliderContainer.simpleRangeSlider({ input });
+    this.sliderConfig = this.getCompleteSliderConfig(input);
+    console.log(this.sliderConfig);
     this.isSinglePointer = this.sliderConfig.start.length === 1;
     this.initBlocks();
     this.controlButton = getControlButton(
@@ -46,16 +47,6 @@ class DemoPanel {
 
   getContainer(type: 'slider-container' | 'config'): JQuery {
     return this.$mainContainer.find(`.js-${this.blockClass}__${type}`) || undefined;
-  }
-
-  getSliderConfig(): ConfigUserList {
-    const config: ConfigUserList = {
-      input: getControlInput(this.$configContainer),
-    };
-    $.each(this.$mainContainer.data(), (key, value) => {
-      config[key] = value;
-    });
-    return config;
   }
 
   getCompleteSliderConfig(input?: ConfigInputs): CompleteConfigList {

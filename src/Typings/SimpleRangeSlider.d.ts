@@ -35,13 +35,13 @@ interface ObjectKeyString {
   [key: string]: any;
 }
 interface ConfigUserList extends ObjectKeyString {
-  readonly orientation?: ConfigOrientation;
-  readonly start?: PointerValue;
-  readonly range?: ConfigRange;
-  readonly step?: number;
-  readonly connect?: boolean;
-  readonly tooltip?: boolean;
-  readonly scale?: boolean;
+  orientation?: ConfigOrientation;
+  start?: PointerValue;
+  range?: ConfigRange;
+  step?: number;
+  connect?: boolean;
+  tooltip?: boolean;
+  scale?: boolean;
   input?: ConfigInputs;
 }
 interface CompleteConfigList extends ObjectKeyString {
@@ -55,18 +55,18 @@ interface CompleteConfigList extends ObjectKeyString {
   input?: ConfigInputs;
 }
 interface ConfigModelList extends ObjectKeyString {
-  readonly start: PointerValue;
-  readonly range: ConfigRange;
-  readonly step: number;
+  start: PointerValue;
+  range: ConfigRange;
+  step: number;
 }
 interface ConfigViewList extends ObjectKeyString {
-  readonly orientation: ConfigOrientation,
-  readonly start: PointerValue;
-  readonly range: ConfigRange;
-  readonly connect: boolean;
-  readonly tooltip: boolean;
-  readonly scale: boolean;
-  readonly input?: ConfigInputs;
+  orientation: ConfigOrientation,
+  start: PointerValue;
+  range: ConfigRange;
+  connect: boolean;
+  tooltip: boolean;
+  scale: boolean;
+  input?: ConfigInputs;
 }
 interface ViewCallback {
   (viewData: ViewData): void
