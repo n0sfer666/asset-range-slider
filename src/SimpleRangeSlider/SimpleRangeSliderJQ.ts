@@ -29,7 +29,9 @@ import SimpleRangeSlider from './SimpleRangeSlider';
         configKeys.splice(indexOfInput);
       }
       configKeys.forEach((key) => {
-        $container.data(key, completeConfig[key]).attr(key, completeConfig[key]);
+        $container
+          .data(key, completeConfig[key])
+          .attr(`data-${key}`, completeConfig[key]);
       });
       return $container;
     },

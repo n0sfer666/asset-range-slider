@@ -55,6 +55,7 @@ class RadioBlock {
 
   rebuildSlider(config: CompleteConfigList) {
     this.$sliderContainer.empty();
+    this.$sliderContainer.removeData();
     this.$sliderContainer.simpleRangeSlider(<ConfigUserList> config);
   }
 

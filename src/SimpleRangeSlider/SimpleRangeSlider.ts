@@ -49,17 +49,6 @@ class SimpleRangeSlider {
   getViewConfig(): ConfigViewList {
     return <ConfigViewList> { ...this.completeConfig };
   }
-
-  rebuildSlider(config: CompleteConfigList) {
-    this.$container.empty();
-    this.completeConfig = config;
-    this.model = new Model(this.getModelConfig());
-    const positions: number[] = this.completeConfig.start.map(
-      (value) => this.model.getPositionFromValue(value),
-    );
-    this.view = new View(this.$container, this.getViewConfig(), positions);
-    this.presenter = new Presenter(this.view, this.model);
-  }
 }
 
 export default SimpleRangeSlider;
