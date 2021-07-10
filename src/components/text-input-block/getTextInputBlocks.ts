@@ -7,20 +7,14 @@ function getTextInputBlocks(
   sliderConfig: CompleteConfigList,
   isSinglePointer: boolean,
 ): TextInput[] {
-  const textInputBlocks: TextInput[] = [];
-  $mainContainer.find('.js-text-input-block').each((_, element) => {
-    if (!$(element).hasClass('text-input-block_with-control')) {
-      textInputBlocks.push(
-        new TextInput(
-          $(element),
-          $sliderContainer,
-          sliderConfig,
-          isSinglePointer,
-        ),
-      );
-    }
-  });
-  return textInputBlocks;
+  return Array.from($mainContainer.find('.js-text-input-block')
+    .not('.text-input-block_with-control')
+    .map((_, element) => new TextInput(
+      $(element),
+      $sliderContainer,
+      sliderConfig,
+      isSinglePointer,
+    )));
 }
 
 export default getTextInputBlocks;

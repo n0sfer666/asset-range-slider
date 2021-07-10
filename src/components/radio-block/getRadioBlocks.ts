@@ -5,17 +5,11 @@ function getRadioBlocks(
   $sliderContainer: JQuery,
   sliderConfig: CompleteConfigList,
 ): RadioBlock[] {
-  const radioBlocks: RadioBlock[] = [];
-  $mainContainer.find('.js-radio-block').each((_, element) => {
-    radioBlocks.push(
-      new RadioBlock(
-        $(element),
-        $sliderContainer,
-        sliderConfig,
-      ),
-    );
-  });
-  return radioBlocks;
+  return Array.from($mainContainer.find('.js-radio-block').map((_, element) => new RadioBlock(
+    $(element),
+    $sliderContainer,
+    sliderConfig,
+  )));
 }
 
 export default getRadioBlocks;
