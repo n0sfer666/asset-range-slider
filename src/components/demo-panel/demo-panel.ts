@@ -33,7 +33,6 @@ class DemoPanel {
     const input: ConfigInputs = getControlInput(this.$configContainer);
     this.$sliderContainer.simpleRangeSlider({ input });
     this.sliderConfig = this.getCompleteSliderConfig(input);
-    console.log(this.sliderConfig);
     this.isSinglePointer = this.sliderConfig.start.length === 1;
     this.initBlocks();
     this.controlButton = getControlButton(

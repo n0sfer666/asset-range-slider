@@ -65,7 +65,6 @@ describe('simpleRangeSliderJQ.ts', () => {
     const config = $slider.data();
     const expectConfig = { ...defaultConfig, ...testConfig };
     expect($slider.length).toBeGreaterThan(0);
-    // console.log(expectConfig.input && expectConfig.input.$tooltip);
     if (expectConfig.input && expectConfig.input.$tooltip) {
       expect(testInput.is(expectConfig.input.$tooltip)).toBe(true);
     } else {
