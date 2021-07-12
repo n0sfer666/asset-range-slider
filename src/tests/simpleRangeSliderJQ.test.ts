@@ -15,6 +15,7 @@ describe('simpleRangeSliderJQ.ts', () => {
 
   afterEach(() => {
     $container.empty();
+    $container.removeData();
   });
 
   test('create with empty config', () => {
@@ -31,8 +32,8 @@ describe('simpleRangeSliderJQ.ts', () => {
       scale: false,
     };
     const $slider = $container.simpleRangeSlider(testConfig);
-    const config = $slider.data();
-    const expectConfig = { ...defaultConfig, ...testConfig };
+    const config = <CompleteConfigList> $slider.data();
+    const expectConfig = <CompleteConfigList> { ...defaultConfig, ...testConfig };
     expect($slider.length).toBeGreaterThan(0);
     expect(expectConfig).toEqual(config);
   });

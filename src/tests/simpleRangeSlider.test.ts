@@ -43,19 +43,4 @@ describe('SimpleRangeSlider.ts', () => {
     expect(testInstance.getViewConfig())
       .toEqual(testViewConfig);
   });
-
-  test('rebuildSlider(config)', () => {
-    const testNewConfig: CompleteConfigList = {
-      orientation: 'horizontal',
-      range: [-100, 100],
-      start: [10],
-      step: 10,
-      connect: false,
-      scale: false,
-      tooltip: false,
-    };
-    testInstance.rebuildSlider(testNewConfig);
-    expect(testInstance instanceof SimpleRangeSlider);
-    expect(testInstance.completeConfig).toEqual(testNewConfig);
-  });
 });
