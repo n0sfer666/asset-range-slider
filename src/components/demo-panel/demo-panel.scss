@@ -5,7 +5,7 @@
   padding: 15px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-evenly;
   box-sizing: border-box;
 
   &__slider {
@@ -13,6 +13,7 @@
     width: 50%;
     max-width: 300px;
     height: 300px;
+    margin-bottom: 50px;
 
     &-container {
       height: 100%;
