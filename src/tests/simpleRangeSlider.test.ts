@@ -34,12 +34,7 @@ describe('SimpleRangeSlider.ts', () => {
   });
 
   test('getViewConfig(completeConfig)', () => {
-    const {
-      start, range, step, orientation, scale, connect, tooltip, input,
-    } = testInstance.completeConfig;
-    const testViewConfig: ConfigViewList = {
-      start, range, step, orientation, scale, connect, tooltip, input,
-    };
+    const testViewConfig: ConfigViewList = { ...testInstance.completeConfig };
     expect(testInstance.getViewConfig())
       .toEqual(testViewConfig);
   });
