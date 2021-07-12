@@ -173,6 +173,10 @@ $scale_font: $tooltip_font;
         height: $scale_size;
         width: 2px;
       }
+
+      & .simple-range-slider__scale-pip-value {
+        transform: translate(0%, 50%);
+      }
     }
 
     &_vertical {
@@ -187,7 +191,7 @@ $scale_font: $tooltip_font;
       }
 
       & .simple-range-slider__scale-pip-value {
-        margin-right: 1px;
+        transform: translate(-100%, 0%);
       }
     }
 
@@ -212,8 +216,10 @@ $scale_font: $tooltip_font;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        position: absolute;
         max-width: $scale_value_max_size;
         display: inline-block;
+        text-align: center;
         font: $scale_font;
       }
     }
