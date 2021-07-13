@@ -27,14 +27,14 @@ class RadioBlock {
   }
 
   getRadioBlocks(): JQuery[] {
-    const radioBlocks: JQuery[] = [];
-    this.$mainContainer.find(`.js-${this.blockClass}__label`).each((_, element) => {
-      const $radio = $(element).find(`.js-${this.blockClass}__radio`);
-      const value = this.getText($radio);
-      $radio.prop('checked', value === this.configurationValue);
-      radioBlocks.push($radio);
-    });
-    return radioBlocks;
+    return Array.from(
+      this.$mainContainer.find(`.js-${this.blockClass}__radio`).map(
+        (_, element) => $(element).prop(
+          'checked',
+          this.getText($(element)) === this.configurationValue,
+        ),
+      ),
+    );
   }
 
   handleRadioClick(event: JQuery.MouseEventBase) {
