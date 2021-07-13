@@ -4,6 +4,7 @@
     "removeComments": true,
     "strict": true,
     "alwaysStrict": true,
+    "strictPropertyInitialization": false,
   },
   "include": [
     "src/**/*.ts",
