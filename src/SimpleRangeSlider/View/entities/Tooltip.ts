@@ -8,15 +8,14 @@ class Tooltip {
   constructor(value: number, orientation: ConfigOrientation) {
     this.value = value;
     this.orientation = orientation;
-    this.$element = this.getElement();
+    this.initElement();
     this.setValue(this.value);
   }
 
-  getElement(): JQuery {
-    const $element: JQuery = jQuery(document.createElement('div'));
-    $element.addClass('simple-range-slider__tooltip');
-    $element.addClass(`simple-range-slider__tooltip_${this.orientation}`);
-    return $element;
+  initElement() {
+    this.$element = jQuery(document.createElement('div'));
+    this.$element.addClass('simple-range-slider__tooltip');
+    this.$element.addClass(`simple-range-slider__tooltip_${this.orientation}`);
   }
 
   setValue(value: number) {

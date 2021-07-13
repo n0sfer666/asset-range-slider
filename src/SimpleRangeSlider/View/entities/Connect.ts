@@ -23,16 +23,15 @@ class Connect {
     this.endPosition = endPosition;
     this.orientation = orientation;
     this.isSinglePointer = isSinglePointer;
-    this.$element = this.getElement();
+    this.initElement();
     this.position = [this.startPosition, this.endPosition];
     this.setPosition(this.startPosition, this.endPosition);
   }
 
-  getElement(): JQuery {
-    const element: JQuery = jQuery(document.createElement('div'));
-    element.addClass('simple-range-slider__connect');
-    element.addClass(`simple-range-slider__connect_${this.orientation}`);
-    return element;
+  initElement() {
+    this.$element = jQuery(document.createElement('div'));
+    this.$element.addClass('simple-range-slider__connect');
+    this.$element.addClass(`simple-range-slider__connect_${this.orientation}`);
   }
 
   setPosition(startPosition: number, endPosition: number) {

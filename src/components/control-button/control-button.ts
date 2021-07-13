@@ -26,13 +26,13 @@ class ControlButton {
     this.$sliderContainer = $sliderContainer;
     this.sliderConfig = sliderConfig;
     this.isSinglePointer = isSinglePointer;
-    this.$text = this.get$text(this.$container);
-    this.$text.text(this.isSinglePointer ? 'add pointer' : 'remove pointer');
+    this.initText();
     this.bindHandlers();
   }
 
-  get$text($container: JQuery) {
-    return $container.find(`.js-${this.blockClass}__text`);
+  initText() {
+    this.$text = this.$container.find(`.js-${this.blockClass}__text`)
+      .text(this.isSinglePointer ? 'add pointer' : 'remove pointer');
   }
 
   handleButtonClick() {

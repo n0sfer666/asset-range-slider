@@ -34,13 +34,6 @@ class DemoPanel {
     this.sliderConfig = this.getCompleteSliderConfig(input);
     this.isSinglePointer = this.sliderConfig.start.length === 1;
     this.initBlocks();
-    this.controlButton = getControlButton(
-      this.$configContainer,
-      this.getSecondStart(),
-      this.$sliderContainer,
-      this.sliderConfig,
-      this.isSinglePointer,
-    );
   }
 
   getContainer(type: 'slider-container' | 'config'): JQuery {
@@ -81,6 +74,13 @@ class DemoPanel {
       this.$configContainer,
       this.$sliderContainer,
       this.sliderConfig,
+    );
+    this.controlButton = getControlButton(
+      this.$configContainer,
+      this.getSecondStart(),
+      this.$sliderContainer,
+      this.sliderConfig,
+      this.isSinglePointer,
     );
   }
 }
