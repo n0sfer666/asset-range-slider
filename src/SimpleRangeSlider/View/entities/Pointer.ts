@@ -3,8 +3,6 @@ class Pointer {
 
   $container: JQuery;
 
-  $document: JQuery.PlainObject;
-
   orientation: ConfigOrientation;
 
   position: number;
@@ -26,7 +24,6 @@ class Pointer {
   constructor($container: JQuery, orientation: ConfigOrientation, position: number, index: number) {
     this.bindContext();
     this.$container = $container;
-    this.$document = $(document);
     this.orientation = orientation;
     this.position = position;
     this.index = index;
@@ -83,8 +80,8 @@ class Pointer {
     this.containerOffsetSize = this.orientation === 'horizontal'
       ? outerWidth
       : outerHeight;
-    this.$document.on('mousemove', this.handlePointerMove);
-    this.$document.on('mouseup', this.handlePointerMouseUp);
+    $(document).on('mousemove', this.handlePointerMove);
+    $(document).on('mouseup', this.handlePointerMouseUp);
   }
 
   handlePointerMove(event: JQuery.MouseEventBase) {
@@ -99,8 +96,8 @@ class Pointer {
   }
 
   handlePointerMouseUp() {
-    this.$document.off('mousemove', this.handlePointerMove);
-    this.$document.off('mouseup', this.handlePointerMouseUp);
+    $(document).off('mousemove', this.handlePointerMove);
+    $(document).off('mouseup', this.handlePointerMouseUp);
   }
 
   bindContext() {
