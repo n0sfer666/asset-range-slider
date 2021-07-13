@@ -3,7 +3,7 @@ type ConfigRange = [number, number];
 type PointerValue = [number] | [number, number];
 type PointerPosition = PointerValue;
 type ConfigInputs = {
-  $values?: JQuery[],
+  values?: JQuery[],
   $tooltip?: JQuery
 };
 type PointerCssValues = {

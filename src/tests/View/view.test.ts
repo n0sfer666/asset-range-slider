@@ -28,21 +28,21 @@ describe('View.ts', () => {
     ],
     start: [makeRandomNumber(-1e3, -1)],
     input: {
-      $values: [$(document.createElement('input')).prop('type', 'text')],
+      values: [$(document.createElement('input')).prop('type', 'text')],
       $tooltip: $(document.createElement('input')).prop('type', 'checkbox'),
     },
   };
   if (randomBoolean) {
     testConfig.start.push(makeRandomNumber(0, 1e3));
-    if (testConfig.input && testConfig.input.$values) {
-      testConfig.input.$values.push($(document.createElement('input')).prop('type', 'text'));
+    if (testConfig.input && testConfig.input.values) {
+      testConfig.input.values.push($(document.createElement('input')).prop('type', 'text'));
     }
   }
 
   $body.append($testContainer);
   if (testConfig.input) {
-    if (testConfig.input.$values) {
-      testConfig.input.$values.forEach(($value: JQuery) => $body.append($value));
+    if (testConfig.input.values) {
+      testConfig.input.values.forEach(($value: JQuery) => $body.append($value));
     }
     if (testConfig.input.$tooltip) {
       $body.append(testConfig.input.$tooltip);
@@ -154,13 +154,13 @@ describe('View.ts', () => {
   test('updateByPointer(pointerData)', () => {
     const position = Math.round(Math.random() * normalizingCoefficient) / normalizingCoefficient;
     const index = Math.round(Math.random());
-    const expecPointerData: PointerData = {
+    const expectPointerData: PointerData = {
       position,
       index,
     };
-    testInstance.updateByPointer(expecPointerData);
-    expect(expecPointerData.index).toEqual(tesViewData.index);
-    expect(expecPointerData.position).toEqual(tesViewData.position);
+    testInstance.updateByPointer(expectPointerData);
+    expect(expectPointerData.index).toEqual(tesViewData.index);
+    expect(expectPointerData.position).toEqual(tesViewData.position);
   });
 
   test('updateByInputText(inputTextData)', () => {

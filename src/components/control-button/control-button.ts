@@ -44,8 +44,8 @@ class ControlButton {
       if (newValue < range[1]) {
         this.isSinglePointer = false;
         start.push(newValue);
-        if (this.sliderConfig.input && this.sliderConfig.input.$values) {
-          this.sliderConfig.input.$values[1].show();
+        if (this.sliderConfig.input && this.sliderConfig.input.values) {
+          this.sliderConfig.input.values[1].show();
         }
         if (start[1]) {
           this.$secondStart.show().val(start[1]);
@@ -56,8 +56,8 @@ class ControlButton {
     } else {
       this.isSinglePointer = true;
       start.pop();
-      if (this.sliderConfig.input && this.sliderConfig.input.$values) {
-        this.sliderConfig.input.$values[1].hide();
+      if (this.sliderConfig.input && this.sliderConfig.input.values) {
+        this.sliderConfig.input.values[1].hide();
       }
       this.$secondStart.hide().val('');
       this.rebuildSlider(this.sliderConfig);
