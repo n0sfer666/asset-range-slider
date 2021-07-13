@@ -38,19 +38,10 @@ class Connect {
   setPosition(startPosition: number, endPosition: number) {
     const start: number = Math.round(startPosition * this.normalizingCoefficient);
     const end: number = Math.round(endPosition * this.normalizingCoefficient);
-    const cssValues: PointerCssValues[] = [{
-      attribute: this.orientation === 'horizontal' ? 'width' : 'height',
-      value: `${end - start}%`,
-    }];
+    this.$element.css(this.orientation === 'horizontal' ? 'width' : 'height', `${end - start}%`);
     if (!this.isSinglePointer) {
-      cssValues.push({
-        attribute: this.orientation === 'horizontal' ? 'left' : 'top',
-        value: `${(start)}%`,
-      });
+      this.$element.css(this.orientation === 'horizontal' ? 'left' : 'top', `${start}%`);
     }
-    cssValues.forEach((cssValue) => {
-      this.$element.css(cssValue.attribute, cssValue.value);
-    });
     this.position = [startPosition, endPosition];
   }
 }
