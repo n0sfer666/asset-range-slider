@@ -9,9 +9,9 @@ class Scale {
 
   orientation: ConfigOrientation;
 
-  $emptyPips: JQuery[] = [];
+  emptyPips: JQuery[] = [];
 
-  $valuePips: JQuery[] = [];
+  valuePips: JQuery[] = [];
 
   callbackList: ScaleCallback[] = [];
 
@@ -28,9 +28,7 @@ class Scale {
     this.diapason = this.range[1] - this.range[0];
     this.values = this.getValues();
     this.positions = this.getPositions();
-    this.$element = Scale.getElement('scale', this.orientation);
-    this.$emptyPips = this.getEmptyPips();
-    this.$valuePips = this.getValuePips();
+    this.initElements();
     this.drawPips();
     this.bindHandler();
   }
@@ -44,17 +42,23 @@ class Scale {
     return $element;
   }
 
+  initElements() {
+    this.$element = Scale.getElement('scale', this.orientation);
+    this.emptyPips = this.getEmptyPips();
+    this.valuePips = this.getValuePips();
+  }
+
   getEmptyPips(): JQuery[] {
-    const $emptyPips: JQuery[] = [];
+    const emptyPips: JQuery[] = [];
     for (let i = 0; i < this.emptyPipsNumber; i += 1) {
       const $emptyDash = Scale.getElement('scale-pip-dash', 'empty');
-      $emptyPips.push(Scale.getElement('scale-pip').append($emptyDash));
+      emptyPips.push(Scale.getElement('scale-pip').append($emptyDash));
     }
-    return $emptyPips;
+    return emptyPips;
   }
 
   getValuePips(): JQuery[] {
-    const $valuePips: JQuery[] = this.values.map((value) => {
+    const valuePips: JQuery[] = this.values.map((value) => {
       const $dash = Scale.getElement('scale-pip-dash');
       const $pipValue = Scale.getElement('scale-pip-value').text(value);
       if (this.orientation === 'vertical') {
@@ -63,15 +67,15 @@ class Scale {
       return Scale.getElement('scale-pip').append($dash, $pipValue);
     });
 
-    return $valuePips;
+    return valuePips;
   }
 
   drawPips() {
-    this.$valuePips.forEach(($valueDashPip, index) => {
+    this.valuePips.forEach(($valueDashPip, index) => {
       this.$element.append($valueDashPip);
-      const isLast: boolean = this.$valuePips.length - 1 === index;
+      const isLast: boolean = this.valuePips.length - 1 === index;
       if (!isLast) {
-        this.$emptyPips.forEach(($emptyDashPip) => {
+        this.emptyPips.forEach(($emptyDashPip) => {
           this.$element.append($emptyDashPip.clone());
         });
       }
@@ -119,7 +123,7 @@ class Scale {
   }
 
   bindHandler() {
-    this.$valuePips.forEach(($valueDashPip) => {
+    this.valuePips.forEach(($valueDashPip) => {
       $valueDashPip.on('click', this.handlerValuePipClick);
     });
   }

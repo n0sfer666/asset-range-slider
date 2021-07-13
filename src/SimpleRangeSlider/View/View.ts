@@ -47,9 +47,6 @@ class View {
     this.range = range;
     this.positions = positions;
     this.isSinglePointer = this.values.length === 1;
-    this.$sliderContainer = this.getSliderElement(false);
-    this.$slider = this.getSliderElement(true);
-    this.pointers = this.positions.map((position, index) => this.getPointer(position, index));
     this.initEntities();
     this.initInputs();
     this.drawSlider();
@@ -102,6 +99,9 @@ class View {
   }
 
   initEntities() {
+    this.$sliderContainer = this.getSliderElement(false);
+    this.$slider = this.getSliderElement(true);
+    this.pointers = this.positions.map((position, index) => this.getPointer(position, index));
     this.tooltips = this.config.tooltip
       ? this.values.map((value) => this.getTooltip(value))
       : undefined;

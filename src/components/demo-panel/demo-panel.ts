@@ -28,10 +28,9 @@ class DemoPanel {
 
   constructor($container: JQuery) {
     this.$mainContainer = $container;
-    this.$sliderContainer = this.getContainer('slider-container');
-    this.$configContainer = this.getContainer('config');
+    this.initContainers();
     const input: ConfigInputs = getControlInput(this.$configContainer);
-    this.$sliderContainer.simpleRangeSlider({ input });
+    this.$sliderContainer.simpleRangeSlider({ input: getControlInput(this.$configContainer) });
     this.sliderConfig = this.getCompleteSliderConfig(input);
     this.isSinglePointer = this.sliderConfig.start.length === 1;
     this.initBlocks();
@@ -64,6 +63,11 @@ class DemoPanel {
       }
     });
     return secondStart;
+  }
+
+  initContainers() {
+    this.$sliderContainer = this.getContainer('slider-container');
+    this.$configContainer = this.getContainer('config');
   }
 
   initBlocks() {
