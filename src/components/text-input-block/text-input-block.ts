@@ -35,9 +35,8 @@ class TextInput {
   }
 
   initInputs() {
-    this.$mainContainer.find(`.js-${this.blockClass}__input`).each((_, element) => {
-      this.inputs.push($(element));
-    });
+    this.inputs = Array.from(this.$mainContainer.find(`.js-${this.blockClass}__input`)
+      .map((_, element) => $(element)));
     if (this.configurationName === 'start' && this.isSinglePointer) {
       this.inputs[1].hide();
     }
