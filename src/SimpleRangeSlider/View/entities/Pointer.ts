@@ -27,16 +27,15 @@ class Pointer {
     this.orientation = orientation;
     this.position = position;
     this.index = index;
-    this.$element = this.getElement();
+    this.initElement();
     this.setPosition(this.position);
     this.bindHandler();
   }
 
-  getElement(): JQuery {
-    const $element: JQuery = jQuery(document.createElement('div'));
-    $element.addClass(`${this.className}`);
-    $element.addClass(`${this.className}_${this.orientation}`);
-    return $element;
+  initElement() {
+    this.$element = jQuery(document.createElement('div'));
+    this.$element.addClass(`${this.className}`);
+    this.$element.addClass(`${this.className}_${this.orientation}`);
   }
 
   switchActive(isActive: boolean) {
