@@ -56,11 +56,7 @@ class DemoPanel {
 
   initBlocks() {
     this.textInputBlocks = getTextInputBlocks(this.$configContainer, this.$sliderContainer);
-    this.radioBlocks = getRadioBlocks(
-      this.$configContainer,
-      this.$sliderContainer,
-      this.sliderConfig,
-    );
+    this.radioBlocks = getRadioBlocks(this.$configContainer, this.$sliderContainer);
     this.controlButton = getControlButton(
       this.$configContainer,
       this.getSecondStart(),

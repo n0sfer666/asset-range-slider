@@ -52,7 +52,7 @@ class SimpleRangeSlider {
 
   rebuildSlider(config: ConfigUserList) {
     this.$container.empty();
-    this.completeConfig = { ...this.completeConfig, config };
+    this.completeConfig = { ...this.completeConfig, ...config };
     this.$container.data('config', this.completeConfig);
     Object.keys(config).forEach((key) => {
       this.$container.attr(`data-${key}`, config[key]);
