@@ -1,3 +1,4 @@
+import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
 import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
 class TextInput {
@@ -9,6 +10,8 @@ class TextInput {
 
   sliderConfig: CompleteConfigList;
 
+  sliderInstance: SimpleRangeSlider;
+
   isSinglePointer: boolean;
 
   inputs: JQuery[] = [];
@@ -17,17 +20,13 @@ class TextInput {
 
   configurationValue: number | number[];
 
-  constructor(
-    $container: JQuery,
-    $sliderContainer: JQuery,
-    sliderConfig: CompleteConfigList,
-    isSinglePointer: boolean,
-  ) {
+  constructor($container: JQuery, $sliderContainer: JQuery) {
     this.bindContext();
     this.$mainContainer = $container;
     this.$sliderContainer = $sliderContainer;
-    this.sliderConfig = sliderConfig;
-    this.isSinglePointer = isSinglePointer;
+    this.sliderInstance = $sliderContainer.data('instance');
+    this.sliderConfig = this.sliderInstance.completeConfig;
+    this.isSinglePointer = this.sliderConfig.start.length === 1;
     this.configurationName = $container.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
     this.initInputs();
@@ -60,11 +59,11 @@ class TextInput {
     if (isNotEqualPrevious) {
       switch (this.configurationName) {
         case 'step': {
-          const isTooBigStep = value > Math.round((Math.abs(range[0]) + Math.abs(range[1])) / 10);
-          const isZero = value === 0;
-          if (!isTooBigStep && !isZero) {
+          const isAboveZero = value > 0;
+          if (isAboveZero) {
             this.sliderConfig.step = value;
-            this.rebuildSlider(this.sliderConfig);
+            this.configurationValue = value;
+            this.sliderInstance.rebuildSlider({ step: value });
           } else {
             this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.step);
           }
@@ -75,7 +74,8 @@ class TextInput {
             const isOutOfRange = value < range[0] || value > range[1];
             if (!isOutOfRange) {
               this.sliderConfig.start[index] = value;
-              this.rebuildSlider(this.sliderConfig);
+              this.configurationValue = start;
+              this.sliderInstance.rebuildSlider({ start });
             } else {
               this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
               $target.val();
@@ -89,7 +89,8 @@ class TextInput {
               : value === start[0];
             if (!isOutOfRange && !isEqualOtherStart) {
               this.sliderConfig.start[index] = value;
-              this.rebuildSlider(this.sliderConfig);
+              this.configurationValue = start;
+              this.sliderInstance.rebuildSlider({ start });
             } else {
               this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
             }
@@ -106,7 +107,8 @@ class TextInput {
               : value < start[0];
             if (!isOutOfStart && !isEqualOtherRange) {
               this.sliderConfig.range[index] = value;
-              this.rebuildSlider(this.sliderConfig);
+              this.configurationValue = range;
+              this.sliderInstance.rebuildSlider({ range });
             } else {
               this.blinkInputAndReturnPreviousValue($target, range[index]);
             }
@@ -116,7 +118,8 @@ class TextInput {
               : value < start[index];
             if (!isOutOfStart && !isEqualOtherRange) {
               this.sliderConfig.range[index] = value;
-              this.rebuildSlider(this.sliderConfig);
+              this.configurationValue = range;
+              this.sliderInstance.rebuildSlider({ range });
             } else {
               this.blinkInputAndReturnPreviousValue($target, range[index]);
             }
@@ -137,12 +140,6 @@ class TextInput {
 
   bindContext() {
     this.handleInputFocusOut = this.handleInputFocusOut.bind(this);
-  }
-
-  rebuildSlider(config: CompleteConfigList) {
-    this.$sliderContainer.empty();
-    this.$sliderContainer.removeData();
-    this.$sliderContainer.simpleRangeSlider(<ConfigUserList> config);
   }
 
   blinkInputAndReturnPreviousValue($input: JQuery, previousValue: number) {
