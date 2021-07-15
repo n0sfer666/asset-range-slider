@@ -29,23 +29,14 @@ class DemoPanel {
   constructor($container: JQuery) {
     this.$mainContainer = $container;
     this.initContainers();
-    const input: ConfigInputs = getControlInput(this.$configContainer);
     this.$sliderContainer.simpleRangeSlider({ input: getControlInput(this.$configContainer) });
-    this.sliderConfig = this.getCompleteSliderConfig(input);
+    this.sliderConfig = <CompleteConfigList> this.$sliderContainer.data('config');
     this.isSinglePointer = this.sliderConfig.start.length === 1;
     this.initBlocks();
   }
 
   getContainer(type: 'slider-container' | 'config'): JQuery {
     return this.$mainContainer.find(`.js-${this.blockClass}__${type}`) || undefined;
-  }
-
-  getCompleteSliderConfig(input?: ConfigInputs): CompleteConfigList {
-    const config: ConfigUserList = { input };
-    $.each(this.$sliderContainer.data(), (key, value) => {
-      config[key] = value;
-    });
-    return <CompleteConfigList> config;
   }
 
   getSecondStart(): JQuery {

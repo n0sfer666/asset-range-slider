@@ -29,10 +29,10 @@ import SimpleRangeSlider from './SimpleRangeSlider';
         configKeys.splice(indexOfInput);
       }
       configKeys.forEach((key) => {
-        $container
-          .data(key, completeConfig[key])
-          .attr(`data-${key}`, completeConfig[key]);
+        $container.attr(`data-${key}`, completeConfig[key]);
       });
+      $container.data('config', completeConfig);
+      $container.data('instance', slider);
       return $container;
     },
   });
