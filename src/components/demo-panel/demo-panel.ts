@@ -61,8 +61,6 @@ class DemoPanel {
       this.$configContainer,
       this.getSecondStart(),
       this.$sliderContainer,
-      this.sliderConfig,
-      this.isSinglePointer,
     );
   }
 }

@@ -1,3 +1,5 @@
+import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
+
 class ControlButton {
   readonly blockClass: string = 'control-button';
 
@@ -9,23 +11,17 @@ class ControlButton {
 
   $text: JQuery;
 
-  sliderConfig: CompleteConfigList;
+  sliderInstance: SimpleRangeSlider;
 
   isSinglePointer: boolean;
 
-  constructor(
-    $container: JQuery,
-    $secondStart: JQuery,
-    $sliderContainer: JQuery,
-    sliderConfig: CompleteConfigList,
-    isSinglePointer: boolean,
-  ) {
+  constructor($container: JQuery, $secondStart: JQuery, $sliderContainer: JQuery) {
     this.bindContext();
     this.$container = $container;
     this.$secondStart = $secondStart;
     this.$sliderContainer = $sliderContainer;
-    this.sliderConfig = sliderConfig;
-    this.isSinglePointer = isSinglePointer;
+    this.sliderInstance = $sliderContainer.data('instance');
+    this.isSinglePointer = this.sliderInstance.completeConfig.start.length === 1;
     this.initText();
     this.bindHandlers();
   }
@@ -36,31 +32,33 @@ class ControlButton {
   }
 
   handleButtonClick() {
-    const { start, range, step } = this.sliderConfig;
+    const {
+      start, range, step, input,
+    } = this.sliderInstance.completeConfig;
     if (this.isSinglePointer) {
-      const newValue = step < 5
+      const newValue = step < 10
         ? start[0] + 5
         : start[0] + step;
       if (newValue < range[1]) {
         this.isSinglePointer = false;
         start.push(newValue);
-        if (this.sliderConfig.input && this.sliderConfig.input.values) {
-          this.sliderConfig.input.values[1].show();
+        if (input && input.values) {
+          input.values[1].show();
         }
         if (start[1]) {
           this.$secondStart.show().val(start[1]);
         }
-        this.rebuildSlider(this.sliderConfig);
+        this.sliderInstance.rebuildSlider({ start });
         this.$text.text('remove pointer');
       }
     } else {
       this.isSinglePointer = true;
       start.pop();
-      if (this.sliderConfig.input && this.sliderConfig.input.values) {
-        this.sliderConfig.input.values[1].hide();
+      if (input && input.values) {
+        input.values[1].hide();
       }
       this.$secondStart.hide().val('');
-      this.rebuildSlider(this.sliderConfig);
+      this.sliderInstance.rebuildSlider({ start });
       this.$text.text('add pointer');
     }
   }
