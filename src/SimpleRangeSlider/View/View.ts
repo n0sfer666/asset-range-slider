@@ -172,19 +172,15 @@ class View {
   }
 
   updateByScale(scaleData: ScaleData) {
-    const { position } = scaleData;
+    const { value } = scaleData;
     if (this.isSinglePointer) {
-      this.positions[0] = position;
       this.activePointerIndex = 0;
     } else {
-      const difference = this.positions.map((currentPosition) => {
-        const result = Math.round((position - currentPosition) * 1e4) / 1e4;
-        return Math.abs(result);
-      });
+      const difference = this.values.map((currentValue) => Math.abs(value - currentValue));
       this.activePointerIndex = difference[0] < difference[1] ? 0 : 1;
     }
     const index = this.activePointerIndex;
-    this.callbackList.forEach((modelCallback) => modelCallback({ index, position }));
+    this.callbackList.forEach((modelCallback) => modelCallback({ index, value }));
   }
 
   updateByModel(modelData: ModelData) {

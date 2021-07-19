@@ -19,15 +19,12 @@ class Scale {
 
   values: number[] = [];
 
-  positions: number[] = [];
-
   constructor(range: ConfigRange, orientation: ConfigOrientation) {
     this.bindContext();
     this.orientation = orientation;
     this.range = range;
     this.diapason = this.range[1] - this.range[0];
     this.values = this.getValues();
-    this.positions = this.getPositions();
     this.initElements();
     this.drawPips();
     this.bindHandler();
@@ -61,10 +58,9 @@ class Scale {
     const valuePips: JQuery[] = this.values.map((value) => {
       const $dash = Scale.getElement('scale-pip-dash');
       const $pipValue = Scale.getElement('scale-pip-value').text(value);
-      if (this.orientation === 'vertical') {
-        return Scale.getElement('scale-pip').append($pipValue, $dash);
-      }
-      return Scale.getElement('scale-pip').append($dash, $pipValue);
+      const $pip = Scale.getElement('scale-pip');
+      $pip.append(this.orientation === 'horizontal' ? [$dash, $pipValue] : [$pipValue, $dash]);
+      return $pip;
     });
 
     return valuePips;
@@ -85,32 +81,20 @@ class Scale {
   getValues(): number[] {
     const result: number[] = [this.range[0]];
     const difference: number = Math.round(this.diapason / (this.valuePipsNumber - 1));
-    for (let i = 0; result.length < (this.valuePipsNumber - 1); i += 1) {
-      result.push(result[i] + difference);
+    for (let i = 0; result.length < (this.valuePipsNumber); i += 1) {
+      const newValue = result[i] + difference;
+      result.push(newValue <= this.range[1] ? newValue : this.range[1]);
     }
-    result.push(this.range[1]);
-    return result;
-  }
-
-  getPositions(): number[] {
-    const result: number[] = [0];
-    const difference: number = 1 / (this.valuePipsNumber - 1);
-    for (let i = 0; result.length < (this.valuePipsNumber - 1); i += 1) {
-      result.push(result[i] + difference);
-    }
-    result.push(1);
     return result;
   }
 
   handlerValuePipClick(event: JQuery.MouseEventBase) {
-    const targetValue: number = Number($(event.target).text());
-    this.values.forEach((value, index) => {
-      if (value === targetValue) {
-        const position = this.positions[index];
-        this.callbackList.forEach((callback) => {
-          callback({ position });
-        });
-      }
+    event.stopPropagation();
+    const value: number = $(event.target).hasClass('simple-range-slider__scale-pip-value')
+      ? Number($(event.target).text())
+      : Number($(event.target).siblings().text());
+    this.callbackList.forEach((callback) => {
+      callback({ value });
     });
   }
 

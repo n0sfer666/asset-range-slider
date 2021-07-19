@@ -20,7 +20,7 @@ type PointerData = {
   index: number
 };
 type ScaleData = {
-  position: number,
+  value: number,
 };
 type InputTextData = {
   value: number,
