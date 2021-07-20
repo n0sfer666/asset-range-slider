@@ -103,13 +103,11 @@ $scale_font: $tooltip_font;
     }
 
     &_horizontal:after {
-      top: -$slider_width;
-      left: calc( -$pointer_size / 2 );
+      transform: translate( -45%, -$slider_width);
     }
 
     &_vertical:after {
-      left: -$slider_width;
-      top: calc( -$pointer_size / 2 );
+      transform: translate(-$slider_width, -45%);
     }
   }
 

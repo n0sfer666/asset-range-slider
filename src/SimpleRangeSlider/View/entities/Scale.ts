@@ -1,7 +1,7 @@
 class Scale {
   readonly valuePipsNumber: number = 5;
 
-  readonly emptyPipsNumber: number = 3;
+  readonly emptyPipsNumber: number = 1;
 
   $element: JQuery;
 
@@ -69,10 +69,20 @@ class Scale {
   drawPips() {
     this.valuePips.forEach(($valueDashPip, index) => {
       this.$element.append($valueDashPip);
-      const isLast: boolean = this.valuePips.length - 1 === index;
-      if (!isLast) {
+      const valuePosition = `${this.getPositionByValue(this.values[index])}%`;
+      $valueDashPip.css(
+        this.orientation === 'horizontal' ? 'left' : 'top',
+        `${valuePosition}`,
+      );
+      const isNotLast: boolean = this.valuePips.length - 1 !== index;
+      if (isNotLast) {
         this.emptyPips.forEach(($emptyDashPip) => {
-          this.$element.append($emptyDashPip.clone());
+          const emptyValue = (this.values[index + 1] - this.values[index]) / 2 + this.values[index];
+          const emptyPosition = `${this.getPositionByValue(emptyValue)}%`;
+          this.$element.append($emptyDashPip.clone().css(
+            this.orientation === 'horizontal' ? 'left' : 'top',
+            emptyPosition,
+          ));
         });
       }
     });
@@ -86,6 +96,11 @@ class Scale {
       result.push(newValue <= this.range[1] ? newValue : this.range[1]);
     }
     return result;
+  }
+
+  getPositionByValue(value: number): number {
+    const result = (value - this.range[0]) / (this.range[1] - this.range[0]);
+    return Math.round(result * 1e6) / 1e4;
   }
 
   handlerValuePipClick(event: JQuery.MouseEventBase) {
