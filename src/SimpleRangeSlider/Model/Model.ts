@@ -15,13 +15,13 @@ class Model {
 
   activePointerIndex: number = 0;
 
-  constructor(config: ConfigModelList) {
+  constructor(config: ConfigModelList, values?: number[]) {
     const { range, start, step } = config;
-    this.values = [...start];
+    this.values = values ? [...values] : [...start];
     this.range = [...range];
     this.step = step;
     this.isSinglePointer = start.length === 1;
-    this.positions = this.values.map((val) => this.getPositionFromValue(val));
+    this.positions = this.values.map((value) => this.getPositionFromValue(value));
   }
 
   subscribeOn(callback: ModelCallback) {

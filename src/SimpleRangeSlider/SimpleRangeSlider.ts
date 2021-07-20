@@ -53,15 +53,16 @@ class SimpleRangeSlider {
   rebuildSlider(config: ConfigUserList) {
     this.$container.empty();
     this.completeConfig = { ...this.completeConfig, ...config };
+    const values = config.start ? undefined : [...this.model.values];
     this.$container.data('config', this.completeConfig);
     Object.keys(config).forEach((key) => {
       this.$container.attr(`data-${key}`, config[key]);
     });
-    this.model = new Model(this.getModelConfig());
-    const positions: number[] = this.completeConfig.start.map(
+    this.model = new Model(this.getModelConfig(), values);
+    const positions: number[] = this.model.values.map(
       (value) => this.model.getPositionFromValue(value),
     );
-    this.view = new View(this.$container, this.getViewConfig(), positions);
+    this.view = new View(this.$container, this.getViewConfig(), positions, values);
     this.presenter = new Presenter(this.view, this.model);
   }
 }

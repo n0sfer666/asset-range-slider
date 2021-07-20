@@ -38,14 +38,14 @@ class View {
 
   activePointerIndex: number = 0;
 
-  constructor($container: JQuery, config: ConfigViewList, positions: number[]) {
+  constructor($container: JQuery, config: ConfigViewList, positions: number[], values?: number[]) {
     this.bindContext();
     this.$container = $container;
     this.config = { ...config };
     const { start, range } = this.config;
-    this.values = start;
-    this.range = range;
-    this.positions = positions;
+    this.values = values || start;
+    this.range = [...range];
+    this.positions = [...positions];
     this.isSinglePointer = this.values.length === 1;
     this.initEntities();
     this.initInputs();
@@ -113,12 +113,12 @@ class View {
     if (this.config.input) {
       const { values, $tooltip } = this.config.input;
       if (values) {
-        this.inputValues = this.config.start.map((startValue, index) => {
-          const instance = new InputTextValue(values[index], startValue, index);
+        this.inputValues = this.values.map((value, index) => {
+          const instance = new InputTextValue(values[index], value, index);
           instance.subscribeOn(this.updateByInputText);
           return instance;
         });
-        const isLengthNotEqual = this.config.start.length !== values.length;
+        const isLengthNotEqual = this.values.length !== values.length;
         if (values[1] && isLengthNotEqual) {
           values[1].hide();
         }
