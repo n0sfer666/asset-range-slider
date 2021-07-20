@@ -41,8 +41,8 @@ class View {
   constructor($container: JQuery, config: ConfigViewList, positions: number[]) {
     this.bindContext();
     this.$container = $container;
-    this.config = config;
-    const { start, range } = config;
+    this.config = { ...config };
+    const { start, range } = this.config;
     this.values = start;
     this.range = range;
     this.positions = positions;

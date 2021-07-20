@@ -17,8 +17,8 @@ class Model {
 
   constructor(config: ConfigModelList) {
     const { range, start, step } = config;
-    this.values = start;
-    this.range = range;
+    this.values = [...start];
+    this.range = [...range];
     this.step = step;
     this.isSinglePointer = start.length === 1;
     this.positions = this.values.map((val) => this.getPositionFromValue(val));
