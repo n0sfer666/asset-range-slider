@@ -1,4 +1,4 @@
-import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
+import Presenter from '../../SimpleRangeSlider/Controller/Presenter';
 import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
 class RadioBlock {
@@ -8,7 +8,7 @@ class RadioBlock {
 
   $sliderContainer: JQuery;
 
-  sliderInstance: SimpleRangeSlider;
+  sliderInstance: Presenter;
 
   configurationName: string;
 

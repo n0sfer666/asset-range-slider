@@ -1,4 +1,4 @@
-import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
+import Presenter from '../../SimpleRangeSlider/Controller/Presenter';
 
 class ControlButton {
   readonly blockClass: string = 'control-button';
@@ -11,7 +11,7 @@ class ControlButton {
 
   $text: JQuery;
 
-  sliderInstance: SimpleRangeSlider;
+  sliderInstance: Presenter;
 
   isSinglePointer: boolean;
 

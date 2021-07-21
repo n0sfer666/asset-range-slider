@@ -1,4 +1,4 @@
-import SimpleRangeSlider from './SimpleRangeSlider';
+import Presenter from './Controller/Presenter';
 
 // eslint-disable-next-line func-names
 (function ($: JQueryStatic) {
@@ -21,7 +21,7 @@ import SimpleRangeSlider from './SimpleRangeSlider';
         }
       });
       const config = <ConfigUserList> { ...userConfig, ...dataConfig };
-      const slider = new SimpleRangeSlider(<JQuery> this, <ConfigUserList> config);
+      const slider = new Presenter(<JQuery> this, <ConfigUserList> config);
       const { completeConfig } = slider;
       const configKeys: string[] = Object.keys(completeConfig);
       const indexOfInput = configKeys.indexOf('input');

@@ -1,4 +1,4 @@
-import SimpleRangeSlider from '../../SimpleRangeSlider/SimpleRangeSlider';
+import Presenter from '../../SimpleRangeSlider/Controller/Presenter';
 import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
 class TextInput {
@@ -10,7 +10,7 @@ class TextInput {
 
   sliderConfig: CompleteConfigList;
 
-  sliderInstance: SimpleRangeSlider;
+  sliderInstance: Presenter;
 
   isSinglePointer: boolean;
 
