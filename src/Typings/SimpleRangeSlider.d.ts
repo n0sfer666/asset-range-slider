@@ -85,4 +85,6 @@ interface ModelCallback {
 }
 interface JQuery {
   simpleRangeSlider(config: ConfigUserList): JQuery
+  getSliderConfig(): CompleteConfigList
+  updateSlider(config: ConfigUserList): void
 }
