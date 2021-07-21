@@ -89,13 +89,11 @@ class Scale {
   }
 
   getValues(): number[] {
-    const result: number[] = [this.range[0]];
     const difference: number = Math.round(this.diapason / (this.valuePipsNumber - 1));
-    for (let i = 0; result.length < (this.valuePipsNumber); i += 1) {
-      const newValue = result[i] + difference;
-      result.push(newValue <= this.range[1] ? newValue : this.range[1]);
-    }
-    return result;
+    return new Array(this.valuePipsNumber).fill(this.range[0]).map((value, index) => {
+      const newVal = value + difference * index;
+      return newVal <= this.range[1] ? newVal : this.range[1];
+    });
   }
 
   getPositionByValue(value: number): number {
