@@ -5,6 +5,7 @@
     "strict": true,
     "alwaysStrict": true,
     "strictPropertyInitialization": false,
+    "sourceMap": true,
   },
   "include": [
     "src/**/*.ts",

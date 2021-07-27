@@ -22,7 +22,7 @@ class RadioBlock {
     this.$sliderContainer = $sliderContainer;
     this.sliderInstance = $sliderContainer.data('instance');
     this.configurationName = this.$mainContainer.data('configuration-name');
-    this.configurationValue = this.sliderInstance.completeConfig[this.configurationName];
+    this.configurationValue = this.sliderInstance.getConfig()[this.configurationName];
     this.radioBlocks = this.getRadioBlocks();
     this.bindHandlers();
   }
@@ -43,7 +43,7 @@ class RadioBlock {
     const value = this.getText($target);
     if (value !== this.configurationValue) {
       this.configurationValue = value;
-      this.sliderInstance.rebuildSlider({ [this.configurationName]: this.configurationValue });
+      // this.sliderInstance.rebuildSlider({ [this.configurationName]: this.configurationValue });
     }
   }
 

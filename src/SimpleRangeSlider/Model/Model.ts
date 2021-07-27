@@ -1,27 +1,64 @@
 class Model {
-  readonly normalizingCoefficient: number = 1e4;
+  private readonly normalizingCoefficient: number = 1e4;
 
-  readonly range: ConfigRange;
+  private readonly defaultConfig: CompleteConfigList = {
+    orientation: 'horizontal',
+    start: [10],
+    range: [0, 100],
+    step: 1,
+    connect: true,
+    tooltip: true,
+    scale: true,
+  };
 
-  readonly step: number;
+  private config: CompleteConfigList;
 
-  callbackList: ModelCallback[] = [];
+  private range: ConfigRange;
 
-  positions: number[];
+  private step: number;
 
-  values: number[];
+  private callbackList: ModelCallback[] = [];
 
-  isSinglePointer: boolean;
+  private positions: PointerValue;
 
-  activePointerIndex: number = 0;
+  private values: PointerValue;
 
-  constructor(config: ConfigModelList, values?: number[]) {
-    const { range, start, step } = config;
-    this.values = values ? [...values] : [...start];
+  private isSinglePointer: boolean;
+
+  private activePointerIndex: number = 0;
+
+  constructor(config: UserConfigList) {
+    this.config = Model.getCompleteConfig(this.defaultConfig, config);
+    const { range, start, step } = this.config;
+    this.values = [...start];
     this.range = [...range];
     this.step = step;
     this.isSinglePointer = start.length === 1;
-    this.positions = this.values.map((value) => this.getPositionFromValue(value));
+    this.positions = <PointerValue> this.values.map((value) => this.getPositionFromValue(value));
+  }
+
+  static getCompleteConfig(
+    defaultConfig: CompleteConfigList,
+    userConfig: UserConfigList,
+  ): CompleteConfigList {
+    return { ...defaultConfig, ...userConfig };
+  }
+
+  getConfig(): CompleteConfigList {
+    return this.config;
+  }
+
+  getViewConfig(): ViewConfigList {
+    const {
+      orientation, connect, scale, tooltip, input,
+    } = this.config;
+    return {
+      orientation, connect, scale, tooltip, input,
+    };
+  }
+
+  getValues(): PointerValue {
+    return this.values;
   }
 
   subscribeOn(callback: ModelCallback) {
@@ -59,15 +96,16 @@ class Model {
       }
       newValue = value;
     }
-    const rightBoundary = this.values[1] - this.step;
-    const leftBoundary = this.values[0] + this.step;
-    const isValueOfLeftPointerBiggerThanRight = newValue > rightBoundary;
-    const isValueOfRightPointerSmallerThanLeft = newValue < leftBoundary;
-    if (index === 0 && !this.isSinglePointer) {
-      return isValueOfLeftPointerBiggerThanRight ? rightBoundary : newValue;
+    const isFirstOfNotSinglePointer = index === 0 && !this.isSinglePointer;
+    if (isFirstOfNotSinglePointer && this.values[1]) {
+      const boundary = this.values[1] - this.step;
+      const isValueBiggerThanOther = boundary < newValue;
+      return isValueBiggerThanOther ? boundary : newValue;
     }
     if (index === 1) {
-      return isValueOfRightPointerSmallerThanLeft ? leftBoundary : newValue;
+      const boundary = this.values[0] + this.step;
+      const isValueBiggerThanOther = boundary > newValue;
+      return isValueBiggerThanOther ? boundary : newValue;
     }
     return newValue;
   }

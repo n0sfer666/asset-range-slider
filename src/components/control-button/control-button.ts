@@ -21,7 +21,7 @@ class ControlButton {
     this.$secondStart = $secondStart;
     this.$sliderContainer = $sliderContainer;
     this.sliderInstance = $sliderContainer.data('instance');
-    this.isSinglePointer = this.sliderInstance.completeConfig.start.length === 1;
+    this.isSinglePointer = this.sliderInstance.getConfig().start.length === 1;
     this.initText();
     this.bindHandlers();
   }
@@ -34,7 +34,7 @@ class ControlButton {
   handleButtonClick() {
     const {
       start, range, step, input,
-    } = this.sliderInstance.completeConfig;
+    } = this.sliderInstance.getConfig();
     if (this.isSinglePointer) {
       const newValue = step < 10
         ? start[0] + 5
@@ -48,7 +48,7 @@ class ControlButton {
         if (start[1]) {
           this.$secondStart.show().val(start[1]);
         }
-        this.sliderInstance.rebuildSlider({ start });
+        // this.sliderInstance.rebuildSlider({ start });
         this.$text.text('remove pointer');
       }
     } else {
@@ -58,7 +58,7 @@ class ControlButton {
         input.values[1].hide();
       }
       this.$secondStart.hide().val('');
-      this.sliderInstance.rebuildSlider({ start });
+      // this.sliderInstance.rebuildSlider({ start });
       this.$text.text('add pointer');
     }
   }
@@ -66,7 +66,7 @@ class ControlButton {
   rebuildSlider(config: CompleteConfigList) {
     this.$sliderContainer.empty();
     this.$sliderContainer.removeData();
-    this.$sliderContainer.simpleRangeSlider(<ConfigUserList> config);
+    this.$sliderContainer.simpleRangeSlider(<UserConfigList> config);
   }
 
   bindContext() {

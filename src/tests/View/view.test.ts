@@ -17,7 +17,7 @@ describe('View.ts', () => {
   });
   const randomBoolean = getRandomBoolean();
   const $testContainer = $(document.createElement('div'));
-  const testConfig: ConfigViewList = {
+  const testConfig: ViewConfigList = {
     connect: getRandomBoolean(),
     scale: getRandomBoolean(),
     tooltip: getRandomBoolean(),

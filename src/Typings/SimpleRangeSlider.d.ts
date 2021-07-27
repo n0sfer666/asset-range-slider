@@ -27,14 +27,14 @@ type InputTextData = {
   index: number
 };
 type ModelData = {
-  values: number[],
-  positions: number[],
+  values: PointerValue,
+  positions: PointerValue,
   index: number
 };
 interface ObjectKeyString {
   [key: string]: any;
 }
-interface ConfigUserList extends ObjectKeyString {
+interface UserConfigList extends ObjectKeyString {
   orientation?: ConfigOrientation;
   start?: PointerValue;
   range?: ConfigRange;
@@ -54,15 +54,13 @@ interface CompleteConfigList extends ObjectKeyString {
   scale: boolean;
   input?: ConfigInputs;
 }
-interface ConfigModelList extends ObjectKeyString {
+interface ModelConfigList extends ObjectKeyString {
   start: PointerValue;
   range: ConfigRange;
   step: number;
 }
-interface ConfigViewList extends ObjectKeyString {
+interface ViewConfigList extends ObjectKeyString {
   orientation: ConfigOrientation,
-  start: PointerValue;
-  range: ConfigRange;
   connect: boolean;
   tooltip: boolean;
   scale: boolean;
@@ -84,7 +82,7 @@ interface ModelCallback {
   (modelData: ModelData): void
 }
 interface JQuery {
-  simpleRangeSlider(config: ConfigUserList): JQuery
+  simpleRangeSlider(config: UserConfigList): JQuery
   getSliderConfig(): CompleteConfigList
-  updateSlider(config: ConfigUserList): void
+  updateSlider(config: UserConfigList): void
 }

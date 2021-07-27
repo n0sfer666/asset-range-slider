@@ -3,7 +3,7 @@ import SimpleRangeSlider from '../SimpleRangeSlider/Controller/Presenter';
 describe('SimpleRangeSlider.ts', () => {
   const $testContainer: JQuery = $(document.createElement('div'));
   $(document.body).append($testContainer);
-  const testConfig: ConfigUserList = {
+  const testConfig: UserConfigList = {
     orientation: 'vertical',
     range: [-1000, 1000],
     start: [-100, 500],
@@ -26,7 +26,7 @@ describe('SimpleRangeSlider.ts', () => {
 
   test('getModelConfig(completeConfig)', () => {
     const { start, range, step } = testInstance.completeConfig;
-    const testModelConfig: ConfigModelList = <ConfigModelList> {
+    const testModelConfig: ModelConfigList = <ModelConfigList> {
       start, range, step,
     };
     expect(testInstance.getModelConfig())
@@ -34,7 +34,7 @@ describe('SimpleRangeSlider.ts', () => {
   });
 
   test('getViewConfig(completeConfig)', () => {
-    const testViewConfig: ConfigViewList = { ...testInstance.completeConfig };
+    const testViewConfig: ViewConfigList = { ...testInstance.completeConfig };
     expect(testInstance.getViewConfig())
       .toEqual(testViewConfig);
   });

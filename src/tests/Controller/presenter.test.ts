@@ -6,12 +6,12 @@ describe('Presenter.ts', () => {
   const start: PointerValue = [10];
   const range: ConfigRange = [0, 100];
   const step = 1;
-  const modelConfig: ConfigModelList = { start, range, step };
+  const modelConfig: ModelConfigList = { start, range, step };
   const model: Model = new Model(modelConfig);
 
   const $container = $(document.createElement('div'));
   $(document.body).append($container);
-  const viewConfig: ConfigViewList = {
+  const viewConfig: ViewConfigList = {
     connect: true,
     scale: true,
     tooltip: true,

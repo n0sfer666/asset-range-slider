@@ -2,7 +2,7 @@ __webpack_base_uri__ = 'http://localhost:9090';
 const Webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+module.exports = (_, options) => ({
   stats: 'errors-only',
   entry: {
     index: './src/index.ts',
@@ -14,6 +14,7 @@ module.exports = {
     filename: '[name].js',
     path: `${__dirname}/dist`,
   },
+  devtool: options.mode === 'development' ? 'inline-source-map' : '',
   devServer: {
     contentBase: `${__dirname}/dist`,
     compress: true,
@@ -46,4 +47,4 @@ module.exports = {
       template: './src/pages/index.pug',
     }),
   ],
-};
+});

@@ -11,7 +11,7 @@ describe('Model.ts', () => {
   const testCallback: ModelCallback = (modelData: ModelData) => {
     tesModelData = modelData;
   };
-  const testConfigs: ConfigModelList[] = [
+  const testConfigs: ModelConfigList[] = [
     {
       range: [-10, 100],
       start: [50],

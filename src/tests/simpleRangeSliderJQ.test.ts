@@ -26,7 +26,7 @@ describe('simpleRangeSliderJQ.ts', () => {
   });
 
   test('create with incomplete config', () => {
-    const testConfig: ConfigUserList = {
+    const testConfig: UserConfigList = {
       orientation: 'vertical',
       range: [-100, 100],
       scale: false,
@@ -57,7 +57,7 @@ describe('simpleRangeSliderJQ.ts', () => {
 
   test('create with input', () => {
     const testInput: JQuery = $(document.createElement('input'));
-    const testConfig: ConfigUserList = {
+    const testConfig: UserConfigList = {
       input: {
         $tooltip: testInput,
       },

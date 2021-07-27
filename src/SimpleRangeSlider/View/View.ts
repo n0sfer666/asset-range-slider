@@ -6,49 +6,51 @@ import Scale from './entities/Scale';
 import Tooltip from './entities/Tooltip';
 
 class View {
-  $container: JQuery;
+  private $container: JQuery;
 
-  config: ConfigViewList;
+  private config: ViewConfigList;
 
-  $sliderContainer: JQuery;
+  private $sliderContainer: JQuery;
 
-  $slider: JQuery;
+  private $slider: JQuery;
 
-  pointers: Pointer[];
+  private positions: PointerValue;
 
-  isSinglePointer: boolean;
+  private values: PointerValue;
 
-  tooltips?: Tooltip[];
+  private pointers: Pointer[];
 
-  connect?: Connect;
+  private isSinglePointer: boolean;
 
-  scale?: Scale;
+  private tooltips?: Tooltip[];
 
-  inputValues?: InputTextValue[];
+  private connect?: Connect;
 
-  inputTooltip?: InputCheckboxTooltip;
+  private scale?: Scale;
 
-  callbackList: ViewCallback[] = [];
+  private inputValues?: InputTextValue[];
 
-  positions: number[];
+  private inputTooltip?: InputCheckboxTooltip;
 
-  values: number[];
+  private callbackList: ViewCallback[] = [];
 
-  range: ConfigRange;
+  private activePointerIndex: number = 0;
 
-  activePointerIndex: number = 0;
-
-  constructor($container: JQuery, config: ConfigViewList, positions: number[], values?: number[]) {
+  constructor(
+    $container: JQuery,
+    config: ViewConfigList,
+    positions: PointerValue,
+    values: PointerValue,
+    range: ConfigRange,
+  ) {
     this.bindContext();
     this.$container = $container;
     this.config = { ...config };
-    const { start, range } = this.config;
-    this.values = values || start;
-    this.range = [...range];
     this.positions = [...positions];
-    this.isSinglePointer = this.values.length === 1;
-    this.initEntities();
-    this.initInputs();
+    this.values = [...values];
+    this.isSinglePointer = this.positions.length === 1;
+    this.initEntities(values, range);
+    this.initInputs(values);
     this.drawSlider();
     this.switchActivePointer();
   }
@@ -92,33 +94,34 @@ class View {
     );
   }
 
-  getScale(): Scale {
-    const scaleInstance = new Scale(this.config.range, this.config.orientation);
+  getScale(range: ConfigRange): Scale {
+    const scaleInstance = new Scale(range, this.config.orientation);
     scaleInstance.subscribeOn(this.updateByScale);
     return scaleInstance;
   }
 
-  initEntities() {
+  initEntities(values: PointerValue, range: ConfigRange) {
     this.$sliderContainer = this.getSliderElement(false);
     this.$slider = this.getSliderElement(true);
     this.pointers = this.positions.map((position, index) => this.getPointer(position, index));
     this.tooltips = this.config.tooltip
-      ? this.values.map((value) => this.getTooltip(value))
+      ? values.map((value) => this.getTooltip(value))
       : undefined;
     this.connect = this.config.connect ? this.getConnect(this.pointers) : undefined;
-    this.scale = this.config.scale ? this.getScale() : undefined;
+    this.scale = this.config.scale ? this.getScale(range) : undefined;
   }
 
-  initInputs() {
+  initInputs(inputValues: PointerValue) {
     if (this.config.input) {
       const { values, $tooltip } = this.config.input;
       if (values) {
-        this.inputValues = this.values.map((value, index) => {
-          const instance = new InputTextValue(values[index], value, index);
+        this.inputValues = values.map(($value, index) => {
+          const value = inputValues[index] || inputValues[index] === 0 ? inputValues[index] : NaN;
+          const instance = new InputTextValue($value, value, index);
           instance.subscribeOn(this.updateByInputText);
           return instance;
         });
-        const isLengthNotEqual = this.values.length !== values.length;
+        const isLengthNotEqual = inputValues.length !== values.length;
         if (values[1] && isLengthNotEqual) {
           values[1].hide();
         }
@@ -193,10 +196,11 @@ class View {
       this.tooltips[index].setValue(values[index]);
     }
     if (this.connect) {
-      this.connect.setPosition(
-        this.isSinglePointer ? 0 : positions[0],
-        this.isSinglePointer ? positions[0] : positions[1],
-      );
+      const start = this.isSinglePointer ? 0 : positions[0];
+      const end = positions[1] || positions[1] === 0
+        ? positions[1]
+        : positions[0];
+      this.connect.setPosition(start, end);
     }
     this.pointers[index].setPosition(positions[index]);
     this.activePointerIndex = index;
