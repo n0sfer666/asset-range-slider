@@ -132,6 +132,24 @@ class Model {
       (viewCallback: ModelCallback) => viewCallback({ positions, values, index }),
     );
   }
+
+  getViewUpdateList(config: UserConfigList): ViewUpdateList {
+    const viewUpdateList: ViewUpdateList = {};
+    this.config = { ...this.config, ...config };
+    this.values = config.start ? [...config.start] : this.values;
+    this.range = config.range ? [...config.range] : this.range;
+    this.step = config.step ? config.step : this.step;
+    if (config.start || config.range) {
+      this.positions = <PointerValue> this.values.map((value) => this.getPositionFromValue(value));
+      viewUpdateList.positions = [...this.positions];
+    }
+    Object.keys(config).forEach((key) => {
+      viewUpdateList[key] = Array.isArray(this.config[key])
+        ? [...this.config[key]]
+        : this.config[key];
+    });
+    return viewUpdateList;
+  }
 }
 
 export default Model;

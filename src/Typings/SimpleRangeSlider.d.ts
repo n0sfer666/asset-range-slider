@@ -66,6 +66,15 @@ interface ViewConfigList extends ObjectKeyString {
   scale: boolean;
   input?: ConfigInputs;
 }
+interface ViewUpdateList extends ObjectKeyString {
+  positions?: PointerValue,
+  range?: ConfigRange,
+  orientation?: ConfigOrientation,
+  connect?: boolean;
+  tooltip?: boolean;
+  scale?: boolean;
+  input?: ConfigInputs;
+}
 interface ViewCallback {
   (viewData: ViewData): void
 }
