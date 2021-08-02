@@ -4,6 +4,7 @@ import InputTextValue from './entities/inputs/InputTextValue';
 import Pointer from './entities/Pointer';
 import Scale from './entities/Scale';
 import Tooltip from './entities/Tooltip';
+import { ViewEntities, ViewEntitiesInput } from './ViewEntities.type';
 
 class View {
   private $container: JQuery;
@@ -22,15 +23,17 @@ class View {
 
   private isSinglePointer: boolean;
 
-  private tooltips?: Tooltip[];
+  private entities: ViewEntities;
 
-  private connect?: Connect;
+  // private tooltips?: Tooltip[];
 
-  private scale?: Scale;
+  // private connect?: Connect;
 
-  private inputValues?: InputTextValue[];
+  // private scale?: Scale;
 
-  private inputTooltip?: InputCheckboxTooltip;
+  // private inputValues?: InputTextValue[];
+
+  // private inputTooltip?: InputCheckboxTooltip;
 
   private callbackList: ViewCallback[] = [];
 
@@ -49,8 +52,7 @@ class View {
     this.positions = [...positions];
     this.values = [...values];
     this.isSinglePointer = this.positions.length === 1;
-    this.initEntities(values, range);
-    this.initInputs(values);
+    this.initEntities(this.positions, this.values, [...range]);
     this.drawSlider();
     this.switchActivePointer();
   }
@@ -100,55 +102,75 @@ class View {
     return scaleInstance;
   }
 
-  initEntities(values: PointerValue, range: ConfigRange) {
-    this.$sliderContainer = this.getSliderElement(false);
-    this.$slider = this.getSliderElement(true);
-    this.pointers = this.positions.map((position, index) => this.getPointer(position, index));
-    this.tooltips = this.config.tooltip
-      ? values.map((value) => this.getTooltip(value))
-      : undefined;
-    this.connect = this.config.connect ? this.getConnect(this.pointers) : undefined;
-    this.scale = this.config.scale ? this.getScale(range) : undefined;
+  initEntities(positions: PointerValue, values: PointerValue, range: ConfigRange) {
+    if (!this.$sliderContainer && !this.$slider) {
+      this.$sliderContainer = this.getSliderElement(false);
+      this.$slider = this.getSliderElement(true);
+    }
+    const pointers = positions.map((position, index) => this.getPointer(position, index));
+    const tooltip = this.config.tooltip ? values.map((value) => this.getTooltip(value)) : undefined;
+    this.entities = {
+      pointers,
+      tooltip,
+      connect: this.config.connect ? this.getConnect(pointers) : undefined,
+      scale: this.config.scale ? this.getScale(range) : undefined,
+      input: this.getInputs(values, this.config.input, tooltip),
+    };
   }
 
-  initInputs(inputValues: PointerValue) {
-    if (this.config.input) {
-      const { values, $tooltip } = this.config.input;
+  getInputs(
+    inputValues: PointerValue,
+    input?: ConfigInputs,
+    tooltips?: Tooltip[],
+  ): ViewEntitiesInput {
+    if (input) {
+      const values = input.values
+        ? input.values.map(($value, index) => new InputTextValue(
+          $value,
+          inputValues[index] !== undefined ? inputValues[index] : NaN,
+          index,
+        ))
+        : undefined;
       if (values) {
-        this.inputValues = values.map(($value, index) => {
-          const value = inputValues[index] || inputValues[index] === 0 ? inputValues[index] : NaN;
-          const instance = new InputTextValue($value, value, index);
-          instance.subscribeOn(this.updateByInputText);
-          return instance;
-        });
-        const isLengthNotEqual = inputValues.length !== values.length;
-        if (values[1] && isLengthNotEqual) {
-          values[1].hide();
+        const isDifferentAmount = inputValues.length !== values.length;
+        if (isDifferentAmount) {
+          values[values.length - 1].$element.hide();
         }
+        values.forEach((inputTextValue) => {
+          inputTextValue.subscribeOn(this.updateByInputText);
+        });
       }
-      if ($tooltip && this.tooltips) {
-        this.inputTooltip = new InputCheckboxTooltip($tooltip, this.tooltips);
-      }
+      const $tooltip = input.$tooltip && tooltips
+        ? new InputCheckboxTooltip(input.$tooltip, tooltips)
+        : undefined;
+      return {
+        values,
+        $tooltip,
+      };
     }
+    return {
+      values: undefined,
+      $tooltip: undefined,
+    };
   }
 
   drawSlider() {
-    this.pointers.forEach((pointer, index) => {
-      if (this.tooltips) {
-        pointer.$element.append(this.tooltips[index].$element);
+    this.entities.pointers.forEach((pointer, index) => {
+      if (this.entities.tooltip) {
+        pointer.$element.append(this.entities.tooltip[index].$element);
       }
       this.$slider.append(pointer.$element);
     });
-    if (this.connect) {
-      this.$slider.append(this.connect.$element);
+    if (this.entities.connect) {
+      this.$slider.append(this.entities.connect.$element);
     }
-    if (this.scale) {
+    if (this.entities.scale) {
       if (this.config.orientation === 'vertical') {
-        this.$sliderContainer.append(this.scale.$element);
+        this.$sliderContainer.append(this.entities.scale.$element);
         this.$sliderContainer.append(this.$slider);
       } else {
         this.$sliderContainer.append(this.$slider);
-        this.$sliderContainer.append(this.scale.$element);
+        this.$sliderContainer.append(this.entities.scale.$element);
       }
     } else {
       this.$sliderContainer.append(this.$slider);
@@ -157,7 +179,7 @@ class View {
   }
 
   switchActivePointer() {
-    this.pointers.forEach(
+    this.entities.pointers.forEach(
       (pointer, index) => pointer.switchActive(index === this.activePointerIndex),
     );
   }
@@ -189,23 +211,35 @@ class View {
   updateByModel(modelData: ModelData) {
     const { index, positions, values } = modelData;
     this.switchActivePointer();
-    if (this.inputValues) {
-      this.inputValues[index].setNewValue(values[index]);
+    if (this.entities.input && this.entities.input.values) {
+      this.entities.input.values[index].setNewValue(values[index]);
     }
-    if (this.tooltips) {
-      this.tooltips[index].setValue(values[index]);
+    if (this.entities.tooltips) {
+      this.entities.tooltips[index].setValue(values[index]);
     }
-    if (this.connect) {
+    if (this.entities.connect) {
       const start = this.isSinglePointer ? 0 : positions[0];
       const end = positions[1] || positions[1] === 0
         ? positions[1]
         : positions[0];
-      this.connect.setPosition(start, end);
+      this.entities.connect.setPosition(start, end);
     }
     this.pointers[index].setPosition(positions[index]);
     this.activePointerIndex = index;
     this.positions = positions;
     this.values = values;
+  }
+
+  updateView(viewUpdateList: ViewUpdateList) {
+    const updatedEntities: string[] = [];
+    Object.keys(this.config).forEach((key) => {
+      const isChanged = this.config[key] !== viewUpdateList[key]
+        && viewUpdateList[key] !== undefined;
+      if (isChanged) {
+        this.config[key] = viewUpdateList[key];
+        updatedEntities.push(key);
+      }
+    });
   }
 
   bindContext() {
