@@ -166,11 +166,9 @@ class View {
     }
     if (this.entities.scale) {
       if (this.config.orientation === 'vertical') {
-        this.$sliderContainer.append(this.entities.scale.$element);
-        this.$sliderContainer.append(this.$slider);
+        this.$sliderContainer.append(this.entities.scale.$element, this.$slider);
       } else {
-        this.$sliderContainer.append(this.$slider);
-        this.$sliderContainer.append(this.entities.scale.$element);
+        this.$sliderContainer.append(this.$slider, this.entities.scale.$element);
       }
     } else {
       this.$sliderContainer.append(this.$slider);
@@ -231,15 +229,22 @@ class View {
   }
 
   updateView(viewUpdateList: ViewUpdateList) {
-    const updatedEntities: string[] = [];
-    Object.keys(this.config).forEach((key) => {
-      const isChanged = this.config[key] !== viewUpdateList[key]
-        && viewUpdateList[key] !== undefined;
-      if (isChanged) {
-        this.config[key] = viewUpdateList[key];
-        updatedEntities.push(key);
+    this.config.orientation = viewUpdateList.orientation
+      ? viewUpdateList.orientation
+      : this.config.orientation;
+    if (viewUpdateList.range) {
+      if (this.entities.scale) {
+        this.entities.scale.updateScale(viewUpdateList.range, viewUpdateList.orientation);
+      } else if (viewUpdateList.scale) {
+        this.config.scale = viewUpdateList.scale;
+        this.entities.scale = this.getScale(viewUpdateList.range);
+        if (this.config.orientation === 'horizontal') {
+          this.$sliderContainer.append(this.entities.scale.$element);
+        } else {
+          this.$sliderContainer.prepend(this.entities.scale.$element);
+        }
       }
-    });
+    }
   }
 
   bindContext() {

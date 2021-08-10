@@ -29,6 +29,10 @@ class Presenter {
   getConfig(): CompleteConfigList {
     return { ...this.model.getConfig() };
   }
+
+  updateSlider(config: UserConfigList) {
+    this.view.updateView(this.model.getViewUpdateList(config));
+  }
 }
 
 export default Presenter;
