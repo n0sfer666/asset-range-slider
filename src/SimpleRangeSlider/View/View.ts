@@ -219,39 +219,49 @@ class View {
   }
 
   updateView(viewUpdateList: ViewUpdateList) {
-    Object.keys(this.config).forEach((option) => {
-      this.config[option] = viewUpdateList[option] !== undefined
-        ? viewUpdateList[option]
-        : this.config[option];
-    });
-
-    if (viewUpdateList.start && viewUpdateList.positions) {
+    if (viewUpdateList.values && viewUpdateList.positions) {
       this.positions = [...viewUpdateList.positions];
       this.isSinglePointer = this.positions.length === 1;
       const lastPointerLength = this.entities.pointers.length;
-      const newPointerLength = viewUpdateList.start.length;
+      const newPointerLength = viewUpdateList.values.length;
+      viewUpdateList.values.forEach((value, index) => {
+        if (this.entities.input && this.entities.input.values) {
+          this.entities.input.values[index].setNewValue(value);
+        }
+      });
       if (lastPointerLength !== newPointerLength) {
         if (newPointerLength === 2) {
-          if (viewUpdateList.positions[1] && viewUpdateList.start[1]) {
+          const isCorrectSecondStart = viewUpdateList.values[1] || viewUpdateList.values[1] === 0;
+          if (viewUpdateList.positions[1] && isCorrectSecondStart) {
             this.entities.pointers.push(this.getPointer(viewUpdateList.positions[1], 1));
             if (this.entities.tooltip) {
-              this.entities.tooltip.push(this.getTooltip(viewUpdateList.start[1]));
+              this.entities.tooltip.push(this.getTooltip(viewUpdateList.values[1]!));
               this.entities.tooltip[1].$element.appendTo(this.entities.pointers[1].$element);
+            }
+            if (this.entities.input && this.entities.input.values) {
+              if (this.entities.input.values[1]) {
+                this.entities.input.values[1].$element.show();
+              }
             }
             this.entities.pointers[1].$element.appendTo(this.$slider);
           }
         } else if (this.entities.pointers[1]) {
           this.entities.pointers[1].$element.remove();
           this.entities.pointers.pop();
-          if (this.entities.tooltip) {
+          if (this.entities.tooltip && this.entities.tooltip[1]) {
             this.entities.tooltip.pop();
+          }
+          if (this.entities.input && this.entities.input.values) {
+            if (this.entities.input.values[1]) {
+              this.entities.input.values[1].$element.hide();
+            }
           }
         }
       }
       this.positions.forEach((position, index) => {
         this.entities.pointers[index].setPosition(position);
-        if (this.entities.tooltip && viewUpdateList.start) {
-          this.entities.tooltip[index].setValue(viewUpdateList.start[index]);
+        if (this.entities.tooltip && viewUpdateList.values) {
+          this.entities.tooltip[index].setValue(viewUpdateList.values[index]);
         }
       });
       if (this.entities.connect) {
@@ -265,18 +275,90 @@ class View {
       }
     }
 
-    if (viewUpdateList.range) {
+    if (viewUpdateList.orientation && viewUpdateList.orientation !== this.config.orientation) {
+      this.setOrientation(viewUpdateList.orientation);
+      const { orientation } = this.config;
+      this.entities.pointers.forEach((pointer) => { pointer.setOrientation(orientation); });
+      if (this.entities.tooltip) {
+        this.entities.tooltip.forEach((tooltip) => { tooltip.setOrientation(orientation); });
+      }
+      if (this.entities.connect) {
+        this.entities.connect.setOrientation(orientation);
+      }
       if (this.entities.scale) {
-        this.entities.scale.updateScale(viewUpdateList.range, viewUpdateList.orientation);
-      } else if (viewUpdateList.scale) {
-        this.config.scale = viewUpdateList.scale;
-        this.entities.scale = this.getScale(viewUpdateList.range);
-        if (this.config.orientation === 'horizontal') {
-          this.$sliderContainer.append(this.entities.scale.$element);
+        this.entities.scale.setOrientation(orientation);
+        if (orientation === 'vertical') {
+          this.entities.scale.$element.prependTo(this.$sliderContainer);
         } else {
-          this.$sliderContainer.prepend(this.entities.scale.$element);
+          this.$slider.prependTo(this.$sliderContainer);
         }
       }
+    }
+
+    if (viewUpdateList.connect !== undefined && this.config.connect !== viewUpdateList.connect) {
+      this.config.connect = viewUpdateList.connect;
+      if (this.config.connect) {
+        this.entities.connect = this.getConnect(this.entities.pointers);
+        this.entities.connect.$element.appendTo(this.$slider);
+      } else {
+        if (this.entities.connect) {
+          this.entities.connect.$element.remove();
+        }
+        this.entities.connect = undefined;
+      }
+    }
+
+    if (viewUpdateList.tooltip !== undefined && this.config.tooltip !== viewUpdateList.tooltip) {
+      this.config.tooltip = viewUpdateList.tooltip;
+      if (this.config.tooltip) {
+        if (viewUpdateList.values) {
+          this.entities.tooltip = viewUpdateList.values.map((value) => this.getTooltip(value));
+          this.entities.tooltip.forEach((tooltip, index) => {
+            tooltip.$element.appendTo(this.entities.pointers[index].$element);
+          });
+        }
+      } else if (this.entities.tooltip) {
+        this.entities.tooltip.forEach((tooltip) => { tooltip.$element.remove(); });
+      }
+      this.entities.tooltip = undefined;
+    }
+
+    if (viewUpdateList.scale !== undefined && this.config.scale !== viewUpdateList.scale) {
+      this.config.scale = viewUpdateList.scale;
+      if (viewUpdateList.range) {
+        if (this.config.scale) {
+          this.entities.scale = this.getScale(viewUpdateList.range);
+          if (this.config.orientation === 'horizontal') {
+            this.entities.scale.$element.appendTo(this.$sliderContainer);
+          } else {
+            this.entities.scale.$element.prependTo(this.$sliderContainer);
+          }
+        } else {
+          if (this.entities.scale) {
+            this.entities.scale.$element.remove();
+          }
+          this.entities.scale = undefined;
+        }
+      }
+    }
+
+    if (viewUpdateList.range) {
+      const { range } = viewUpdateList;
+      const isRangeChange = this.entities.scale && this.entities.scale.range !== range;
+      if (this.entities.scale && isRangeChange) {
+        this.entities.scale.updateScale(range, viewUpdateList.orientation);
+      }
+    }
+  }
+
+  setOrientation(orientation: ConfigOrientation) {
+    if (this.config.orientation !== orientation) {
+      const blockClassName = 'simple-range-slider';
+      this.$slider.removeClass(`${blockClassName}__slider_${this.config.orientation}`);
+      this.$sliderContainer.removeClass(`${blockClassName}__slider-container_${this.config.orientation}`);
+      this.config.orientation = orientation;
+      this.$slider.addClass(`${blockClassName}__slider_${this.config.orientation}`);
+      this.$sliderContainer.addClass(`${blockClassName}__slider-container_${this.config.orientation}`);
     }
   }
 

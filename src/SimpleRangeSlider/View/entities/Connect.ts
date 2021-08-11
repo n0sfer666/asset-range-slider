@@ -55,6 +55,7 @@ class Connect {
       this.$element.removeClass(`${this.className}_${this.orientation}`);
       this.orientation = orientation;
       this.$element.addClass(`${this.className}_${this.orientation}`);
+      this.setPosition(this.position[0], this.position[1]);
     }
   }
 }

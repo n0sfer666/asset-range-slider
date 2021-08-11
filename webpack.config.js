@@ -14,7 +14,6 @@ module.exports = {
     filename: '[name].js',
     path: `${__dirname}/dist`,
   },
-  devtool: 'inline-source-map',
   devServer: {
     contentBase: `${__dirname}/dist`,
     compress: true,

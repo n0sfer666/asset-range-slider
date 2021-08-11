@@ -167,12 +167,18 @@ class Scale {
     this.values = this.getValues();
     this.emptyValues = this.getEmptyValues();
     if (newOrientation) {
-      this.$element.removeClass(`simple-range-slider__scale_${this.orientation}`);
-      this.orientation = newOrientation;
-      this.$element.addClass(`simple-range-slider__scale_${this.orientation}`);
+      this.setOrientation(newOrientation);
       ['left', 'top'].forEach((cssAttribute) => this.$element.children().css(cssAttribute, ''));
     }
     this.updatePips();
+  }
+
+  setOrientation(orientation: ConfigOrientation) {
+    if (this.orientation !== orientation) {
+      this.$element.removeClass(`simple-range-slider__scale_${this.orientation}`);
+      this.orientation = orientation;
+      this.$element.addClass(`simple-range-slider__scale_${this.orientation}`);
+    }
   }
 
   subscribeOn(callback: ScaleCallback) {

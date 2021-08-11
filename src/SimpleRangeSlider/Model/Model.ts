@@ -148,6 +148,8 @@ class Model {
         ? [...this.config[key]]
         : this.config[key];
     });
+    viewUpdateList.values = this.values;
+    viewUpdateList.range = this.range;
     return viewUpdateList;
   }
 }

@@ -51,6 +51,7 @@ class Pointer {
   }
 
   setPosition(position: number) {
+    this.$element.css('transform', '');
     this.position = position;
     const liter: string = this.orientation === 'horizontal' ? 'X' : 'Y';
     this.$element.css('transform', `translate${liter}(${this.position * this.normalizingCoefficient}%)`);
@@ -65,6 +66,15 @@ class Pointer {
 
   getNormalizePosition(position: number): number {
     return (Math.round(position * this.normalizingCoefficient) / this.normalizingCoefficient);
+  }
+
+  setOrientation(orientation: ConfigOrientation) {
+    if (this.orientation !== orientation) {
+      this.$element.removeClass(`${this.className}_${this.orientation}`);
+      this.orientation = orientation;
+      this.$element.addClass(`${this.className}_${this.orientation}`);
+      this.setPosition(this.position);
+    }
   }
 
   handlePointerMouseDown(event: JQuery.MouseEventBase) {

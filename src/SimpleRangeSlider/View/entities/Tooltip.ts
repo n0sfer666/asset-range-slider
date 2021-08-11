@@ -30,6 +30,14 @@ class Tooltip {
       this.$element.hide();
     }
   }
+
+  setOrientation(orientation: ConfigOrientation) {
+    if (this.orientation !== orientation) {
+      this.$element.removeClass(`simple-range-slider__tooltip_${this.orientation}`);
+      this.orientation = orientation;
+      this.$element.addClass(`simple-range-slider__tooltip_${this.orientation}`);
+    }
+  }
 }
 
 export default Tooltip;

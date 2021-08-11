@@ -68,7 +68,7 @@ interface ViewConfigList extends ObjectKeyString {
 }
 interface ViewUpdateList extends ObjectKeyString {
   positions?: PointerValue,
-  start?: PointerValue,
+  values?: PointerValue,
   range?: ConfigRange,
   orientation?: ConfigOrientation,
   connect?: boolean;

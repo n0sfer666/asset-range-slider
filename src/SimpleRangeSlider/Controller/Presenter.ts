@@ -24,7 +24,6 @@ class Presenter {
     this.model.subscribeOn((modelData) => {
       this.view.updateByModel(modelData);
     });
-    this.updateSlider({range: [-1500, 1500], start: [-1000]});
   }
 
   getConfig(): CompleteConfigList {
