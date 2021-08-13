@@ -1,4 +1,3 @@
-import Presenter from '../../SimpleRangeSlider/Controller/Presenter';
 import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
 class TextInput {
@@ -10,23 +9,17 @@ class TextInput {
 
   sliderConfig: CompleteConfigList;
 
-  sliderInstance: Presenter;
-
-  isSinglePointer: boolean;
-
   inputs: JQuery[] = [];
 
   configurationName: string;
 
-  configurationValue: number | number[];
+  configurationValue: number | ConfigRange | PointerValue;
 
   constructor($container: JQuery, $sliderContainer: JQuery) {
     this.bindContext();
     this.$mainContainer = $container;
-    this.$sliderContainer = $sliderContainer;
-    this.sliderInstance = $sliderContainer.data('instance');
-    this.sliderConfig = this.sliderInstance.getConfig();
-    this.isSinglePointer = this.sliderConfig.start.length === 1;
+    this.$sliderContainer = $sliderContainer.getSliderConfig();
+    this.sliderConfig = $sliderContainer.data('config');
     this.configurationName = $container.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
     this.initInputs();
@@ -36,7 +29,8 @@ class TextInput {
   initInputs() {
     this.inputs = Array.from(this.$mainContainer.find(`.js-${this.blockClass}__input`)
       .map((_, element) => $(element)));
-    if (this.configurationName === 'start' && this.isSinglePointer) {
+    const isSinglePointer = this.sliderConfig.start.length === 1;
+    if (this.configurationName === 'start' && isSinglePointer) {
       this.inputs[1].hide();
     }
     this.inputs.forEach((input, index) => {
@@ -50,79 +44,33 @@ class TextInput {
 
   handleInputFocusOut(event: JQuery.FocusOutEvent) {
     const $target = $(event.target);
-    const { range, start } = this.sliderConfig;
     const value = Number($target.val());
     const index = Number($target.data('index'));
     const isNotEqualPrevious = Array.isArray(this.configurationValue)
       ? value !== this.configurationValue[index]
       : value !== this.configurationValue;
     if (isNotEqualPrevious) {
+      if (Array.isArray(this.configurationValue)) {
+        this.configurationValue[index] = value;
+      } else {
+        this.configurationValue = value;
+      }
       switch (this.configurationName) {
         case 'step': {
-          const isAboveZero = value > 0;
-          if (isAboveZero) {
-            this.sliderConfig.step = value;
-            this.configurationValue = value;
-            // this.sliderInstance.rebuildSlider({ step: value });
-          } else {
-            this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.step);
+          if (!Array.isArray(this.configurationValue)) {
+            this.$sliderContainer.updateSlider({ step: this.configurationValue });
           }
           break;
         }
         case 'start': {
-          if (this.isSinglePointer) {
-            const isOutOfRange = value < range[0] || value > range[1];
-            if (!isOutOfRange) {
-              this.sliderConfig.start[index] = value;
-              this.configurationValue = start;
-              // this.sliderInstance.rebuildSlider({ start });
-            } else {
-              this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
-              $target.val();
-            }
-          } else {
-            const isOutOfRange = start[1]
-              ? value < range[0] || value > start[1]
-              : value < start[0] || value > range[1];
-            const isEqualOtherStart = start[1]
-              ? value === start[1]
-              : value === start[0];
-            if (!isOutOfRange && !isEqualOtherStart) {
-              this.sliderConfig.start[index] = value;
-              this.configurationValue = start;
-              // this.sliderInstance.rebuildSlider({ start });
-            } else {
-              this.blinkInputAndReturnPreviousValue($target, this.sliderConfig.start[index]);
-            }
+          if (Array.isArray(this.configurationValue)) {
+            this.$sliderContainer.updateSlider({ start: <PointerValue> this.configurationValue });
           }
           break;
         }
         case 'range': {
-          const isEqualOtherRange = index === 0
-            ? value === range[1]
-            : value === range[0];
-          if (this.isSinglePointer) {
-            const isOutOfStart = index === 0
-              ? value > start[0]
-              : value < start[0];
-            if (!isOutOfStart && !isEqualOtherRange) {
-              this.sliderConfig.range[index] = value;
-              this.configurationValue = range;
-              // this.sliderInstance.rebuildSlider({ range });
-            } else {
-              this.blinkInputAndReturnPreviousValue($target, range[index]);
-            }
-          } else {
-            const isOutOfStart = index === 0
-              ? value > start[index]
-              : value < start[index];
-            if (!isOutOfStart && !isEqualOtherRange) {
-              this.sliderConfig.range[index] = value;
-              this.configurationValue = range;
-              // this.sliderInstance.rebuildSlider({ range });
-            } else {
-              this.blinkInputAndReturnPreviousValue($target, range[index]);
-            }
+          if (Array.isArray(this.configurationValue)) {
+            this.$sliderContainer.updateSlider({ range: <ConfigRange> this.configurationValue });
           }
           break;
         }

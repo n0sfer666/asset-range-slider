@@ -1,4 +1,3 @@
-import Presenter from '../../SimpleRangeSlider/Controller/Presenter';
 import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
 class RadioBlock {
@@ -8,7 +7,7 @@ class RadioBlock {
 
   $sliderContainer: JQuery;
 
-  sliderInstance: Presenter;
+  sliderConfig: CompleteConfigList;
 
   configurationName: string;
 
@@ -19,10 +18,10 @@ class RadioBlock {
   constructor($container: JQuery, $sliderContainer: JQuery) {
     this.bindContext();
     this.$mainContainer = $container;
-    this.$sliderContainer = $sliderContainer;
-    this.sliderInstance = $sliderContainer.data('instance');
+    this.$sliderContainer = $sliderContainer.getSliderConfig();
+    this.sliderConfig = $sliderContainer.data('config');
     this.configurationName = this.$mainContainer.data('configuration-name');
-    this.configurationValue = this.sliderInstance.getConfig()[this.configurationName];
+    this.configurationValue = this.sliderConfig[this.configurationName];
     this.radioBlocks = this.getRadioBlocks();
     this.bindHandlers();
   }
@@ -43,6 +42,7 @@ class RadioBlock {
     const value = this.getText($target);
     if (value !== this.configurationValue) {
       this.configurationValue = value;
+      this.$sliderContainer.updateSlider({ [this.configurationName]: this.configurationValue });
       // this.sliderInstance.rebuildSlider({ [this.configurationName]: this.configurationValue });
     }
   }

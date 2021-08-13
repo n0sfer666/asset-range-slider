@@ -16,10 +16,6 @@ class DemoPanel {
 
   $configContainer: JQuery;
 
-  sliderConfig: CompleteConfigList;
-
-  isSinglePointer: boolean;
-
   textInputBlocks: TextInput[] = [];
 
   radioBlocks: RadioBlock[] = [];
@@ -30,8 +26,6 @@ class DemoPanel {
     this.$mainContainer = $container;
     this.initContainers();
     this.$sliderContainer.simpleRangeSlider({ input: getControlInput(this.$configContainer) });
-    this.sliderConfig = <CompleteConfigList> this.$sliderContainer.data('config');
-    this.isSinglePointer = this.sliderConfig.start.length === 1;
     this.initBlocks();
   }
 
