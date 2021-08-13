@@ -14,6 +14,14 @@ class InputCheckboxTooltip {
     this.bindHandlers();
   }
 
+  switchChecked(isVisible: boolean) {
+    if (isVisible) {
+      this.$element.prop('checked', true);
+    } else {
+      this.$element.prop('checked', false);
+    }
+  }
+
   handleTooltipCheckboxChange() {
     const isVisible: boolean = this.$element.is(':checked');
     this.tooltips.forEach((tooltip) => tooltip.switchHidden(isVisible));

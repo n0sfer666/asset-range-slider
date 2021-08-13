@@ -316,11 +316,18 @@ class View {
           this.entities.tooltip.forEach((tooltip, index) => {
             tooltip.$element.appendTo(this.entities.pointers[index].$element);
           });
+          if (this.entities.input && this.entities.input.$tooltip) {
+            this.entities.input.$tooltip.tooltips = this.entities.tooltip;
+            this.entities.input.$tooltip.switchChecked(true);
+          }
         }
       } else if (this.entities.tooltip) {
         this.entities.tooltip.forEach((tooltip) => { tooltip.$element.remove(); });
+        this.entities.tooltip = undefined;
+        if (this.entities.input && this.entities.input.$tooltip) {
+          this.entities.input.$tooltip.switchChecked(false);
+        }
       }
-      this.entities.tooltip = undefined;
     }
 
     if (viewUpdateList.scale !== undefined && this.config.scale !== viewUpdateList.scale) {
