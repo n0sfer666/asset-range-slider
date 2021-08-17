@@ -7,8 +7,6 @@ class RadioBlock {
 
   $sliderContainer: JQuery;
 
-  sliderConfig: CompleteConfigList;
-
   configurationName: string;
 
   configurationValue: boolean | string;
@@ -19,9 +17,8 @@ class RadioBlock {
     this.bindContext();
     this.$mainContainer = $container;
     this.$sliderContainer = $sliderContainer.getSliderConfig();
-    this.sliderConfig = $sliderContainer.data('config');
     this.configurationName = this.$mainContainer.data('configuration-name');
-    this.configurationValue = this.sliderConfig[this.configurationName];
+    this.configurationValue = $sliderContainer.data('config')[this.configurationName];
     this.radioBlocks = this.getRadioBlocks();
     this.bindHandlers();
   }
@@ -43,7 +40,6 @@ class RadioBlock {
     if (value !== this.configurationValue) {
       this.configurationValue = value;
       this.$sliderContainer.updateSlider({ [this.configurationName]: this.configurationValue });
-      // this.sliderInstance.rebuildSlider({ [this.configurationName]: this.configurationValue });
     }
   }
 

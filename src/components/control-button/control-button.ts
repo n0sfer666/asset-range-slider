@@ -30,6 +30,7 @@ class ControlButton {
   }
 
   handleButtonClick() {
+    this.sliderConfig = this.$sliderContainer.data('config');
     const {
       start, range, step, input,
     } = this.sliderConfig;
@@ -48,6 +49,11 @@ class ControlButton {
         }
         this.$sliderContainer.updateSlider({ start });
         this.$text.text('remove pointer');
+      } else {
+        this.$container.addClass(`${this.blockClass}_wrong-condition`);
+        setTimeout(() => {
+          this.$container.removeClass(`${this.blockClass}_wrong-condition`);
+        }, 300);
       }
     } else {
       this.isSinglePointer = true;
@@ -59,12 +65,6 @@ class ControlButton {
       this.$sliderContainer.updateSlider({ start });
       this.$text.text('add pointer');
     }
-  }
-
-  rebuildSlider(config: CompleteConfigList) {
-    this.$sliderContainer.empty();
-    this.$sliderContainer.removeData();
-    this.$sliderContainer.simpleRangeSlider(<UserConfigList> config);
   }
 
   bindContext() {
