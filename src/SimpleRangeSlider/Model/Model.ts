@@ -28,7 +28,7 @@ class Model {
   private activePointerIndex: number = 0;
 
   constructor(config: UserConfigList) {
-    this.config = Model.getCompleteConfig(this.defaultConfig, config);
+    this.config = this.getVerifiedConfig(Model.getCompleteConfig(this.defaultConfig, config));
     const { range, start, step } = this.config;
     this.values = [...start];
     this.range = [...range];
@@ -42,6 +42,33 @@ class Model {
     userConfig: UserConfigList,
   ): CompleteConfigList {
     return { ...defaultConfig, ...userConfig };
+  }
+
+  getVerifiedConfig(userConfig: CompleteConfigList): CompleteConfigList {
+    const config = { ...userConfig };
+    config.step = config.step > 0
+      ? config.step
+      : this.defaultConfig.step;
+    config.range = Math.abs(config.range[1] - config.range[0]) >= 5
+      ? config.range
+      : this.defaultConfig.range;
+
+    if (config.start[1]) {
+      const isFirstStartCorrect = config.start[0] >= config.range[0]
+        && config.start[0] < config.start[1]
+        && config.start[0] <= config.range[1];
+      config.start[0] = isFirstStartCorrect
+        ? config.start[0]
+        : config.range[0];
+      config.start[1] = config.start[1] > config.start[0] && config.start[1] <= config.range[1]
+        ? config.start[1]
+        : config.range[1];
+    } else {
+      config.start[0] = config.start[0] >= config.range[0] && config.start[0] <= config.range[1]
+        ? config.start[0]
+        : config.range[0];
+    }
+    return config;
   }
 
   getConfig(): CompleteConfigList {
@@ -135,7 +162,7 @@ class Model {
 
   getViewUpdateList(config: UserConfigList): ViewUpdateList {
     const viewUpdateList: ViewUpdateList = {};
-    this.config = { ...this.config, ...config };
+    this.config = this.getVerifiedConfig({ ...this.config, ...config });
     this.values = config.start ? [...config.start] : this.values;
     this.range = config.range ? [...config.range] : this.range;
     this.step = config.step ? config.step : this.step;
