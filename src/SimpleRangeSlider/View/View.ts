@@ -19,8 +19,6 @@ class View {
 
   private values: PointerValue;
 
-  private pointers: Pointer[];
-
   private isSinglePointer: boolean;
 
   private entities: ViewEntities;
