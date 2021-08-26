@@ -35,28 +35,4 @@ import Presenter from './Presenter/Presenter';
       return $container;
     },
   });
-  $.fn.extend({
-    updateSlider(config: UserConfigList) {
-      const $container = <JQuery> this;
-      const instance = <Presenter> $container.data('SimpleRangeSlider');
-      instance.updateSlider(config);
-      return $container;
-    },
-  });
-  $.fn.extend({
-    getSliderConfig() {
-      const $container = <JQuery> this;
-      const instance = <Presenter> $container.data('SimpleRangeSlider');
-      $container.data('config', instance.getConfig());
-      return $container;
-    },
-  });
-  $.fn.extend({
-    getSliderInstance() {
-      const $container = <JQuery> this;
-      const instance = <Presenter> $container.data('SimpleRangeSlider');
-      $container.data('instance', instance);
-      return $container;
-    },
-  });
 }(jQuery));

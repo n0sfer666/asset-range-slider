@@ -1,3 +1,5 @@
+import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
+
 class ControlButton {
   readonly blockClass: string = 'control-button';
 
@@ -9,6 +11,8 @@ class ControlButton {
 
   $text: JQuery;
 
+  sliderInstance: Presenter;
+
   sliderConfig: CompleteConfigList;
 
   isSinglePointer: boolean;
@@ -17,8 +21,9 @@ class ControlButton {
     this.bindContext();
     this.$container = $container;
     this.$secondStart = $secondStart;
-    this.$sliderContainer = $sliderContainer.getSliderConfig();
-    this.sliderConfig = $sliderContainer.data('config');
+    this.$sliderContainer = $sliderContainer;
+    this.sliderInstance = $sliderContainer.data('SimpleRangeSlider');
+    this.sliderConfig = this.sliderInstance.getConfig();
     this.isSinglePointer = this.sliderConfig.start.length === 1;
     this.initText();
     this.bindHandlers();
@@ -30,7 +35,7 @@ class ControlButton {
   }
 
   handleButtonClick() {
-    this.sliderConfig = this.$sliderContainer.data('config');
+    this.sliderConfig = this.sliderInstance.getConfig();
     const {
       start, range, step, input,
     } = this.sliderConfig;
@@ -47,7 +52,7 @@ class ControlButton {
         if (start[1]) {
           this.$secondStart.show().val(start[1]);
         }
-        this.$sliderContainer.updateSlider({ start });
+        this.sliderInstance.updateSlider({ start });
         this.$text.text('remove pointer');
       } else {
         this.$container.addClass(`${this.blockClass}_wrong-condition`);
@@ -62,7 +67,7 @@ class ControlButton {
         input.values[1].hide();
       }
       this.$secondStart.hide().val('');
-      this.$sliderContainer.updateSlider({ start });
+      this.sliderInstance.updateSlider({ start });
       this.$text.text('add pointer');
     }
   }

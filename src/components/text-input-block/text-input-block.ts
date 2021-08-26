@@ -1,3 +1,4 @@
+import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
 import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
 class TextInput {
@@ -6,6 +7,8 @@ class TextInput {
   $mainContainer: JQuery;
 
   $sliderContainer: JQuery;
+
+  sliderInstance: Presenter;
 
   sliderConfig: CompleteConfigList;
 
@@ -18,8 +21,9 @@ class TextInput {
   constructor($container: JQuery, $sliderContainer: JQuery) {
     this.bindContext();
     this.$mainContainer = $container;
-    this.$sliderContainer = $sliderContainer.getSliderConfig();
-    this.sliderConfig = $sliderContainer.data('config');
+    this.$sliderContainer = $sliderContainer;
+    this.sliderInstance = $sliderContainer.data('SimpleRangeSlider');
+    this.sliderConfig = this.sliderInstance.getConfig();
     this.configurationName = $container.data('configuration-name');
     this.configurationValue = this.sliderConfig[this.configurationName];
     this.initInputs();
@@ -43,7 +47,7 @@ class TextInput {
   }
 
   handleInputFocusOut(event: JQuery.FocusOutEvent) {
-    this.sliderConfig = this.$sliderContainer.data('config');
+    this.sliderConfig = this.sliderInstance.getConfig();
     const $target = $(event.target);
     const value = Number($target.val());
     const index = Number($target.data('index'));
@@ -122,7 +126,7 @@ class TextInput {
   }
 
   updateSlider() {
-    this.$sliderContainer.updateSlider({ [this.configurationName]: this.configurationValue });
+    this.sliderInstance.updateSlider({ [this.configurationName]: this.configurationValue });
   }
 
   bindHandlers() {
