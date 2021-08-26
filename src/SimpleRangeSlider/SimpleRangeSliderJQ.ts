@@ -1,4 +1,4 @@
-import Presenter from './Controller/Presenter';
+import Presenter from './Presenter/Presenter';
 
 // eslint-disable-next-line func-names
 (function ($: JQueryStatic) {

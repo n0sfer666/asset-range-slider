@@ -1,4 +1,4 @@
-import Presenter from '../../SimpleRangeSlider/Controller/Presenter';
+import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
 import Model from '../../SimpleRangeSlider/Model/Model';
 import View from '../../SimpleRangeSlider/View/View';
 

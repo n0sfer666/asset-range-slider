@@ -1,4 +1,4 @@
-import SimpleRangeSlider from '../SimpleRangeSlider/Controller/Presenter';
+import SimpleRangeSlider from '../SimpleRangeSlider/Presenter/Presenter';
 
 describe('SimpleRangeSlider.ts', () => {
   const $testContainer: JQuery = $(document.createElement('div'));
