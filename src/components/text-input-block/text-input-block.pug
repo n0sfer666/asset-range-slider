@@ -10,7 +10,3 @@ mixin text-input-block({name = 'control'})
     input(type = 'text', class = `${className}__input  js-${className}__input`, name = name, data-index = 0)
     if (isRange || isStart || isControl)
       input(type = 'text', class = `${className}__input  js-${className}__input`, name = name, data-index = 1)
-      if (isControl)
-        label.text-input-block__label
-          input(type='checkbox', class = `${className}__checkbox js-${className}__checkbox`, name = 'tooltip')
-          span.text-input-block__label-text show/hidden tooltip(s)

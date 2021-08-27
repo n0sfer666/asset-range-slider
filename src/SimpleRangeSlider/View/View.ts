@@ -1,5 +1,4 @@
 import Connect from './entities/Connect';
-import InputCheckboxTooltip from './entities/inputs/InputCheckboxTooltip';
 import InputTextValue from './entities/inputs/InputTextValue';
 import Pointer from './entities/Pointer';
 import Scale from './entities/Scale';
@@ -102,14 +101,13 @@ class View {
       tooltip,
       connect: this.config.connect ? this.getConnect(pointers) : undefined,
       scale: this.config.scale ? this.getScale(range) : undefined,
-      input: this.getInputs(values, this.config.input, tooltip),
+      input: this.getInputs(values, this.config.input),
     };
   }
 
   getInputs(
     inputValues: PointerValue,
     input?: ConfigInputs,
-    tooltips?: Tooltip[],
   ): ViewEntitiesInput {
     if (input) {
       const values = input.values
@@ -128,17 +126,12 @@ class View {
           inputTextValue.subscribeOn(this.updateByInputText);
         });
       }
-      const $tooltip = input.$tooltip && tooltips
-        ? new InputCheckboxTooltip(input.$tooltip, tooltips)
-        : undefined;
       return {
         values,
-        $tooltip,
       };
     }
     return {
       values: undefined,
-      $tooltip: undefined,
     };
   }
 
@@ -314,17 +307,10 @@ class View {
           this.entities.tooltip.forEach((tooltip, index) => {
             tooltip.$element.appendTo(this.entities.pointers[index].$element);
           });
-          if (this.entities.input && this.entities.input.$tooltip) {
-            this.entities.input.$tooltip.tooltips = this.entities.tooltip;
-            this.entities.input.$tooltip.switchChecked(true);
-          }
         }
       } else if (this.entities.tooltip) {
         this.entities.tooltip.forEach((tooltip) => { tooltip.$element.remove(); });
         this.entities.tooltip = undefined;
-        if (this.entities.input && this.entities.input.$tooltip) {
-          this.entities.input.$tooltip.switchChecked(false);
-        }
       }
     }
 
