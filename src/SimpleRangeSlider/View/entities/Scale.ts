@@ -3,7 +3,7 @@ import ScaleClassNames from './types';
 class Scale {
   readonly valuePipsNumber: number = 5;
 
-  readonly emptyPipsNumber: number = 1;
+  readonly emptyPipsNumber: number = 2;
 
   readonly classNames: ScaleClassNames = {
     slider: 'simple-range-slider',
