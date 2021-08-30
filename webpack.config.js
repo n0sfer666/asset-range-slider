@@ -1,6 +1,7 @@
 __webpack_base_uri__ = 'http://localhost:9090';
 const Webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   stats: 'errors-only',
@@ -44,6 +45,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './src/pages/index.pug',
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/favicons', to: 'favicons' },
+      ]
     }),
   ],
 };
