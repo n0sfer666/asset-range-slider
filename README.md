@@ -19,7 +19,6 @@ $(container).simpleRangeSlider({
   scale: boolean,
   input: {
     values: [leftPointer: JQuery, rightPointer: JQuery],
-    $tooltip: switchCheckbox: JQuery,
   }
 });
 ```
@@ -73,7 +72,6 @@ type PointerValue = [number] | [number, number];
 type PointerPosition = PointerValue;
 type ConfigInputs = {
   values?: JQuery[],
-  $tooltip?: JQuery
 };
 type PointerCssValues = {
   attribute: string,
