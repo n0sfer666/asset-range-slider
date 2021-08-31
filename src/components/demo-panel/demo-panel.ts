@@ -30,7 +30,7 @@ class DemoPanel {
   }
 
   getContainer(type: 'slider-container' | 'config'): JQuery {
-    return this.$mainContainer.find(`.js-${this.blockClass}__${type}`) || undefined;
+    return this.$mainContainer.find(`.js-${this.blockClass}__${type}`);
   }
 
   getSecondStart(): JQuery {
