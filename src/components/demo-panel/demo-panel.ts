@@ -34,13 +34,7 @@ class DemoPanel {
   }
 
   getSecondStart(): JQuery {
-    let secondStart: JQuery = $(document.createElement('div'));
-    this.textInputBlocks.forEach((textInput) => {
-      if (textInput.configurationName === 'start') {
-        secondStart = textInput.inputs[1];
-      }
-    });
-    return secondStart;
+    return this.textInputBlocks.find((block) => block.configurationName === 'start')?.inputs[1]!;
   }
 
   initContainers() {
