@@ -36,40 +36,43 @@ class ControlButton {
 
   handleButtonClick() {
     this.sliderConfig = this.sliderInstance.getConfig();
+    if (this.isSinglePointer) {
+      this.addPointerIfPossible();
+    } else {
+      this.removePointer();
+    }
+  }
+
+  addPointerIfPossible() {
     const {
       start, range, step, input,
     } = this.sliderConfig;
-    if (this.isSinglePointer) {
-      const newValue = step < 10
-        ? start[0] + 5
-        : start[0] + step;
-      if (newValue < range[1]) {
-        this.isSinglePointer = false;
-        start.push(newValue);
-        if (input && input.values) {
-          input.values[1].show();
-        }
-        if (start[1]) {
-          this.$secondStart.show().val(start[1]);
-        }
-        this.sliderInstance.updateSlider({ start });
-        this.$text.text('remove pointer');
-      } else {
-        this.$container.addClass(`${this.blockClass}_wrong-condition`);
-        setTimeout(() => {
-          this.$container.removeClass(`${this.blockClass}_wrong-condition`);
-        }, 300);
-      }
-    } else {
-      this.isSinglePointer = true;
-      start.pop();
-      if (input && input.values) {
-        input.values[1].hide();
-      }
-      this.$secondStart.hide().val('');
+    const newValue = step < 10
+      ? start[0] + 10
+      : start[0] + step;
+    if (newValue < range[1]) {
+      this.isSinglePointer = false;
+      start.push(newValue);
+      input!.values![1].show();
+      this.$secondStart.show().val(start[1]!);
       this.sliderInstance.updateSlider({ start });
-      this.$text.text('add pointer');
+      this.$text.text('remove pointer');
+    } else {
+      this.$container.addClass(`${this.blockClass}_wrong-condition`);
+      setTimeout(() => {
+        this.$container.removeClass(`${this.blockClass}_wrong-condition`);
+      }, 300);
     }
+  }
+
+  removePointer() {
+    const { start, input } = this.sliderConfig;
+    this.isSinglePointer = true;
+    start.pop();
+    input!.values![1].hide();
+    this.$secondStart.hide().val('');
+    this.sliderInstance.updateSlider({ start });
+    this.$text.text('add pointer');
   }
 
   bindContext() {
