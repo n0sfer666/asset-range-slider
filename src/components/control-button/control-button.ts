@@ -53,7 +53,7 @@ class ControlButton {
     if (newValue < range[1]) {
       this.isSinglePointer = false;
       start.push(newValue);
-      input!.values![1].show();
+      input!.values![1]!.show();
       this.$secondStart.show().val(start[1]!);
       this.sliderInstance.updateSlider({ start });
       this.$text.text('remove pointer');
@@ -69,7 +69,7 @@ class ControlButton {
     const { start, input } = this.sliderConfig;
     this.isSinglePointer = true;
     start.pop();
-    input!.values![1].hide();
+    input!.values![1]!.hide();
     this.$secondStart.hide().val('');
     this.sliderInstance.updateSlider({ start });
     this.$text.text('add pointer');
