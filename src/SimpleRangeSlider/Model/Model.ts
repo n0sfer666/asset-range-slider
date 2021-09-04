@@ -9,6 +9,9 @@ class Model {
     connect: true,
     tooltip: true,
     scale: true,
+    input: {
+      values: undefined,
+    },
   };
 
   private config: CompleteConfigList;
@@ -19,7 +22,7 @@ class Model {
 
   private callbackList: ModelCallback[] = [];
 
-  private positions: PointerValue;
+  private positions: PointerPosition;
 
   private values: PointerValue;
 
@@ -28,24 +31,21 @@ class Model {
   private activePointerIndex: number = 0;
 
   constructor(config: UserConfigList) {
-    this.config = this.getVerifiedConfig(Model.getCompleteConfig(this.defaultConfig, config));
+    this.config = this.getVerifiedConfig(this.getCompleteConfig(config));
     const { range, start, step } = this.config;
     this.values = [...start];
     this.range = [...range];
     this.step = step;
     this.isSinglePointer = start.length === 1;
-    this.positions = <PointerValue> this.values.map((value) => this.getPositionFromValue(value));
+    this.positions = <PointerPosition> this.values.map((value) => this.getPositionFromValue(value));
   }
 
-  static getCompleteConfig(
-    defaultConfig: CompleteConfigList,
-    userConfig: UserConfigList,
-  ): CompleteConfigList {
-    return { ...defaultConfig, ...userConfig };
+  getCompleteConfig(userConfig: UserConfigList): CompleteConfigList {
+    return { ...this.defaultConfig, ...userConfig };
   }
 
   getVerifiedConfig(userConfig: CompleteConfigList): CompleteConfigList {
-    const config = { ...userConfig };
+    const config: CompleteConfigList = { ...userConfig };
     config.step = config.step > 0
       ? config.step
       : this.defaultConfig.step;
@@ -167,7 +167,9 @@ class Model {
     this.range = config.range ? [...config.range] : this.range;
     this.step = config.step ? config.step : this.step;
     if (config.start || config.range) {
-      this.positions = <PointerValue> this.values.map((value) => this.getPositionFromValue(value));
+      this.positions = <PointerPosition> this.values.map(
+        (value) => this.getPositionFromValue(value),
+      );
       viewUpdateList.positions = [...this.positions];
     }
     Object.keys(config).forEach((key) => {

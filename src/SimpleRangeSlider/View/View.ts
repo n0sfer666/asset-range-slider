@@ -14,7 +14,7 @@ class View {
 
   private $slider: JQuery;
 
-  private positions: PointerValue;
+  private positions: PointerPosition;
 
   private values: PointerValue;
 
@@ -29,7 +29,7 @@ class View {
   constructor(
     $container: JQuery,
     config: ViewConfigList,
-    positions: PointerValue,
+    positions: PointerPosition,
     values: PointerValue,
     range: ConfigRange,
   ) {
@@ -89,7 +89,7 @@ class View {
     return scaleInstance;
   }
 
-  initEntities(positions: PointerValue, values: PointerValue, range: ConfigRange) {
+  initEntities(positions: PointerPosition, values: PointerValue, range: ConfigRange) {
     if (!this.$sliderContainer && !this.$slider) {
       this.$sliderContainer = this.getSliderElement(false);
       this.$slider = this.getSliderElement(true);
