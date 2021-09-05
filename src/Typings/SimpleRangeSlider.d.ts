@@ -3,33 +3,24 @@ type ConfigRange = [number, number];
 type PointerValue = [number] | [number, number];
 type PointerPosition = PointerValue;
 type ConfigInputs = {
-  values?: [JQuery] | [JQuery, JQuery],
+  values?: JQuery[],
 };
 type PointerCssValues = {
   attribute: string,
   value: string
 };
-type ViewData = {
+interface SliderData extends ObjectKeyString {
   position?: number,
+  positions: PointerPosition,
   value?: number,
-  index: number
-};
-type PointerData = {
-  position: number,
-  index: number
-};
-type ScaleData = {
-  value: number,
-};
-type InputTextData = {
-  value: number,
-  index: number
-};
-type ModelData = {
   values: PointerValue,
-  positions: PointerValue,
   index: number
-};
+}
+type ViewData = Pick<SliderData, 'position' | 'value' | 'index'>;
+type PointerData = Required<Pick<SliderData, 'position' | 'index'>>;
+type ScaleData = Required<Pick<SliderData, 'value'>>;
+type InputTextData = Required<Pick<SliderData, 'value' | 'index'>>;
+type ModelData = Pick<SliderData, 'positions' | 'values' | 'index'>;
 interface ObjectKeyString {
   [key: string]: any;
 }
@@ -43,37 +34,14 @@ interface UserConfigList extends ObjectKeyString {
   scale?: boolean;
   input?: ConfigInputs;
 }
-interface CompleteConfigList extends ObjectKeyString {
-  orientation: ConfigOrientation;
-  start: PointerValue;
-  range: ConfigRange;
-  step: number;
-  connect: boolean;
-  tooltip: boolean;
-  scale: boolean;
-  input?: ConfigInputs;
+interface CompleteConfigList extends Required<UserConfigList> {
 }
-interface ModelConfigList extends ObjectKeyString {
-  start: PointerValue;
-  range: ConfigRange;
-  step: number;
+interface ViewConfigList extends Pick<CompleteConfigList, 'orientation' | 'connect' | 'tooltip' | 'scale' | 'input'> {
 }
-interface ViewConfigList extends ObjectKeyString {
-  orientation: ConfigOrientation,
-  connect: boolean;
-  tooltip: boolean;
-  scale: boolean;
-  input?: ConfigInputs;
-}
-interface ViewUpdateList extends ObjectKeyString {
+interface ViewUpdateList extends Partial<ViewConfigList> {
   positions?: PointerValue,
   values?: PointerValue,
   range?: ConfigRange,
-  orientation?: ConfigOrientation,
-  connect?: boolean;
-  tooltip?: boolean;
-  scale?: boolean;
-  input?: ConfigInputs;
 }
 interface ViewCallback {
   (viewData: ViewData): void
