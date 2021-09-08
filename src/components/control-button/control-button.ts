@@ -5,7 +5,7 @@ class ControlButton {
 
   $container: JQuery;
 
-  $secondStart: JQuery;
+  $secondValue: JQuery;
 
   $sliderContainer: JQuery;
 
@@ -17,10 +17,10 @@ class ControlButton {
 
   isSinglePointer: boolean;
 
-  constructor($container: JQuery, $secondStart: JQuery, $sliderContainer: JQuery) {
+  constructor($container: JQuery, $secondValue: JQuery, $sliderContainer: JQuery) {
     this.bindContext();
     this.$container = $container;
-    this.$secondStart = $secondStart;
+    this.$secondValue = $secondValue;
     this.$sliderContainer = $sliderContainer;
     this.sliderInstance = $sliderContainer.data('SimpleRangeSlider');
     this.sliderConfig = this.sliderInstance.getConfig();
@@ -53,7 +53,7 @@ class ControlButton {
     if (newValue < range[1]) {
       this.isSinglePointer = false;
       values.push(newValue);
-      this.$secondStart.show().val(values[1]!);
+      this.$secondValue.show().val(values[1] || values[1] === 0 ? values[1] : NaN);
       this.sliderInstance.updateSlider({ values });
       this.$text.text('remove pointer');
     } else {
@@ -68,7 +68,7 @@ class ControlButton {
     const { values } = this.sliderConfig;
     this.isSinglePointer = true;
     values.pop();
-    this.$secondStart.hide().val('');
+    this.$secondValue.hide().val('');
     this.sliderInstance.updateSlider({ values });
     this.$text.text('add pointer');
   }

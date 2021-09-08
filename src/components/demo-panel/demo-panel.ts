@@ -32,8 +32,9 @@ class DemoPanel {
     return this.$mainContainer.find(`.js-${this.blockClass}__${type}`);
   }
 
-  getSecondStart(): JQuery {
-    return this.textInputBlocks.find((block) => block.configurationName === 'values')?.inputs[1]!;
+  getSecondValue(): JQuery {
+    const values = this.textInputBlocks.find((block) => block.configurationName === 'values')?.inputs;
+    return values ? values[values.length - 1] : $(document.createElement('input'));
   }
 
   initContainers() {
@@ -46,7 +47,7 @@ class DemoPanel {
     this.radioBlocks = getRadioBlocks(this.$configContainer, this.$sliderContainer);
     this.controlButton = getControlButton(
       this.$configContainer,
-      this.getSecondStart(),
+      this.getSecondValue(),
       this.$sliderContainer,
     );
   }
