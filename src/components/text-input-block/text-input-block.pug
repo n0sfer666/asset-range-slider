@@ -1,11 +1,11 @@
 mixin text-input-block({name = 'change me'})
   -
-    const isStart = name === 'values'
+    const isValues = name === 'values'
     const isRange = name === 'range'
     const className = 'text-input-block'
     const blockClassName = `${className} js-${className}`
   div(class = blockClassName, data-configuration-name = name)
     h3.text-input-block__title #{name}
     input(type = 'text', class = `${className}__input  js-${className}__input`, name = name, data-index = 0)
-    if (isRange || isStart)
+    if (isRange || isValues)
       input(type = 'text', class = `${className}__input  js-${className}__input`, name = name, data-index = 1)
