@@ -3,10 +3,10 @@
 // import View from '../../SimpleRangeSlider/View/View';
 
 // describe('Presenter.ts', () => {
-//   const start: PointerValue = [10];
+//   const values: PointerValue = [10];
 //   const range: ConfigRange = [0, 100];
 //   const step = 1;
-//   const modelConfig: ModelConfigList = { start, range, step };
+//   const modelConfig: ModelConfigList = { values, range, step };
 //   const model: Model = new Model(modelConfig);
 
 //   const $container = $(document.createElement('div'));
@@ -16,11 +16,11 @@
 //     scale: true,
 //     tooltip: true,
 //     orientation: 'horizontal',
-//     start,
+//     values,
 //     range,
 //     step,
 //   };
-//   const positions: number[] = start.map(
+//   const positions: number[] = values.map(
 //     (value) => model.getPositionFromValue(value),
 //   );
 //   const view: View = new View($container, viewConfig, positions);

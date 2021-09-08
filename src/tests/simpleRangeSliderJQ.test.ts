@@ -3,7 +3,7 @@ import '../SimpleRangeSlider/SimpleRangeSliderJQ';
 describe('simpleRangeSliderJQ.ts', () => {
   const defaultConfig: CompleteConfigList = {
     orientation: 'horizontal',
-    start: [10],
+    values: [10],
     range: [0, 100],
     step: 1,
     connect: true,
@@ -41,7 +41,7 @@ describe('simpleRangeSliderJQ.ts', () => {
   test('create with complete config', () => {
     const testConfig: CompleteConfigList = {
       orientation: 'vertical',
-      start: [-10, 10],
+      values: [-10, 10],
       range: [-100, 100],
       step: 10,
       connect: false,

@@ -3,7 +3,7 @@ class Model {
 
   private readonly defaultConfig: CompleteConfigList = {
     orientation: 'horizontal',
-    start: [10],
+    values: [10],
     range: [0, 100],
     step: 1,
     connect: true,
@@ -32,11 +32,11 @@ class Model {
 
   constructor(config: UserConfigList) {
     this.config = this.getVerifiedConfig(this.getCompleteConfig(config));
-    const { range, start, step } = this.config;
-    this.values = [...start];
+    const { range, values, step } = this.config;
+    this.values = [...values];
     this.range = [...range];
     this.step = step;
-    this.isSinglePointer = start.length === 1;
+    this.isSinglePointer = values.length === 1;
     this.positions = <PointerPosition> this.values.map((value) => this.getPositionFromValue(value));
   }
 
@@ -53,19 +53,19 @@ class Model {
       ? config.range
       : this.defaultConfig.range;
 
-    if (config.start[1]) {
-      const isFirstStartCorrect = config.start[0] >= config.range[0]
-        && config.start[0] < config.start[1]
-        && config.start[0] <= config.range[1];
-      config.start[0] = isFirstStartCorrect
-        ? config.start[0]
+    if (config.values[1]) {
+      const isFirstStartCorrect = config.values[0] >= config.range[0]
+        && config.values[0] < config.values[1]
+        && config.values[0] <= config.range[1];
+      config.values[0] = isFirstStartCorrect
+        ? config.values[0]
         : config.range[0];
-      config.start[1] = config.start[1] > config.start[0] && config.start[1] <= config.range[1]
-        ? config.start[1]
+      config.values[1] = config.values[1] > config.values[0] && config.values[1] <= config.range[1]
+        ? config.values[1]
         : config.range[1];
     } else {
-      config.start[0] = config.start[0] >= config.range[0] && config.start[0] <= config.range[1]
-        ? config.start[0]
+      config.values[0] = config.values[0] >= config.range[0] && config.values[0] <= config.range[1]
+        ? config.values[0]
         : config.range[0];
     }
     return config;
@@ -163,10 +163,10 @@ class Model {
   getViewUpdateList(config: UserConfigList): ViewUpdateList {
     const viewUpdateList: ViewUpdateList = {};
     this.config = this.getVerifiedConfig({ ...this.config, ...config });
-    this.values = config.start ? [...config.start] : this.values;
+    this.values = config.values ? [...config.values] : this.values;
     this.range = config.range ? [...config.range] : this.range;
     this.step = config.step ? config.step : this.step;
-    if (config.start || config.range) {
+    if (config.values || config.range) {
       this.positions = <PointerPosition> this.values.map(
         (value) => this.getPositionFromValue(value),
       );

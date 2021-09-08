@@ -197,11 +197,11 @@ class View {
       this.entities.tooltip[index].setValue(values[index]);
     }
     if (this.entities.connect) {
-      const start = this.isSinglePointer ? 0 : positions[0];
+      const values = this.isSinglePointer ? 0 : positions[0];
       const end = positions[1] || positions[1] === 0
         ? positions[1]
         : positions[0];
-      this.entities.connect.setPosition(start, end);
+      this.entities.connect.setPosition(values, end);
     }
     this.entities.pointers[index].setPosition(positions[index]);
     this.activePointerIndex = index;

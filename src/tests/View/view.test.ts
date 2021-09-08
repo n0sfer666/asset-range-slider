@@ -25,13 +25,13 @@
 //       makeRandomNumber(-1e4, -1e3),
 //       makeRandomNumber(1e3, 1e4),
 //     ],
-//     start: [makeRandomNumber(-1e3, -1)],
+//     values: [makeRandomNumber(-1e3, -1)],
 //     input: {
 //       values: [$(document.createElement('input')).prop('type', 'text')],
 //     },
 //   };
 //   if (randomBoolean) {
-//     testConfig.start.push(makeRandomNumber(0, 1e3));
+//     testConfig.values.push(makeRandomNumber(0, 1e3));
 //     if (testConfig.input && testConfig.input.values) {
 //       testConfig.input.values.push($(document.createElement('input')).prop('type', 'text'));
 //     }
@@ -44,7 +44,7 @@
 //     }
 //   }
 
-//   const testPositions = getPositionFromValue(testConfig.start, testConfig.range);
+//   const testPositions = getPositionFromValue(testConfig.values, testConfig.range);
 //   const testInstance = new View($testContainer, testConfig, testPositions);
 
 //   let tesViewData: ViewData = {

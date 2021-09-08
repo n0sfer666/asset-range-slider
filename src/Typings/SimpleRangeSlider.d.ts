@@ -26,7 +26,7 @@ interface ObjectKeyString {
 }
 interface UserConfigList extends ObjectKeyString {
   orientation?: ConfigOrientation;
-  start?: PointerValue;
+  values?: PointerValue;
   range?: ConfigRange;
   step?: number;
   connect?: boolean;

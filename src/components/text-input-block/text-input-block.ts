@@ -33,8 +33,8 @@ class TextInput {
   initInputs() {
     this.inputs = Array.from(this.$mainContainer.find(`.js-${this.blockClass}__input`)
       .map((_, element) => $(element)));
-    const isSinglePointer = this.sliderConfig.start.length === 1;
-    if (this.configurationName === 'start' && isSinglePointer) {
+    const isSinglePointer = this.sliderConfig.values.length === 1;
+    if (this.configurationName === 'values' && isSinglePointer) {
       this.inputs[1].hide();
     }
     this.inputs.forEach((input, index) => {
@@ -54,8 +54,8 @@ class TextInput {
     const isNotEqualPrevious = Array.isArray(this.configurationValue)
       ? value !== this.configurationValue[index]
       : value !== this.configurationValue;
-    const { range, start } = this.sliderConfig;
-    const isSinglePointer = start.length === 1;
+    const { range, values } = this.sliderConfig;
+    const isSinglePointer = values.length === 1;
     if (isNotEqualPrevious) {
       if (!Array.isArray(this.configurationValue)) {
         if (value > 0) {
@@ -69,7 +69,7 @@ class TextInput {
         }
       } else {
         switch (this.configurationName) {
-          case 'start': {
+          case 'values': {
             if (isSinglePointer) {
               const isNotOutOfRange = value >= range[0] && value <= range[1];
               if (isNotOutOfRange) {
@@ -77,13 +77,13 @@ class TextInput {
               } else {
                 this.blinkInputAndReturnPreviousValue($target, this.configurationValue[index]);
               }
-            } else if (start[1] || start[1] === 0) {
+            } else if (values[1] || values[1] === 0) {
               const isNotOutOfRange = index === 0
-                ? value >= range[0] && value <= start[1]
-                : value >= start[0] && value <= range[1];
+                ? value >= range[0] && value <= values[1]
+                : value >= values[0] && value <= range[1];
               const isNotEqualOtherStart = index === 0
-                ? value !== start[1]
-                : value !== start[0];
+                ? value !== values[1]
+                : value !== values[0];
               if (isNotOutOfRange && isNotEqualOtherStart) {
                 this.configurationValue[index] = value;
               } else {
@@ -98,17 +98,17 @@ class TextInput {
               : value !== range[0];
             if (isSinglePointer) {
               const isOutOfStart = index === 0
-                ? value <= start[0]
-                : value >= start[0];
+                ? value <= values[0]
+                : value >= values[0];
               if (isNotEqualOtherRange && isOutOfStart) {
                 this.configurationValue[index] = value;
               } else {
                 this.blinkInputAndReturnPreviousValue($target, this.configurationValue[index]);
               }
-            } else if (start[1] || start[1] === 0) {
+            } else if (values[1] || values[1] === 0) {
               const isOutOfStart = index === 0
-                ? value <= start[0]
-                : value >= start[1];
+                ? value <= values[0]
+                : value >= values[1];
               if (isNotEqualOtherRange && isOutOfStart) {
                 this.configurationValue[index] = value;
               } else {

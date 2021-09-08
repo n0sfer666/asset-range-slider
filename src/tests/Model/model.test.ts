@@ -14,12 +14,12 @@
 //   const testConfigs: ModelConfigList[] = [
 //     {
 //       range: [-10, 100],
-//       start: [50],
+//       values: [50],
 //       step: 1,
 //     },
 //     {
 //       range: [-1000, 1000],
-//       start: [-500, 500],
+//       values: [-500, 500],
 //       step: 10,
 //     },
 //   ];
@@ -35,11 +35,11 @@
 //   test('getPositionFromValue(value)', () => {
 //     testModels.forEach((modelInstance, index) => {
 //       const { range } = modelInstance;
-//       const testPositions = testConfigs[index].start.map((value) => {
+//       const testPositions = testConfigs[index].values.map((value) => {
 //         const result = (value - range[0]) / (range[1] - range[0]);
 //         return Math.round(result * normalizingCoefficient) / normalizingCoefficient;
 //       });
-//       const expectPositions = testConfigs[index].start.map(
+//       const expectPositions = testConfigs[index].values.map(
 //         (value) => modelInstance.getPositionFromValue(value),
 //       );
 //       expect(expectPositions).toEqual(testPositions);

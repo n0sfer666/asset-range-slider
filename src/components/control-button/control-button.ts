@@ -24,7 +24,7 @@ class ControlButton {
     this.$sliderContainer = $sliderContainer;
     this.sliderInstance = $sliderContainer.data('SimpleRangeSlider');
     this.sliderConfig = this.sliderInstance.getConfig();
-    this.isSinglePointer = this.sliderConfig.start.length === 1;
+    this.isSinglePointer = this.sliderConfig.values.length === 1;
     this.initText();
     this.bindHandlers();
   }
@@ -45,17 +45,17 @@ class ControlButton {
 
   addPointerIfPossible() {
     const {
-      start, range, step, input,
+      values, range, step, input,
     } = this.sliderConfig;
     const newValue = step < 10
-      ? start[0] + 10
-      : start[0] + step;
+      ? values[0] + 10
+      : values[0] + step;
     if (newValue < range[1]) {
       this.isSinglePointer = false;
-      start.push(newValue);
+      values.push(newValue);
       input!.values![1]!.show();
-      this.$secondStart.show().val(start[1]!);
-      this.sliderInstance.updateSlider({ start });
+      this.$secondStart.show().val(values[1]!);
+      this.sliderInstance.updateSlider({ values });
       this.$text.text('remove pointer');
     } else {
       this.$container.addClass(`${this.blockClass}_wrong-condition`);
@@ -66,12 +66,12 @@ class ControlButton {
   }
 
   removePointer() {
-    const { start, input } = this.sliderConfig;
+    const { values, input } = this.sliderConfig;
     this.isSinglePointer = true;
-    start.pop();
+    values.pop();
     input!.values![1]!.hide();
     this.$secondStart.hide().val('');
-    this.sliderInstance.updateSlider({ start });
+    this.sliderInstance.updateSlider({ values });
     this.$text.text('add pointer');
   }
 

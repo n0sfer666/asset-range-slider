@@ -6,7 +6,7 @@
 //   const testConfig: UserConfigList = {
 //     orientation: 'vertical',
 //     range: [-1000, 1000],
-//     start: [-100, 500],
+//     values: [-100, 500],
 //     step: 5,
 //   };
 
@@ -25,9 +25,9 @@
 //   });
 
 //   test('getModelConfig(completeConfig)', () => {
-//     const { start, range, step } = testInstance.completeConfig;
+//     const { values, range, step } = testInstance.completeConfig;
 //     const testModelConfig: ModelConfigList = <ModelConfigList> {
-//       start, range, step,
+//       values, range, step,
 //     };
 //     expect(testInstance.getModelConfig())
 //       .toEqual(testModelConfig);

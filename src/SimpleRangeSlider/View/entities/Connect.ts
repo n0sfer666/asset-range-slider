@@ -1,7 +1,7 @@
 class Connect {
   readonly className: string = 'simple-range-slider__connect';
 
-  startPosition: number;
+  valuesPosition: number;
 
   endPosition: number;
 
@@ -16,18 +16,18 @@ class Connect {
   readonly normalizingCoefficient: number = 1e2;
 
   constructor(
-    startPosition: number,
+    valuesPosition: number,
     endPosition: number,
     orientation: ConfigOrientation,
     isSinglePointer: boolean,
   ) {
-    this.startPosition = startPosition;
+    this.valuesPosition = valuesPosition;
     this.endPosition = endPosition;
     this.orientation = orientation;
     this.isSinglePointer = isSinglePointer;
     this.initElement();
-    this.position = [this.startPosition, this.endPosition];
-    this.setPosition(this.startPosition, this.endPosition);
+    this.position = [this.valuesPosition, this.endPosition];
+    this.setPosition(this.valuesPosition, this.endPosition);
   }
 
   initElement() {
@@ -36,18 +36,18 @@ class Connect {
     this.$element.addClass(`${this.className}_${this.orientation}`);
   }
 
-  setPosition(startPosition: number, endPosition: number, isSinglePointer?: boolean) {
+  setPosition(valuesPosition: number, endPosition: number, isSinglePointer?: boolean) {
     ['width', 'height', 'left', 'top'].forEach((attr) => {
       this.$element.css(attr, '');
     });
     this.isSinglePointer = isSinglePointer !== undefined ? isSinglePointer : this.isSinglePointer;
-    const start: number = Math.round(startPosition * this.normalizingCoefficient);
+    const values: number = Math.round(valuesPosition * this.normalizingCoefficient);
     const end: number = Math.round(endPosition * this.normalizingCoefficient);
-    this.$element.css(this.orientation === 'horizontal' ? 'width' : 'height', `${end - start}%`);
+    this.$element.css(this.orientation === 'horizontal' ? 'width' : 'height', `${end - values}%`);
     if (!this.isSinglePointer) {
-      this.$element.css(this.orientation === 'horizontal' ? 'left' : 'top', `${start}%`);
+      this.$element.css(this.orientation === 'horizontal' ? 'left' : 'top', `${values}%`);
     }
-    this.position = [startPosition, endPosition];
+    this.position = [valuesPosition, endPosition];
   }
 
   setOrientation(orientation: ConfigOrientation) {

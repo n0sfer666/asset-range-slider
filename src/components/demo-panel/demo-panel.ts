@@ -34,7 +34,7 @@ class DemoPanel {
   }
 
   getSecondStart(): JQuery {
-    return this.textInputBlocks.find((block) => block.configurationName === 'start')?.inputs[1]!;
+    return this.textInputBlocks.find((block) => block.configurationName === 'values')?.inputs[1]!;
   }
 
   initContainers() {

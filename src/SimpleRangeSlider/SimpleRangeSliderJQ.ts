@@ -7,11 +7,11 @@ import Presenter from './Presenter/Presenter';
       const $container = <JQuery> this;
       const dataConfig: UserConfigList = {};
       $.each($container.data(), (key, value) => {
-        if (key === 'start' || key === 'range') {
+        if (key === 'values' || key === 'range') {
           const valueWithoutBracketsAndComma = String(value);
           valueWithoutBracketsAndComma.replace(/(\[|\]|\S)$/, '');
           const correctValue = valueWithoutBracketsAndComma.split(',').map((str) => Number(str));
-          if (key === 'start') {
+          if (key === 'values') {
             dataConfig[key] = <PointerValue> correctValue;
           } else {
             dataConfig[key] = <ConfigRange> correctValue;

@@ -8,7 +8,7 @@ class Presenter {
 
   constructor($container: JQuery, config: UserConfigList) {
     this.model = new Model(config);
-    const positions = <PointerValue> this.model.getConfig().start.map(
+    const positions = <PointerValue> this.model.getConfig().values.map(
       (value) => this.model.getPositionFromValue(value),
     );
     this.view = new View(
