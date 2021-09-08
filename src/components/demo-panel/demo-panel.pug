@@ -2,14 +2,14 @@ include ../radio-block/radio-block
 include ../text-input-block/text-input-block
 include ../control-button/control-button
 
-mixin demo-panel({orientation, start, range, step, connect, tooltip, scale})
+mixin demo-panel({orientation, values, range, step, connect, tooltip, scale})
   .demo-panel.js-demo-panel
     .demo-panel__slider
       h2.demo-panel__title Slider:
       div(
         class = "demo-panel__slider-container js-demo-panel__slider-container",
         data-orientation = orientation,
-        data-start = start,
+        data-values = values,
         data-range = range,
         data-step = step,
         data-connect = connect,
@@ -22,7 +22,7 @@ mixin demo-panel({orientation, start, range, step, connect, tooltip, scale})
         +control-button
       +text-input-block({name: 'control'})
       +text-input-block({name: 'range'})
-      +text-input-block({name: 'start'})
+      +text-input-block({name: 'values'})
       +text-input-block({name: 'step'})
       +radio-block({name: 'orientation'})
       +radio-block({name: 'tooltip'})
