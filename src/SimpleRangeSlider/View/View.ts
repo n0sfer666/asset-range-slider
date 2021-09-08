@@ -1,9 +1,8 @@
 import Connect from './entities/Connect';
-import InputTextValue from './entities/inputs/InputTextValue';
 import Pointer from './entities/Pointer';
 import Scale from './entities/Scale';
 import Tooltip from './entities/Tooltip';
-import { ViewEntities, ViewEntitiesInput } from './ViewEntities.type';
+import ViewEntities from './ViewEntities.type';
 
 class View {
   private $container: JQuery;
@@ -101,37 +100,6 @@ class View {
       tooltip,
       connect: this.config.connect ? this.getConnect(pointers) : undefined,
       scale: this.config.scale ? this.getScale(range) : undefined,
-      input: this.getInputs(values, this.config.input),
-    };
-  }
-
-  getInputs(
-    inputValues: PointerValue,
-    input?: ConfigInputs,
-  ): ViewEntitiesInput {
-    if (input) {
-      const values = input.values
-        ? input.values.map(($value, index) => new InputTextValue(
-          $value,
-          inputValues[index] !== undefined ? inputValues[index] : NaN,
-          index,
-        ))
-        : undefined;
-      if (values) {
-        const isDifferentAmount = inputValues.length !== values.length;
-        if (isDifferentAmount) {
-          values[values.length - 1].$element.hide();
-        }
-        values.forEach((inputTextValue) => {
-          inputTextValue.subscribeOn(this.updateByInputText);
-        });
-      }
-      return {
-        values,
-      };
-    }
-    return {
-      values: undefined,
     };
   }
 
@@ -169,12 +137,6 @@ class View {
     this.callbackList.forEach((modelCallback) => modelCallback({ index, position }));
   }
 
-  updateByInputText(inputTextData: InputTextData) {
-    const { index, value } = inputTextData;
-    this.activePointerIndex = index;
-    this.callbackList.forEach((modelCallback) => modelCallback({ index, value }));
-  }
-
   updateByScale(scaleData: ScaleData) {
     const { value } = scaleData;
     if (this.isSinglePointer) {
@@ -190,18 +152,15 @@ class View {
   updateByModel(modelData: ModelData) {
     const { index, positions, values } = modelData;
     this.switchActivePointer();
-    if (this.entities.input && this.entities.input.values) {
-      this.entities.input.values[index].setNewValue(values[index]);
-    }
     if (this.entities.tooltip) {
       this.entities.tooltip[index].setValue(values[index]);
     }
     if (this.entities.connect) {
-      const values = this.isSinglePointer ? 0 : positions[0];
+      const start = this.isSinglePointer ? 0 : positions[0];
       const end = positions[1] || positions[1] === 0
         ? positions[1]
         : positions[0];
-      this.entities.connect.setPosition(values, end);
+      this.entities.connect.setPosition(start, end);
     }
     this.entities.pointers[index].setPosition(positions[index]);
     this.activePointerIndex = index;
@@ -215,11 +174,6 @@ class View {
       this.isSinglePointer = this.positions.length === 1;
       const lastPointerLength = this.entities.pointers.length;
       const newPointerLength = viewUpdateList.values.length;
-      viewUpdateList.values.forEach((value, index) => {
-        if (this.entities.input && this.entities.input.values) {
-          this.entities.input.values[index].setNewValue(value);
-        }
-      });
       if (lastPointerLength !== newPointerLength) {
         if (newPointerLength === 2) {
           const isCorrectSecondStart = viewUpdateList.values[1] || viewUpdateList.values[1] === 0;
@@ -229,11 +183,6 @@ class View {
               this.entities.tooltip.push(this.getTooltip(viewUpdateList.values[1]!));
               this.entities.tooltip[1].$element.appendTo(this.entities.pointers[1].$element);
             }
-            if (this.entities.input && this.entities.input.values) {
-              if (this.entities.input.values[1]) {
-                this.entities.input.values[1].$element.show();
-              }
-            }
             this.entities.pointers[1].$element.appendTo(this.$slider);
           }
         } else if (this.entities.pointers[1]) {
@@ -241,11 +190,6 @@ class View {
           this.entities.pointers.pop();
           if (this.entities.tooltip && this.entities.tooltip[1]) {
             this.entities.tooltip.pop();
-          }
-          if (this.entities.input && this.entities.input.values) {
-            if (this.entities.input.values[1]) {
-              this.entities.input.values[1].$element.hide();
-            }
           }
         }
       }
@@ -354,7 +298,6 @@ class View {
   }
 
   bindContext() {
-    this.updateByInputText = this.updateByInputText.bind(this);
     this.updateByScale = this.updateByScale.bind(this);
     this.updateByPointer = this.updateByPointer.bind(this);
   }

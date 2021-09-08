@@ -2,9 +2,6 @@ type ConfigOrientation = 'horizontal' | 'vertical';
 type ConfigRange = [number, number];
 type PointerValue = [number] | [number, number];
 type PointerPosition = PointerValue;
-type ConfigInputs = {
-  values?: JQuery[],
-};
 type PointerCssValues = {
   attribute: string,
   value: string
@@ -32,11 +29,10 @@ interface UserConfigList extends ObjectKeyString {
   connect?: boolean;
   tooltip?: boolean;
   scale?: boolean;
-  input?: ConfigInputs;
 }
 interface CompleteConfigList extends Required<UserConfigList> {
 }
-interface ViewConfigList extends Pick<CompleteConfigList, 'orientation' | 'connect' | 'tooltip' | 'scale' | 'input'> {
+interface ViewConfigList extends Pick<CompleteConfigList, 'orientation' | 'connect' | 'tooltip' | 'scale'> {
 }
 interface ViewUpdateList extends Partial<ViewConfigList> {
   positions?: PointerValue,

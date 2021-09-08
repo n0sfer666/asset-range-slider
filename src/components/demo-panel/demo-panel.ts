@@ -5,7 +5,6 @@ import getRadioBlocks from '../radio-block/getRadioBlocks';
 import RadioBlock from '../radio-block/radio-block';
 import TextInput from '../text-input-block/text-input-block';
 import getTextInputBlocks from '../text-input-block/getTextInputBlocks';
-import getControlInput from '../text-input-block/getControlInput';
 
 class DemoPanel {
   readonly blockClass = 'demo-panel';
@@ -25,7 +24,7 @@ class DemoPanel {
   constructor($container: JQuery) {
     this.$mainContainer = $container;
     this.initContainers();
-    this.$sliderContainer.simpleRangeSlider({ input: getControlInput(this.$configContainer) });
+    this.$sliderContainer.simpleRangeSlider({});
     this.initBlocks();
   }
 

@@ -9,9 +9,6 @@ class Model {
     connect: true,
     tooltip: true,
     scale: true,
-    input: {
-      values: undefined,
-    },
   };
 
   private config: CompleteConfigList;
@@ -77,10 +74,10 @@ class Model {
 
   getViewConfig(): ViewConfigList {
     const {
-      orientation, connect, scale, tooltip, input,
+      orientation, connect, scale, tooltip,
     } = this.config;
     return {
-      orientation, connect, scale, tooltip, input,
+      orientation, connect, scale, tooltip,
     };
   }
 
