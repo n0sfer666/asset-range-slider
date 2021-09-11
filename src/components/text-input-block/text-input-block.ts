@@ -54,79 +54,35 @@ class TextInput {
     const isNotEqualPrevious = Array.isArray(this.configurationValue)
       ? value !== this.configurationValue[index]
       : value !== this.configurationValue;
-    const { range, values } = this.sliderConfig;
-    const isSinglePointer = values.length === 1;
     if (isNotEqualPrevious) {
-      if (!Array.isArray(this.configurationValue)) {
-        if (value > 0) {
-          const isStep = this.configurationName === 'step';
-          if (isStep) {
-            this.configurationValue = value;
-            this.sliderConfig[this.configurationName] = this.configurationValue;
-          }
-        } else {
-          this.blinkInputAndReturnPreviousValue($target, this.configurationValue);
-        }
+      const lastValue = Array.isArray(this.configurationValue)
+        ? [...this.configurationValue]
+        : this.configurationValue;
+      if (Array.isArray(this.configurationValue)) {
+        this.configurationValue[index] = value;
       } else {
-        switch (this.configurationName) {
-          case 'values': {
-            if (isSinglePointer) {
-              const isNotOutOfRange = value >= range[0] && value <= range[1];
-              if (isNotOutOfRange) {
-                this.configurationValue[index] = value;
-              } else {
-                this.blinkInputAndReturnPreviousValue($target, this.configurationValue[index]);
-              }
-            } else if (values[1] || values[1] === 0) {
-              const isNotOutOfRange = index === 0
-                ? value >= range[0] && value <= values[1]
-                : value >= values[0] && value <= range[1];
-              const isNotEqualOtherStart = index === 0
-                ? value !== values[1]
-                : value !== values[0];
-              if (isNotOutOfRange && isNotEqualOtherStart) {
-                this.configurationValue[index] = value;
-              } else {
-                this.blinkInputAndReturnPreviousValue($target, this.configurationValue[index]);
-              }
-            }
-            break;
-          }
-          case 'range': {
-            const isNotEqualOtherRange = index === 0
-              ? value !== range[1]
-              : value !== range[0];
-            if (isSinglePointer) {
-              const isOutOfStart = index === 0
-                ? value <= values[0]
-                : value >= values[0];
-              if (isNotEqualOtherRange && isOutOfStart) {
-                this.configurationValue[index] = value;
-              } else {
-                this.blinkInputAndReturnPreviousValue($target, this.configurationValue[index]);
-              }
-            } else if (values[1] || values[1] === 0) {
-              const isOutOfStart = index === 0
-                ? value <= values[0]
-                : value >= values[1];
-              if (isNotEqualOtherRange && isOutOfStart) {
-                this.configurationValue[index] = value;
-              } else {
-                this.blinkInputAndReturnPreviousValue($target, this.configurationValue[index]);
-              }
-            }
-            break;
-          }
-          default:
-            break;
-        }
+        this.configurationValue = value;
       }
-      this.updateSlider();
+      this.updateSlider(
+        Array.isArray(this.configurationValue)
+          ? [...this.configurationValue]
+          : this.configurationValue,
+      );
+      const newValue = this.sliderConfig[this.configurationName];
+      const isCorrectValue = JSON.stringify(newValue) === JSON.stringify(this.configurationValue);
+      if (!isCorrectValue) {
+        this.blinkInputAndReturnPreviousValue(
+          $target,
+          Array.isArray(lastValue) ? lastValue[index] : lastValue,
+          index,
+        );
+      }
     }
   }
 
-  updateSlider() {
-    this.sliderInstance.updateSlider({ [this.configurationName]: this.configurationValue });
+  updateSlider(value: number | ConfigRange | PointerValue) {
+    this.sliderInstance.updateSlider({ [this.configurationName]: value });
+    this.sliderConfig = this.sliderInstance.getConfig();
   }
 
   bindHandlers() {
@@ -139,12 +95,18 @@ class TextInput {
     this.handleInputFocusOut = this.handleInputFocusOut.bind(this);
   }
 
-  blinkInputAndReturnPreviousValue($input: JQuery, previousValue: number) {
+  blinkInputAndReturnPreviousValue($input: JQuery, previousValue: number, index: number) {
     $input.addClass(`${this.blockClass}__input_wrong`);
     setTimeout(() => {
       $input.removeClass(`${this.blockClass}__input_wrong`);
     }, 250);
     $input.val(previousValue);
+    if (Array.isArray(this.configurationValue)) {
+      this.configurationValue[index] = previousValue;
+    } else {
+      this.configurationValue = previousValue;
+    }
+    this.updateSlider(this.configurationValue);
   }
 }
 

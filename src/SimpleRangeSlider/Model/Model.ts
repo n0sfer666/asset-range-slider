@@ -43,27 +43,42 @@ class Model {
 
   getVerifiedConfig(userConfig: CompleteConfigList): CompleteConfigList {
     const config: CompleteConfigList = { ...userConfig };
-    config.step = config.step > 0
-      ? config.step
-      : this.defaultConfig.step;
-    config.range = Math.abs(config.range[1] - config.range[0]) >= 5
-      ? config.range
-      : this.defaultConfig.range;
+    if (this.step !== config.step) {
+      config.step = config.step > 0
+        ? config.step
+        : this.defaultConfig.step;
+    }
 
-    if (config.values[1]) {
-      const isFirstStartCorrect = config.values[0] >= config.range[0]
-        && config.values[0] < config.values[1]
-        && config.values[0] <= config.range[1];
-      config.values[0] = isFirstStartCorrect
-        ? config.values[0]
-        : config.range[0];
-      config.values[1] = config.values[1] > config.values[0] && config.values[1] <= config.range[1]
-        ? config.values[1]
-        : config.range[1];
-    } else {
-      config.values[0] = config.values[0] >= config.range[0] && config.values[0] <= config.range[1]
-        ? config.values[0]
-        : config.range[0];
+    const { values, range } = config;
+    this.isSinglePointer = values.length === 1;
+    if (JSON.stringify(this.range) !== JSON.stringify(range)) {
+      const isCorrectRange = values[1] || values[1] === 0
+        ? range[0] <= values[0] && range[1] >= values[1]
+        : range[0] <= values[0] && range[1] >= values[0];
+      if (values[1] || values[1] === 0) {
+        config.range = isCorrectRange
+          ? range
+          : [values[0], values[1]];
+      } else {
+        config.range = isCorrectRange
+          ? range
+          : [values[0] - 100, values[0] + 100];
+      }
+    }
+
+    if (JSON.stringify(this.values) !== JSON.stringify(values)) {
+      if (config.values[1] || config.values[1] === 0) {
+        config.values[0] = values[0] >= range[0] && values[0] < config.values[1]
+          ? values[0]
+          : range[0];
+        config.values[1] = config.values[1] >= values[0] && config.values[1] <= range[1]
+          ? config.values[1]
+          : range[1];
+      } else {
+        config.values[0] = values[0] >= range[0] && values[0] <= range[1]
+          ? values[0]
+          : range[0];
+      }
     }
     return config;
   }
