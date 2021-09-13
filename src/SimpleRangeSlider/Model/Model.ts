@@ -173,11 +173,14 @@ class Model {
   }
 
   getViewUpdateList(config: UserConfigList): ViewUpdateList {
-    const viewUpdateList: ViewUpdateList = {};
     this.config = this.getVerifiedConfig({ ...this.config, ...config });
     this.values = config.values ? [...config.values] : this.values;
     this.range = config.range ? [...config.range] : this.range;
     this.step = config.step ? config.step : this.step;
+    const viewUpdateList: ViewUpdateList = {
+      values: this.values,
+      range: this.range,
+    };
     if (config.values || config.range) {
       this.positions = <PointerPosition> this.values.map(
         (value) => this.getPositionFromValue(value),

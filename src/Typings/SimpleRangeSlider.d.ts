@@ -36,8 +36,8 @@ interface ViewConfigList extends Pick<CompleteConfigList, 'orientation' | 'conne
 }
 interface ViewUpdateList extends Partial<ViewConfigList> {
   positions?: PointerValue,
-  values?: PointerValue,
-  range?: ConfigRange,
+  values: PointerValue,
+  range: ConfigRange,
 }
 interface ViewCallback {
   (viewData: ViewData): void

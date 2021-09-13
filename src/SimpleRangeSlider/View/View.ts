@@ -258,30 +258,34 @@ class View {
       }
     }
 
-    if (viewUpdateList.scale !== undefined && this.config.scale !== viewUpdateList.scale) {
-      this.config.scale = viewUpdateList.scale;
-      if (viewUpdateList.range) {
-        if (this.config.scale) {
-          this.entities.scale = this.getScale(viewUpdateList.range);
-          if (this.config.orientation === 'horizontal') {
-            this.entities.scale.$element.appendTo(this.$sliderContainer);
-          } else {
-            this.entities.scale.$element.prependTo(this.$sliderContainer);
-          }
-        } else {
-          if (this.entities.scale) {
-            this.entities.scale.$element.remove();
-          }
-          this.entities.scale = undefined;
-        }
-      }
+    if (viewUpdateList.scale !== undefined) {
+      this.updateScale(viewUpdateList.scale, viewUpdateList.range);
     }
 
     if (viewUpdateList.range) {
       const { range } = viewUpdateList;
-      const isRangeChange = this.entities.scale && this.entities.scale.range !== range;
-      if (this.entities.scale && isRangeChange) {
+      if (this.entities.scale) {
         this.entities.scale.updateScale(range, viewUpdateList.orientation);
+      }
+    }
+  }
+
+  updateScale(withScale: boolean, range: ConfigRange) {
+    const isScaleChange = withScale !== this.config.scale;
+    if (isScaleChange) {
+      this.config.scale = withScale;
+      if (withScale) {
+        this.entities.scale = this.getScale(range);
+        if (this.config.orientation === 'horizontal') {
+          this.entities.scale.$element.appendTo(this.$sliderContainer);
+        } else {
+          this.entities.scale.$element.prependTo(this.$sliderContainer);
+        }
+      } else {
+        if (this.entities.scale) {
+          this.entities.scale.$element.remove();
+        }
+        this.entities.scale = undefined;
       }
     }
   }
