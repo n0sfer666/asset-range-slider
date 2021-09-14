@@ -169,93 +169,20 @@ class View {
   }
 
   updateView(viewUpdateList: ViewUpdateList) {
-    if (viewUpdateList.values && viewUpdateList.positions) {
-      this.positions = [...viewUpdateList.positions];
-      this.isSinglePointer = this.positions.length === 1;
-      const lastPointerLength = this.entities.pointers.length;
-      const newPointerLength = viewUpdateList.values.length;
-      if (lastPointerLength !== newPointerLength) {
-        if (newPointerLength === 2) {
-          const isCorrectSecondStart = viewUpdateList.values[1] || viewUpdateList.values[1] === 0;
-          if (viewUpdateList.positions[1] && isCorrectSecondStart) {
-            this.entities.pointers.push(this.getPointer(viewUpdateList.positions[1], 1));
-            if (this.entities.tooltip) {
-              this.entities.tooltip.push(this.getTooltip(viewUpdateList.values[1]!));
-              this.entities.tooltip[1].$element.appendTo(this.entities.pointers[1].$element);
-            }
-            this.entities.pointers[1].$element.appendTo(this.$slider);
-          }
-        } else if (this.entities.pointers[1]) {
-          this.entities.pointers[1].$element.remove();
-          this.entities.pointers.pop();
-          if (this.entities.tooltip && this.entities.tooltip[1]) {
-            this.entities.tooltip.pop();
-          }
-        }
-      }
-      this.positions.forEach((position, index) => {
-        this.entities.pointers[index].setPosition(position);
-        if (this.entities.tooltip && viewUpdateList.values) {
-          this.entities.tooltip[index].setValue(viewUpdateList.values[index]);
-        }
-      });
-      if (this.entities.connect) {
-        this.entities.connect.setPosition(
-          this.isSinglePointer ? 0 : this.positions[0],
-          this.positions[1] || this.positions[1] === 0
-            ? this.positions[1]
-            : this.positions[0],
-          this.isSinglePointer,
-        );
-      }
+    if (viewUpdateList.positions) {
+      this.updatePositions(viewUpdateList.positions, viewUpdateList.values);
     }
 
     if (viewUpdateList.orientation && viewUpdateList.orientation !== this.config.orientation) {
-      this.setOrientation(viewUpdateList.orientation);
-      const { orientation } = this.config;
-      this.entities.pointers.forEach((pointer) => { pointer.setOrientation(orientation); });
-      if (this.entities.tooltip) {
-        this.entities.tooltip.forEach((tooltip) => { tooltip.setOrientation(orientation); });
-      }
-      if (this.entities.connect) {
-        this.entities.connect.setOrientation(orientation);
-      }
-      if (this.entities.scale) {
-        this.entities.scale.setOrientation(orientation);
-        if (orientation === 'vertical') {
-          this.entities.scale.$element.prependTo(this.$sliderContainer);
-        } else {
-          this.$slider.prependTo(this.$sliderContainer);
-        }
-      }
+      this.updateOrientation(viewUpdateList.orientation);
     }
 
     if (viewUpdateList.connect !== undefined && this.config.connect !== viewUpdateList.connect) {
-      this.config.connect = viewUpdateList.connect;
-      if (this.config.connect) {
-        this.entities.connect = this.getConnect(this.entities.pointers);
-        this.entities.connect.$element.appendTo(this.$slider);
-      } else {
-        if (this.entities.connect) {
-          this.entities.connect.$element.remove();
-        }
-        this.entities.connect = undefined;
-      }
+      this.updateConnect(viewUpdateList.connect);
     }
 
     if (viewUpdateList.tooltip !== undefined && this.config.tooltip !== viewUpdateList.tooltip) {
-      this.config.tooltip = viewUpdateList.tooltip;
-      if (this.config.tooltip) {
-        if (viewUpdateList.values) {
-          this.entities.tooltip = viewUpdateList.values.map((value) => this.getTooltip(value));
-          this.entities.tooltip.forEach((tooltip, index) => {
-            tooltip.$element.appendTo(this.entities.pointers[index].$element);
-          });
-        }
-      } else if (this.entities.tooltip) {
-        this.entities.tooltip.forEach((tooltip) => { tooltip.$element.remove(); });
-        this.entities.tooltip = undefined;
-      }
+      this.updateTooltip(viewUpdateList.tooltip, viewUpdateList.values);
     }
 
     if (viewUpdateList.scale !== undefined) {
@@ -265,7 +192,10 @@ class View {
     if (viewUpdateList.range) {
       const { range } = viewUpdateList;
       if (this.entities.scale) {
-        this.entities.scale.updateScale(range, viewUpdateList.orientation);
+        const isRangeChanged = JSON.stringify(range) !== JSON.stringify(this.entities.scale.range);
+        if (isRangeChanged) {
+          this.entities.scale.updateScale(range, viewUpdateList.orientation);
+        }
       }
     }
   }
@@ -290,14 +220,103 @@ class View {
     }
   }
 
-  setOrientation(orientation: ConfigOrientation) {
+  updatePositions(positions: PointerPosition, values: PointerValue) {
+    this.positions = [...positions];
+    this.isSinglePointer = this.positions.length === 1;
+    const lastPointerLength = this.entities.pointers.length;
+    const newPointerLength = values.length;
+    if (lastPointerLength !== newPointerLength) {
+      this.updatePointerAndTooltip(newPointerLength, positions, values);
+    }
+    this.positions.forEach((position, index) => {
+      this.entities.pointers[index].setPosition(position);
+      if (this.entities.tooltip && values) {
+        this.entities.tooltip[index].setValue(values[index]);
+      }
+    });
+    if (this.entities.connect) {
+      this.entities.connect.setPosition(
+        this.isSinglePointer ? 0 : this.positions[0],
+        this.positions[1] || this.positions[1] === 0
+          ? this.positions[1]
+          : this.positions[0],
+        this.isSinglePointer,
+      );
+    }
+  }
+
+  updatePointerAndTooltip(PointerLength: number, positions: PointerPosition, values: PointerValue) {
+    if (PointerLength === 2) {
+      const isCorrectSecondStart = values[1] || values[1] === 0;
+      if (positions[1] && isCorrectSecondStart) {
+        this.entities.pointers.push(this.getPointer(positions[1], 1));
+        if (this.entities.tooltip) {
+          this.entities.tooltip.push(this.getTooltip(
+            values[1] || values[1] === 0
+              ? values[1]
+              : NaN,
+          ));
+          this.entities.tooltip[1].$element.appendTo(this.entities.pointers[1].$element);
+        }
+        this.entities.pointers[1].$element.appendTo(this.$slider);
+      }
+    } else if (this.entities.pointers[1]) {
+      this.entities.pointers[1].$element.remove();
+      this.entities.pointers.pop();
+      if (this.entities.tooltip && this.entities.tooltip[1]) {
+        this.entities.tooltip.pop();
+      }
+    }
+  }
+
+  updateConnect(withConnect: boolean) {
+    this.config.connect = withConnect;
+    if (this.config.connect) {
+      this.entities.connect = this.getConnect(this.entities.pointers);
+      this.entities.connect.$element.appendTo(this.$slider);
+    } else {
+      if (this.entities.connect) {
+        this.entities.connect.$element.remove();
+      }
+      this.entities.connect = undefined;
+    }
+  }
+
+  updateTooltip(withTooltip: boolean, values: PointerValue) {
+    this.config.tooltip = withTooltip;
+    if (this.config.tooltip) {
+      this.entities.tooltip = values.map((value) => this.getTooltip(value));
+      this.entities.tooltip.forEach((tooltip, index) => {
+        tooltip.$element.appendTo(this.entities.pointers[index].$element);
+      });
+    } else if (this.entities.tooltip) {
+      this.entities.tooltip.forEach((tooltip) => { tooltip.$element.remove(); });
+      this.entities.tooltip = undefined;
+    }
+  }
+
+  updateOrientation(orientation: ConfigOrientation) {
     if (this.config.orientation !== orientation) {
       const blockClassName = 'simple-range-slider';
       this.$slider.removeClass(`${blockClassName}__slider_${this.config.orientation}`);
       this.$sliderContainer.removeClass(`${blockClassName}__slider-container_${this.config.orientation}`);
       this.config.orientation = orientation;
       this.$slider.addClass(`${blockClassName}__slider_${this.config.orientation}`);
-      this.$sliderContainer.addClass(`${blockClassName}__slider-container_${this.config.orientation}`);
+      this.$sliderContainer.addClass(`${blockClassName}__slider-container_${this.config.orientation}`); this.entities.pointers.forEach((pointer) => { pointer.setOrientation(orientation); });
+      if (this.entities.tooltip) {
+        this.entities.tooltip.forEach((tooltip) => { tooltip.setOrientation(orientation); });
+      }
+      if (this.entities.connect) {
+        this.entities.connect.setOrientation(orientation);
+      }
+      if (this.entities.scale) {
+        this.entities.scale.setOrientation(orientation);
+        if (orientation === 'vertical') {
+          this.entities.scale.$element.prependTo(this.$sliderContainer);
+        } else {
+          this.$slider.prependTo(this.$sliderContainer);
+        }
+      }
     }
   }
 

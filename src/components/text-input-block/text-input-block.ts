@@ -51,32 +51,27 @@ class TextInput {
     const $target = $(event.target);
     const value = Number($target.val());
     const index = Number($target.data('index'));
-    const isNotEqualPrevious = Array.isArray(this.configurationValue)
-      ? value !== this.configurationValue[index]
-      : value !== this.configurationValue;
-    if (isNotEqualPrevious) {
-      const lastValue = Array.isArray(this.configurationValue)
+    const lastValue = Array.isArray(this.configurationValue)
+      ? [...this.configurationValue]
+      : this.configurationValue;
+    if (Array.isArray(this.configurationValue)) {
+      this.configurationValue[index] = value;
+    } else {
+      this.configurationValue = value;
+    }
+    this.updateSlider(
+      Array.isArray(this.configurationValue)
         ? [...this.configurationValue]
-        : this.configurationValue;
-      if (Array.isArray(this.configurationValue)) {
-        this.configurationValue[index] = value;
-      } else {
-        this.configurationValue = value;
-      }
-      this.updateSlider(
-        Array.isArray(this.configurationValue)
-          ? [...this.configurationValue]
-          : this.configurationValue,
+        : this.configurationValue,
+    );
+    const newValue = this.sliderConfig[this.configurationName];
+    const isCorrectValue = JSON.stringify(newValue) === JSON.stringify(this.configurationValue);
+    if (!isCorrectValue) {
+      this.blinkInputAndReturnPreviousValue(
+        $target,
+        Array.isArray(lastValue) ? lastValue[index] : lastValue,
+        index,
       );
-      const newValue = this.sliderConfig[this.configurationName];
-      const isCorrectValue = JSON.stringify(newValue) === JSON.stringify(this.configurationValue);
-      if (!isCorrectValue) {
-        this.blinkInputAndReturnPreviousValue(
-          $target,
-          Array.isArray(lastValue) ? lastValue[index] : lastValue,
-          index,
-        );
-      }
     }
   }
 
