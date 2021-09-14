@@ -153,16 +153,20 @@ class View {
     const { index, positions, values } = modelData;
     this.switchActivePointer();
     if (this.entities.tooltip) {
-      this.entities.tooltip[index].setValue(values[index]);
+      this.entities.tooltip.forEach((tooltip, i) => {
+        tooltip.setValue(values[i]);
+      });
     }
     if (this.entities.connect) {
       const start = this.isSinglePointer ? 0 : positions[0];
       const end = positions[1] || positions[1] === 0
         ? positions[1]
         : positions[0];
-      this.entities.connect.setPosition(start, end);
+      this.entities.connect.setPosition(start, end, this.isSinglePointer);
     }
-    this.entities.pointers[index].setPosition(positions[index]);
+    this.entities.pointers.forEach((pointer, i) => {
+      pointer.setPosition(positions[i]);
+    });
     this.activePointerIndex = index;
     this.positions = positions;
     this.values = values;
@@ -221,28 +225,13 @@ class View {
   }
 
   updatePositions(positions: PointerPosition, values: PointerValue) {
-    this.positions = [...positions];
-    this.isSinglePointer = this.positions.length === 1;
+    this.isSinglePointer = values.length === 1;
     const lastPointerLength = this.entities.pointers.length;
     const newPointerLength = values.length;
     if (lastPointerLength !== newPointerLength) {
       this.updatePointerAndTooltip(newPointerLength, positions, values);
     }
-    this.positions.forEach((position, index) => {
-      this.entities.pointers[index].setPosition(position);
-      if (this.entities.tooltip && values) {
-        this.entities.tooltip[index].setValue(values[index]);
-      }
-    });
-    if (this.entities.connect) {
-      this.entities.connect.setPosition(
-        this.isSinglePointer ? 0 : this.positions[0],
-        this.positions[1] || this.positions[1] === 0
-          ? this.positions[1]
-          : this.positions[0],
-        this.isSinglePointer,
-      );
-    }
+    this.updateByModel({ values, positions, index: 0 });
   }
 
   updatePointerAndTooltip(PointerLength: number, positions: PointerPosition, values: PointerValue) {
