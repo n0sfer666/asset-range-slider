@@ -151,7 +151,6 @@ class View {
 
   updateByModel(modelData: ModelData) {
     const { index, positions, values } = modelData;
-    this.switchActivePointer();
     if (this.entities.tooltip) {
       this.entities.tooltip.forEach((tooltip, i) => {
         tooltip.setValue(values[i]);
@@ -168,6 +167,7 @@ class View {
       pointer.setPosition(positions[i]);
     });
     this.activePointerIndex = index;
+    this.switchActivePointer();
     this.positions = positions;
     this.values = values;
   }
@@ -291,7 +291,8 @@ class View {
       this.$sliderContainer.removeClass(`${blockClassName}__slider-container_${this.config.orientation}`);
       this.config.orientation = orientation;
       this.$slider.addClass(`${blockClassName}__slider_${this.config.orientation}`);
-      this.$sliderContainer.addClass(`${blockClassName}__slider-container_${this.config.orientation}`); this.entities.pointers.forEach((pointer) => { pointer.setOrientation(orientation); });
+      this.$sliderContainer.addClass(`${blockClassName}__slider-container_${this.config.orientation}`);
+      this.entities.pointers.forEach((pointer) => { pointer.setOrientation(orientation); });
       if (this.entities.tooltip) {
         this.entities.tooltip.forEach((tooltip) => { tooltip.setOrientation(orientation); });
       }
