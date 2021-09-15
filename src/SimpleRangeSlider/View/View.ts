@@ -241,8 +241,8 @@ class View {
         this.entities.pointers.push(this.getPointer(positions[1], 1));
         if (this.entities.tooltip) {
           this.entities.tooltip.push(this.getTooltip(
-            values[1] || values[1] === 0
-              ? values[1]
+            isCorrectSecondStart
+              ? values[1]!
               : NaN,
           ));
           this.entities.tooltip[1].$element.appendTo(this.entities.pointers[1].$element);
