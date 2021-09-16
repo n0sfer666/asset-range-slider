@@ -55,8 +55,15 @@ class View {
     return $element;
   }
 
-  getPointer(position: number, index: number): Pointer {
-    const pointerInstance = new Pointer(this.$container, this.config.orientation, position, index);
+  getPointer(position: number, index: number, value: number): Pointer {
+    const pointerInstance = new Pointer(
+      this.$container,
+      this.config.orientation,
+      position,
+      index,
+      this.config.tooltip,
+      value,
+    );
     pointerInstance.subscribeOn(this.updateByPointer);
     return pointerInstance;
   }
@@ -93,21 +100,18 @@ class View {
       this.$sliderContainer = this.getSliderElement(false);
       this.$slider = this.getSliderElement(true);
     }
-    const pointers = positions.map((position, index) => this.getPointer(position, index));
-    const tooltip = this.config.tooltip ? values.map((value) => this.getTooltip(value)) : undefined;
+    const pointers = positions.map(
+      (position, index) => this.getPointer(position, index, values[index]),
+    );
     this.entities = {
       pointers,
-      tooltip,
       connect: this.config.connect ? this.getConnect(pointers) : undefined,
       scale: this.config.scale ? this.getScale(range) : undefined,
     };
   }
 
   drawSlider() {
-    this.entities.pointers.forEach((pointer, index) => {
-      if (this.entities.tooltip) {
-        pointer.$element.append(this.entities.tooltip[index].$element);
-      }
+    this.entities.pointers.forEach((pointer) => {
       this.$slider.append(pointer.$element);
     });
     if (this.entities.connect) {
@@ -151,11 +155,6 @@ class View {
 
   updateByModel(modelData: ModelData) {
     const { index, positions, values } = modelData;
-    if (this.entities.tooltip) {
-      this.entities.tooltip.forEach((tooltip, i) => {
-        tooltip.setValue(values[i]);
-      });
-    }
     if (this.entities.connect) {
       const start = this.isSinglePointer ? 0 : positions[0];
       const end = positions[1] || positions[1] === 0
@@ -165,6 +164,7 @@ class View {
     }
     this.entities.pointers.forEach((pointer, i) => {
       pointer.setPosition(positions[i]);
+      pointer.updateTooltip(this.config.tooltip, values[i]);
     });
     this.activePointerIndex = index;
     this.switchActivePointer();
@@ -173,10 +173,6 @@ class View {
   }
 
   updateView(viewUpdateList: ViewUpdateList) {
-    if (viewUpdateList.positions) {
-      this.updatePositions(viewUpdateList.positions, viewUpdateList.values);
-    }
-
     if (viewUpdateList.orientation && viewUpdateList.orientation !== this.config.orientation) {
       this.updateOrientation(viewUpdateList.orientation);
     }
@@ -186,7 +182,11 @@ class View {
     }
 
     if (viewUpdateList.tooltip !== undefined && this.config.tooltip !== viewUpdateList.tooltip) {
-      this.updateTooltip(viewUpdateList.tooltip, viewUpdateList.values);
+      this.config.tooltip = viewUpdateList.tooltip;
+      const { tooltip, values } = viewUpdateList;
+      this.entities.pointers.forEach((pointer, index) => {
+        pointer.updateTooltip(tooltip, values[index]);
+      });
     }
 
     if (viewUpdateList.scale !== undefined) {
@@ -201,6 +201,10 @@ class View {
           this.entities.scale.updateScale(range, viewUpdateList.orientation);
         }
       }
+    }
+
+    if (viewUpdateList.positions) {
+      this.updatePositions(viewUpdateList.positions, viewUpdateList.values);
     }
   }
 
@@ -238,23 +242,12 @@ class View {
     if (PointerLength === 2) {
       const isCorrectSecondStart = values[1] || values[1] === 0;
       if (positions[1] && isCorrectSecondStart) {
-        this.entities.pointers.push(this.getPointer(positions[1], 1));
-        if (this.entities.tooltip) {
-          this.entities.tooltip.push(this.getTooltip(
-            isCorrectSecondStart
-              ? values[1]!
-              : NaN,
-          ));
-          this.entities.tooltip[1].$element.appendTo(this.entities.pointers[1].$element);
-        }
+        this.entities.pointers.push(this.getPointer(positions[1], 1, values[1]!));
         this.entities.pointers[1].$element.appendTo(this.$slider);
       }
     } else if (this.entities.pointers[1]) {
       this.entities.pointers[1].$element.remove();
       this.entities.pointers.pop();
-      if (this.entities.tooltip && this.entities.tooltip[1]) {
-        this.entities.tooltip.pop();
-      }
     }
   }
 
@@ -271,19 +264,6 @@ class View {
     }
   }
 
-  updateTooltip(withTooltip: boolean, values: PointerValue) {
-    this.config.tooltip = withTooltip;
-    if (this.config.tooltip) {
-      this.entities.tooltip = values.map((value) => this.getTooltip(value));
-      this.entities.tooltip.forEach((tooltip, index) => {
-        tooltip.$element.appendTo(this.entities.pointers[index].$element);
-      });
-    } else if (this.entities.tooltip) {
-      this.entities.tooltip.forEach((tooltip) => { tooltip.$element.remove(); });
-      this.entities.tooltip = undefined;
-    }
-  }
-
   updateOrientation(orientation: ConfigOrientation) {
     if (this.config.orientation !== orientation) {
       const blockClassName = 'simple-range-slider';
@@ -293,9 +273,6 @@ class View {
       this.$slider.addClass(`${blockClassName}__slider_${this.config.orientation}`);
       this.$sliderContainer.addClass(`${blockClassName}__slider-container_${this.config.orientation}`);
       this.entities.pointers.forEach((pointer) => { pointer.setOrientation(orientation); });
-      if (this.entities.tooltip) {
-        this.entities.tooltip.forEach((tooltip) => { tooltip.setOrientation(orientation); });
-      }
       if (this.entities.connect) {
         this.entities.connect.setOrientation(orientation);
       }

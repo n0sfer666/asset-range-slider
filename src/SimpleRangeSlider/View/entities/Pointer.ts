@@ -1,3 +1,5 @@
+import Tooltip from './Tooltip';
+
 class Pointer {
   readonly normalizingCoefficient: number = 1e4;
 
@@ -8,6 +10,10 @@ class Pointer {
   position: number;
 
   index: number;
+
+  withTooltip: boolean;
+
+  tooltip?: Tooltip;
 
   $element: JQuery;
 
@@ -21,13 +27,22 @@ class Pointer {
 
   className: string = 'simple-range-slider__pointer';
 
-  constructor($container: JQuery, orientation: ConfigOrientation, position: number, index: number) {
+  constructor(
+    $container: JQuery,
+    orientation: ConfigOrientation,
+    position: number,
+    index: number,
+    withTooltip: boolean,
+    value: number,
+  ) {
     this.bindContext();
     this.$container = $container;
     this.orientation = orientation;
     this.position = position;
     this.index = index;
+    this.withTooltip = withTooltip;
     this.initElement();
+    this.initTooltip(value);
     this.setPosition(this.position);
     this.bindHandler();
   }
@@ -36,6 +51,28 @@ class Pointer {
     this.$element = jQuery(document.createElement('div'));
     this.$element.addClass(`${this.className}`);
     this.$element.addClass(`${this.className}_${this.orientation}`);
+  }
+
+  initTooltip(value: number) {
+    if (this.withTooltip) {
+      this.tooltip = new Tooltip(value, this.orientation);
+      this.tooltip.$element.appendTo(this.$element);
+    }
+  }
+
+  updateTooltip(withTooltip: boolean, value: number) {
+    this.withTooltip = withTooltip;
+    if (this.withTooltip) {
+      if (!this.tooltip) {
+        this.tooltip = new Tooltip(value, this.orientation);
+        this.tooltip.$element.appendTo(this.$element);
+      } else {
+        this.tooltip.setValue(value);
+      }
+    } else if (this.tooltip) {
+      this.tooltip.$element.remove();
+      this.tooltip = undefined;
+    }
   }
 
   switchActive(isActive: boolean) {
@@ -74,6 +111,9 @@ class Pointer {
       this.orientation = orientation;
       this.$element.addClass(`${this.className}_${this.orientation}`);
       this.setPosition(this.position);
+      if (this.tooltip) {
+        this.tooltip.setOrientation(this.orientation);
+      }
     }
   }
 
