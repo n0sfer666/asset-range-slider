@@ -163,8 +163,7 @@ class View {
       this.entities.connect.setPosition(start, end, this.isSinglePointer);
     }
     this.entities.pointers.forEach((pointer, i) => {
-      pointer.setPosition(positions[i]);
-      pointer.updateTooltip(this.config.tooltip, values[i]);
+      pointer.setPositionAndUpdateTooltip(positions[i], this.config.tooltip, values[i]);
     });
     this.activePointerIndex = index;
     this.switchActivePointer();

@@ -75,6 +75,11 @@ class Pointer {
     }
   }
 
+  setPositionAndUpdateTooltip(position: number, withTooltip: boolean, value: number) {
+    this.setPosition(position);
+    this.updateTooltip(withTooltip, value);
+  }
+
   switchActive(isActive: boolean) {
     if (isActive) {
       this.$element.addClass(`${this.className}_active`);
