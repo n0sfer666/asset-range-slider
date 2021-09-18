@@ -37,6 +37,10 @@ class Model {
     this.positions = <PointerPosition> this.values.map((value) => this.getPositionFromValue(value));
   }
 
+  getPosition(): PointerPosition {
+    return this.positions;
+  }
+
   getCompleteConfig(userConfig: UserConfigList): CompleteConfigList {
     return { ...this.defaultConfig, ...userConfig };
   }
