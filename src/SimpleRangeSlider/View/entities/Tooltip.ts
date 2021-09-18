@@ -23,14 +23,6 @@ class Tooltip {
     this.$element.text(Math.round(value));
   }
 
-  switchHidden(isVisible: boolean) {
-    if (isVisible) {
-      this.$element.show();
-    } else {
-      this.$element.hide();
-    }
-  }
-
   setOrientation(orientation: ConfigOrientation) {
     if (this.orientation !== orientation) {
       this.$element.removeClass(`simple-range-slider__tooltip_${this.orientation}`);
