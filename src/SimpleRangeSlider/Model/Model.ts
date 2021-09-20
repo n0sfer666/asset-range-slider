@@ -184,6 +184,7 @@ class Model {
     const viewUpdateList: ViewUpdateList = {
       values: this.values,
       range: this.range,
+      ...config,
     };
     if (config.values || config.range) {
       this.positions = <PointerPosition> this.values.map(
@@ -191,11 +192,6 @@ class Model {
       );
       viewUpdateList.positions = [...this.positions];
     }
-    Object.keys(config).forEach((key) => {
-      viewUpdateList[key] = Array.isArray(this.config[key])
-        ? [...this.config[key]]
-        : this.config[key];
-    });
     return viewUpdateList;
   }
 }
