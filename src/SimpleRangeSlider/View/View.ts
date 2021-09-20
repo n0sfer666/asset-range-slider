@@ -157,7 +157,7 @@ class View {
     const { index, positions, values } = modelData;
     if (this.entities.connect) {
       const start = this.isSinglePointer ? 0 : positions[0];
-      const end = positions[1] || positions[1] === 0
+      const end = typeof positions[1] === 'number'
         ? positions[1]
         : positions[0];
       this.entities.connect.setPosition(start, end, this.isSinglePointer);
@@ -239,9 +239,8 @@ class View {
 
   updatePointerAndTooltip(PointerLength: number, positions: PointerPosition, values: PointerValue) {
     if (PointerLength === 2) {
-      const isCorrectSecondStart = values[1] || values[1] === 0;
-      if (positions[1] && isCorrectSecondStart) {
-        this.entities.pointers.push(this.getPointer(positions[1], 1, values[1]!));
+      if (typeof values[1] === 'number' && typeof positions[1] === 'number') {
+        this.entities.pointers.push(this.getPointer(positions[1], 1, values[1]));
         this.entities.pointers[1].$element.appendTo(this.$slider);
       }
     } else if (this.entities.pointers[1]) {

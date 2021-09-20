@@ -56,10 +56,10 @@ class Model {
     const { values, range } = config;
     this.isSinglePointer = values.length === 1;
     if (JSON.stringify(this.range) !== JSON.stringify(range)) {
-      const isCorrectRange = values[1] || values[1] === 0
+      const isCorrectRange = typeof values[1] === 'number'
         ? range[0] <= values[0] && range[1] >= values[1]
         : range[0] <= values[0] && range[1] >= values[0];
-      if (values[1] || values[1] === 0) {
+      if (typeof values[1] === 'number') {
         config.range = isCorrectRange
           ? range
           : [values[0], values[1]];
@@ -71,7 +71,7 @@ class Model {
     }
 
     if (JSON.stringify(this.values) !== JSON.stringify(values)) {
-      if (config.values[1] || config.values[1] === 0) {
+      if (typeof config.values[1] === 'number') {
         config.values[0] = values[0] >= range[0] && values[0] < config.values[1]
           ? values[0]
           : range[0];
@@ -121,7 +121,7 @@ class Model {
   getNewValue(viewData: ViewData): number {
     const { index, position, value } = viewData;
     let newValue = 0;
-    if (position || position === 0) {
+    if (typeof position === 'number') {
       if (position <= 0) {
         return this.range[0];
       }
@@ -130,7 +130,7 @@ class Model {
       }
       newValue = this.getValueFromPosition(position);
     }
-    if (value || value === 0) {
+    if (typeof value === 'number') {
       if (value <= this.range[0]) {
         return this.range[0];
       }

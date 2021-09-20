@@ -53,7 +53,7 @@ class ControlButton {
     if (newValue < range[1]) {
       this.isSinglePointer = false;
       values.push(newValue);
-      this.$secondValue.show().val(values[1] || values[1] === 0 ? values[1] : NaN);
+      this.$secondValue.show().val(typeof values[1] === 'number' ? values[1] : NaN);
       this.sliderInstance.updateSlider({ values });
       this.$text.text('remove pointer');
     } else {
