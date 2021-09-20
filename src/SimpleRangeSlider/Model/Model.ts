@@ -170,9 +170,12 @@ class Model {
     this.activePointerIndex = index;
     const newValue = this.getNewValue(viewData);
     this.setValueAndPosition(newValue, index);
-    const { positions, values } = this;
     this.callbackList.forEach(
-      (viewCallback: ModelCallback) => viewCallback({ positions, values, index }),
+      (viewCallback: ModelCallback) => viewCallback({
+        index,
+        positions: this.positions,
+        values: this.values,
+      }),
     );
   }
 
