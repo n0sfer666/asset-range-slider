@@ -1,5 +1,10 @@
 import Tooltip from './Tooltip';
 
+const classes = {
+  root: 'simple-range-slider__pointer',
+  active: 'simple-range-slider__pointer_active',
+};
+
 class Pointer {
   readonly normalizingCoefficient: number = 1e4;
 
@@ -25,8 +30,6 @@ class Pointer {
 
   containerOffsetSize: number = 0;
 
-  className: string = 'simple-range-slider__pointer';
-
   constructor(
     $container: JQuery,
     orientation: ConfigOrientation,
@@ -49,8 +52,8 @@ class Pointer {
 
   initElement() {
     this.$element = jQuery(document.createElement('div'));
-    this.$element.addClass(`${this.className}`);
-    this.$element.addClass(`${this.className}_${this.orientation}`);
+    this.$element.addClass(`${classes.root}`);
+    this.$element.addClass(`${classes.root}_${this.orientation}`);
   }
 
   initTooltip(value: number) {
@@ -82,9 +85,9 @@ class Pointer {
 
   switchActive(isActive: boolean) {
     if (isActive) {
-      this.$element.addClass(`${this.className}_active`);
+      this.$element.addClass(`${classes.active}}`);
     } else {
-      this.$element.removeClass(`${this.className}_active`);
+      this.$element.removeClass(`${classes.active}`);
     }
   }
 
@@ -112,9 +115,9 @@ class Pointer {
 
   setOrientation(orientation: ConfigOrientation) {
     if (this.orientation !== orientation) {
-      this.$element.removeClass(`${this.className}_${this.orientation}`);
+      this.$element.removeClass(`${classes.root}_${this.orientation}`);
       this.orientation = orientation;
-      this.$element.addClass(`${this.className}_${this.orientation}`);
+      this.$element.addClass(`${classes.root}_${this.orientation}`);
       this.setPosition(this.position);
       if (this.tooltip) {
         this.tooltip.setOrientation(this.orientation);
