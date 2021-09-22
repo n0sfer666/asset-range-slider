@@ -1,3 +1,7 @@
+const classes = {
+  root: 'simple-range-slider__tooltip',
+};
+
 class Tooltip {
   value: number;
 
@@ -14,8 +18,8 @@ class Tooltip {
 
   initElement() {
     this.$element = jQuery(document.createElement('div'));
-    this.$element.addClass('simple-range-slider__tooltip');
-    this.$element.addClass(`simple-range-slider__tooltip_${this.orientation}`);
+    this.$element.addClass(`${classes.root}`);
+    this.$element.addClass(`${classes.root}_${this.orientation}`);
   }
 
   setValue(value: number) {
@@ -25,9 +29,9 @@ class Tooltip {
 
   setOrientation(orientation: ConfigOrientation) {
     if (this.orientation !== orientation) {
-      this.$element.removeClass(`simple-range-slider__tooltip_${this.orientation}`);
+      this.$element.removeClass(`${classes.root}_${this.orientation}`);
       this.orientation = orientation;
-      this.$element.addClass(`simple-range-slider__tooltip_${this.orientation}`);
+      this.$element.addClass(`${classes.root}_${this.orientation}`);
     }
   }
 }
