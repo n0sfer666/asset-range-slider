@@ -4,6 +4,12 @@ import Scale from './entities/Scale';
 import Tooltip from './entities/Tooltip';
 import ViewEntities from './ViewEntities.type';
 
+const classes = {
+  root: 'simple-range-slider',
+  slider: 'simple-range-slider__slider',
+  sliderContainer: 'simple-range-slider__slider-container',
+};
+
 class View {
   private $container: JQuery;
 
@@ -48,10 +54,10 @@ class View {
   }
 
   getSliderElement(isContainer: boolean) {
-    const className = isContainer ? 'slider' : 'slider-container';
+    const className = isContainer ? classes.slider : classes.sliderContainer;
     const $element: JQuery = jQuery(document.createElement('div'));
-    $element.addClass(`simple-range-slider__${className}`);
-    $element.addClass(`simple-range-slider__${className}_${this.config.orientation}`);
+    $element.addClass(`${className}`);
+    $element.addClass(`${className}_${this.config.orientation}`);
     return $element;
   }
 
@@ -264,12 +270,11 @@ class View {
 
   updateOrientation(orientation: ConfigOrientation) {
     if (this.config.orientation !== orientation) {
-      const blockClassName = 'simple-range-slider';
-      this.$slider.removeClass(`${blockClassName}__slider_${this.config.orientation}`);
-      this.$sliderContainer.removeClass(`${blockClassName}__slider-container_${this.config.orientation}`);
+      this.$slider.removeClass(`${V.slider}_${this.config.orientation}`);
+      this.$sliderContainer.removeClass(`${classes.sliderContainer}_${this.config.orientation}`);
       this.config.orientation = orientation;
-      this.$slider.addClass(`${blockClassName}__slider_${this.config.orientation}`);
-      this.$sliderContainer.addClass(`${blockClassName}__slider-container_${this.config.orientation}`);
+      this.$slider.addClass(`${classes.slider}_${this.config.orientation}`);
+      this.$sliderContainer.addClass(`${classes.sliderContainer}_${this.config.orientation}`);
       this.entities.pointers.forEach((pointer) => { pointer.setOrientation(orientation); });
       if (this.entities.connect) {
         this.entities.connect.setOrientation(orientation);
