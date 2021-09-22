@@ -6,9 +6,11 @@ import RadioBlock from '../radio-block/radio-block';
 import TextInput from '../text-input-block/text-input-block';
 import getTextInputBlocks from '../text-input-block/getTextInputBlocks';
 
-class DemoPanel {
-  readonly blockClass = 'demo-panel';
+const classes = {
+  root: 'demo-panel',
+};
 
+class DemoPanel {
   $mainContainer: JQuery;
 
   $sliderContainer: JQuery;
@@ -29,7 +31,7 @@ class DemoPanel {
   }
 
   getContainer(type: 'slider-container' | 'config'): JQuery {
-    return this.$mainContainer.find(`.js-${this.blockClass}__${type}`);
+    return this.$mainContainer.find(`.js-${classes.root}__${type}`);
   }
 
   getSecondValue(): JQuery {

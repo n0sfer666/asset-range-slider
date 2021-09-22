@@ -1,9 +1,11 @@
 import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
 import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
-class TextInput {
-  readonly blockClass: string = 'text-input-block';
+const classes = {
+  input: 'text-input-block__input',
+};
 
+class TextInput {
   $mainContainer: JQuery;
 
   $sliderContainer: JQuery;
@@ -31,7 +33,7 @@ class TextInput {
   }
 
   initInputs() {
-    this.inputs = Array.from(this.$mainContainer.find(`.js-${this.blockClass}__input`)
+    this.inputs = Array.from(this.$mainContainer.find(`.js-${classes.input}`)
       .map((_, element) => $(element)));
     const isSinglePointer = this.sliderConfig.values.length === 1;
     if (this.configurationName === 'values' && isSinglePointer) {
@@ -91,9 +93,9 @@ class TextInput {
   }
 
   blinkInputAndReturnPreviousValue($input: JQuery, previousValue: number, index: number) {
-    $input.addClass(`${this.blockClass}__input_wrong`);
+    $input.addClass(`${classes.input}_wrong`);
     setTimeout(() => {
-      $input.removeClass(`${this.blockClass}__input_wrong`);
+      $input.removeClass(`${classes.input}_wrong`);
     }, 250);
     $input.val(previousValue);
     if (Array.isArray(this.configurationValue)) {

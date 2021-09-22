@@ -1,8 +1,10 @@
 import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
 
-class ControlButton {
-  readonly blockClass: string = 'control-button';
+const classes = {
+  text: 'control-button__text',
+};
 
+class ControlButton {
   $container: JQuery;
 
   $secondValue: JQuery;
@@ -30,7 +32,7 @@ class ControlButton {
   }
 
   initText() {
-    this.$text = this.$container.find(`.js-${this.blockClass}__text`)
+    this.$text = this.$container.find(`.js-${classes.text}`)
       .text(this.isSinglePointer ? 'add pointer' : 'remove pointer');
   }
 
@@ -57,9 +59,9 @@ class ControlButton {
       this.sliderInstance.updateSlider({ values });
       this.$text.text('remove pointer');
     } else {
-      this.$container.addClass(`${this.blockClass}_wrong-condition`);
+      this.$container.addClass(`${classes.text}_wrong-condition`);
       setTimeout(() => {
-        this.$container.removeClass(`${this.blockClass}_wrong-condition`);
+        this.$container.removeClass(`${classes.text}_wrong-condition`);
       }, 300);
     }
   }

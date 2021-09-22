@@ -1,9 +1,11 @@
 import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
 import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
-class RadioBlock {
-  readonly blockClass: string = 'radio-block';
+const classes = {
+  radio: 'radio-block__radio',
+};
 
+class RadioBlock {
   $mainContainer: JQuery;
 
   $sliderContainer: JQuery;
@@ -29,7 +31,7 @@ class RadioBlock {
 
   getRadioBlocks(): JQuery[] {
     return Array.from(
-      this.$mainContainer.find(`.js-${this.blockClass}__radio`).map(
+      this.$mainContainer.find(`.js-${classes.radio}`).map(
         (_, element) => $(element).prop(
           'checked',
           this.getText($(element)) === this.configurationValue,
