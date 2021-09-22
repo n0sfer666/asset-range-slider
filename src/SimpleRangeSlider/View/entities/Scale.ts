@@ -1,20 +1,14 @@
-import ScaleClassNames from './types';
+const classes = {
+  root: 'simple-range-slider__scale',
+  pip: 'simple-range-slider__scale-pip',
+  pipDash: 'simple-range-slider__scale-pip-dash',
+  pipValue: 'simple-range-slider__scale-pip-value',
+};
 
 class Scale {
   readonly valuePipsNumber: number = 5;
 
   readonly emptyPipsNumber: number = 2;
-
-  readonly classNames: ScaleClassNames = {
-    slider: 'simple-range-slider',
-    scale: 'scale',
-    pip: 'scale-pip',
-    dash: 'scale-pip-dash',
-    value: 'scale-pip-value',
-    modifier: {
-      empty: 'empty',
-    },
-  };
 
   $element: JQuery;
 
@@ -46,11 +40,11 @@ class Scale {
     this.bindHandler();
   }
 
-  getElement(elementName: string, modifier?: string): JQuery {
+  static getElement(elementClassName: string, modifier?: string): JQuery {
     const $element: JQuery = jQuery(document.createElement('div'));
-    $element.addClass(`${this.classNames.slider}__${elementName}`);
+    $element.addClass(`${elementClassName}`);
     if (modifier) {
-      $element.addClass(`${this.classNames.slider}__${elementName}_${modifier}`);
+      $element.addClass(`${elementClassName}_${modifier}`);
     }
     return $element;
   }
@@ -60,7 +54,7 @@ class Scale {
   }
 
   initElements() {
-    this.$element = this.getElement(this.classNames.scale, this.orientation);
+    this.$element = Scale.getElement(classes.root, this.orientation);
     this.emptyPips = this.getEmptyPips();
     this.valuePips = this.getValuePips();
   }
@@ -68,17 +62,17 @@ class Scale {
   getEmptyPips(): JQuery[] {
     const emptyPips: JQuery[] = [];
     for (let i = 0; i < this.emptyPipsNumber; i += 1) {
-      const $emptyDash = this.getElement(this.classNames.dash, this.classNames.modifier.empty);
-      emptyPips.push(this.getElement(this.classNames.pip).append($emptyDash));
+      const $emptyDash = Scale.getElement(classes.pipDash, 'empty');
+      emptyPips.push(Scale.getElement(classes.pip).append($emptyDash));
     }
     return emptyPips;
   }
 
   getValuePips(): JQuery[] {
     const valuePips: JQuery[] = this.values.map(() => {
-      const $dash = this.getElement(this.classNames.dash);
-      const $pipValue = this.getElement(this.classNames.value);
-      const $pip = this.getElement(this.classNames.pip);
+      const $dash = Scale.getElement(classes.pipDash);
+      const $pipValue = Scale.getElement(classes.pipValue);
+      const $pip = Scale.getElement(classes.pip);
       $pip.append(this.orientation === 'horizontal' ? [$dash, $pipValue] : [$pipValue, $dash]);
       return $pip;
     });
@@ -98,21 +92,18 @@ class Scale {
   }
 
   updatePips() {
-    const {
-      slider, dash, value, modifier,
-    } = this.classNames;
     if (this.emptyPips.length === this.emptyPipsNumber) {
       this.emptyPips = [];
       this.$element.children().each((_, pip) => {
         const $pip = $(pip);
-        if ($pip.children().hasClass(`${slider}__${dash}_${modifier.empty}`)) {
+        if ($pip.children().hasClass(`${classes.pipDash}_empty`)) {
           this.emptyPips.push($pip);
         }
       });
     }
     this.valuePips.forEach(($pip, index) => {
       this.setPipPosition($pip, this.values[index]);
-      $pip.find(`.${slider}__${value}`).text(this.values[index]);
+      $pip.find(`.${classes.pipValue}`).text(this.values[index]);
     });
     this.emptyPips.forEach(($pip, index) => this.setPipPosition($pip, this.emptyValues[index]));
   }
@@ -153,7 +144,7 @@ class Scale {
 
   handlerValuePipClick(event: JQuery.MouseEventBase) {
     event.stopPropagation();
-    const value = $(event.target).hasClass(`${this.classNames.slider}__${this.classNames.value}`)
+    const value = $(event.target).hasClass(`${classes.pipValue}`)
       ? Number($(event.target).text())
       : Number($(event.target).siblings().text());
     this.callbackList.forEach((callback) => {
@@ -175,9 +166,9 @@ class Scale {
 
   setOrientation(orientation: ConfigOrientation) {
     if (this.orientation !== orientation) {
-      this.$element.removeClass(`simple-range-slider__scale_${this.orientation}`);
+      this.$element.removeClass(`${classes.root}_${this.orientation}`);
       this.orientation = orientation;
-      this.$element.addClass(`simple-range-slider__scale_${this.orientation}`);
+      this.$element.addClass(`${classes.root}_${this.orientation}`);
     }
   }
 
