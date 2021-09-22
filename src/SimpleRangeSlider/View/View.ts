@@ -270,7 +270,7 @@ class View {
 
   updateOrientation(orientation: ConfigOrientation) {
     if (this.config.orientation !== orientation) {
-      this.$slider.removeClass(`${V.slider}_${this.config.orientation}`);
+      this.$slider.removeClass(`${classes.slider}_${this.config.orientation}`);
       this.$sliderContainer.removeClass(`${classes.sliderContainer}_${this.config.orientation}`);
       this.config.orientation = orientation;
       this.$slider.addClass(`${classes.slider}_${this.config.orientation}`);
