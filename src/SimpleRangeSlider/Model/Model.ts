@@ -28,7 +28,7 @@ class Model {
   private activePointerIndex: number = 0;
 
   constructor(config: UserConfigList) {
-    this.config = this.getVerifiedConfig( { ...this.defaultConfig, ...config });
+    this.config = this.getVerifiedConfig({ ...this.defaultConfig, ...config });
     const { range, values, step } = this.config;
     this.values = [...values];
     this.range = [...range];
