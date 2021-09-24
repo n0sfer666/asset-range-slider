@@ -28,7 +28,7 @@ class Model {
   private activePointerIndex: number = 0;
 
   constructor(config: UserConfigList) {
-    this.config = this.getVerifiedConfig(this.getCompleteConfig(config));
+    this.config = this.getVerifiedConfig( { ...this.defaultConfig, ...config });
     const { range, values, step } = this.config;
     this.values = [...values];
     this.range = [...range];
@@ -39,10 +39,6 @@ class Model {
 
   getPosition(): PointerPosition {
     return this.positions;
-  }
-
-  getCompleteConfig(userConfig: UserConfigList): CompleteConfigList {
-    return { ...this.defaultConfig, ...userConfig };
   }
 
   getVerifiedConfig(userConfig: CompleteConfigList): CompleteConfigList {
