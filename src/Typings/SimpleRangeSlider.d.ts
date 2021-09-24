@@ -32,9 +32,7 @@ interface UserConfigList extends ObjectKeyString {
 }
 interface CompleteConfigList extends Required<UserConfigList> {
 }
-interface ViewConfigList extends Pick<CompleteConfigList, 'orientation' | 'connect' | 'tooltip' | 'scale'> {
-}
-interface ViewUpdateList extends Partial<ViewConfigList> {
+interface ViewUpdateList extends UserConfigList {
   positions?: PointerValue,
   values: PointerValue,
   range: ConfigRange,

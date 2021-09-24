@@ -1,7 +1,6 @@
 import Connect from './entities/Connect';
 import Pointer from './entities/Pointer';
 import Scale from './entities/Scale';
-import Tooltip from './entities/Tooltip';
 import ViewEntities from './ViewEntities.type';
 
 const classes = {
@@ -13,15 +12,13 @@ const classes = {
 class View {
   private $container: JQuery;
 
-  private config: ViewConfigList;
+  private config: CompleteConfigList;
 
   private $sliderContainer: JQuery;
 
   private $slider: JQuery;
 
   private positions: PointerPosition;
-
-  private values: PointerValue;
 
   private isSinglePointer: boolean;
 
@@ -31,20 +28,13 @@ class View {
 
   private activePointerIndex: number = 0;
 
-  constructor(
-    $container: JQuery,
-    config: ViewConfigList,
-    positions: PointerPosition,
-    values: PointerValue,
-    range: ConfigRange,
-  ) {
+  constructor($container: JQuery, config: CompleteConfigList, positions: PointerPosition) {
     this.bindContext();
     this.$container = $container;
     this.config = { ...config };
     this.positions = [...positions];
-    this.values = [...values];
     this.isSinglePointer = this.positions.length === 1;
-    this.initEntities(this.positions, this.values, [...range]);
+    this.initEntities(this.positions, this.config.values, [...this.config.range]);
     this.drawSlider();
     this.switchActivePointer();
   }
@@ -72,10 +62,6 @@ class View {
     );
     pointerInstance.subscribeOn(this.updateByPointer);
     return pointerInstance;
-  }
-
-  getTooltip(value: number): Tooltip {
-    return new Tooltip(value, this.config.orientation);
   }
 
   getConnect(pointers: Pointer[]): Connect {
@@ -152,7 +138,7 @@ class View {
     if (this.isSinglePointer) {
       this.activePointerIndex = 0;
     } else {
-      const difference = this.values.map((currentValue) => Math.abs(value - currentValue));
+      const difference = this.config.values.map((currentValue) => Math.abs(value - currentValue));
       this.activePointerIndex = difference[0] < difference[1] ? 0 : 1;
     }
     const index = this.activePointerIndex;
@@ -174,7 +160,7 @@ class View {
     this.activePointerIndex = index;
     this.switchActivePointer();
     this.positions = positions;
-    this.values = values;
+    this.config.values = values;
   }
 
   updateView(viewUpdateList: ViewUpdateList) {

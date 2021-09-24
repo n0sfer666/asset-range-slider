@@ -35,61 +35,41 @@ class Model {
 
   getVerifiedConfig(userConfig: CompleteConfigList): CompleteConfigList {
     const config: CompleteConfigList = { ...userConfig };
-    if (this.config.step !== config.step) {
-      config.step = config.step > 0
-        ? config.step
-        : this.defaultConfig.step;
-    }
+    const { values, range } = userConfig;
+    config.step = config.step > 0
+      ? config.step
+      : this.defaultConfig.step;
 
-    const { values, range } = config;
+    if (typeof config.values[1] === 'number') {
+      config.values[0] = values[0] >= range[0] && values[0] < config.values[1]
+        ? values[0]
+        : range[0];
+      config.values[1] = config.values[1] >= values[0] && config.values[1] <= range[1]
+        ? config.values[1]
+        : range[1];
+    } else {
+      config.values[0] = values[0] >= range[0] && values[0] <= range[1]
+        ? values[0]
+        : range[0];
+    }
     this.isSinglePointer = values.length === 1;
-    if (JSON.stringify(this.config.range) !== JSON.stringify(range)) {
-      const isCorrectRange = typeof values[1] === 'number'
-        ? range[0] <= values[0] && range[1] >= values[1]
-        : range[0] <= values[0] && range[1] >= values[0];
-      if (typeof values[1] === 'number') {
-        config.range = isCorrectRange
-          ? range
-          : [values[0], values[1]];
-      } else {
-        config.range = isCorrectRange
-          ? range
-          : [values[0] - 100, values[0] + 100];
-      }
-    }
-
-    if (JSON.stringify(this.config.values) !== JSON.stringify(values)) {
-      if (typeof config.values[1] === 'number') {
-        config.values[0] = values[0] >= range[0] && values[0] < config.values[1]
-          ? values[0]
-          : range[0];
-        config.values[1] = config.values[1] >= values[0] && config.values[1] <= range[1]
-          ? config.values[1]
-          : range[1];
-      } else {
-        config.values[0] = values[0] >= range[0] && values[0] <= range[1]
-          ? values[0]
-          : range[0];
-      }
+    const isCorrectRange = typeof values[1] === 'number'
+      ? range[0] <= values[0] && range[1] >= values[1]
+      : range[0] <= values[0] && range[1] >= values[0];
+    if (typeof values[1] === 'number') {
+      config.range = isCorrectRange
+        ? range
+        : [values[0], values[1]];
+    } else {
+      config.range = isCorrectRange
+        ? range
+        : [values[0] - 100, values[0] + 100];
     }
     return config;
   }
 
   getConfig(): CompleteConfigList {
     return this.config;
-  }
-
-  getViewConfig(): ViewConfigList {
-    const {
-      orientation, connect, scale, tooltip,
-    } = this.config;
-    return {
-      orientation, connect, scale, tooltip,
-    };
-  }
-
-  getValues(): PointerValue {
-    return this.config.values;
   }
 
   subscribeOn(callback: ModelCallback) {

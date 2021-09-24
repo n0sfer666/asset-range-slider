@@ -8,13 +8,7 @@ class Presenter {
 
   constructor($container: JQuery, config: UserConfigList) {
     this.model = new Model(config);
-    this.view = new View(
-      $container,
-      this.model.getViewConfig(),
-      this.model.getPosition(),
-      this.model.getValues(),
-      this.model.getConfig().range,
-    );
+    this.view = new View($container, this.model.getConfig(), this.model.getPosition());
     this.view.subscribeOn((viewData) => {
       this.model.updateByView(viewData);
     });
