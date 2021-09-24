@@ -13,15 +13,9 @@ class Model {
 
   private config: CompleteConfigList;
 
-  private range: ConfigRange;
-
-  private step: number;
-
   private callbackList: ModelCallback[] = [];
 
   private positions: PointerPosition;
-
-  private values: PointerValue;
 
   private isSinglePointer: boolean;
 
@@ -29,12 +23,10 @@ class Model {
 
   constructor(config: UserConfigList) {
     this.config = this.getVerifiedConfig({ ...this.defaultConfig, ...config });
-    const { range, values, step } = this.config;
-    this.values = [...values];
-    this.range = [...range];
-    this.step = step;
-    this.isSinglePointer = values.length === 1;
-    this.positions = <PointerPosition> this.values.map((value) => this.getPositionFromValue(value));
+    this.isSinglePointer = this.config.values.length === 1;
+    this.positions = <PointerPosition> this.config.values.map(
+      (value) => this.getPositionFromValue(value),
+    );
   }
 
   getPosition(): PointerPosition {
@@ -43,7 +35,7 @@ class Model {
 
   getVerifiedConfig(userConfig: CompleteConfigList): CompleteConfigList {
     const config: CompleteConfigList = { ...userConfig };
-    if (this.step !== config.step) {
+    if (this.config.step !== config.step) {
       config.step = config.step > 0
         ? config.step
         : this.defaultConfig.step;
@@ -51,7 +43,7 @@ class Model {
 
     const { values, range } = config;
     this.isSinglePointer = values.length === 1;
-    if (JSON.stringify(this.range) !== JSON.stringify(range)) {
+    if (JSON.stringify(this.config.range) !== JSON.stringify(range)) {
       const isCorrectRange = typeof values[1] === 'number'
         ? range[0] <= values[0] && range[1] >= values[1]
         : range[0] <= values[0] && range[1] >= values[0];
@@ -66,7 +58,7 @@ class Model {
       }
     }
 
-    if (JSON.stringify(this.values) !== JSON.stringify(values)) {
+    if (JSON.stringify(this.config.values) !== JSON.stringify(values)) {
       if (typeof config.values[1] === 'number') {
         config.values[0] = values[0] >= range[0] && values[0] < config.values[1]
           ? values[0]
@@ -97,7 +89,7 @@ class Model {
   }
 
   getValues(): PointerValue {
-    return this.values;
+    return this.config.values;
   }
 
   subscribeOn(callback: ModelCallback) {
@@ -105,12 +97,14 @@ class Model {
   }
 
   getPositionFromValue(value: number): number {
-    const result: number = (value - this.range[0]) / (this.range[1] - this.range[0]);
+    const { range } = this.config;
+    const result: number = (value - range[0]) / (range[1] - range[0]);
     return Math.round(result * this.normalizingCoefficient) / this.normalizingCoefficient;
   }
 
   getValueFromPosition(position: number): number {
-    const result: number = (position * (this.range[1] - this.range[0])) + this.range[0];
+    const { range } = this.config;
+    const result: number = (position * (range[1] - range[0])) + range[0];
     return Math.round(result);
   }
 
@@ -119,30 +113,30 @@ class Model {
     let newValue = 0;
     if (typeof position === 'number') {
       if (position <= 0) {
-        return this.range[0];
+        return this.config.range[0];
       }
       if (position >= 1) {
-        return this.range[1];
+        return this.config.range[1];
       }
       newValue = this.getValueFromPosition(position);
     }
     if (typeof value === 'number') {
-      if (value <= this.range[0]) {
-        return this.range[0];
+      if (value <= this.config.range[0]) {
+        return this.config.range[0];
       }
-      if (value >= this.range[1]) {
-        return this.range[1];
+      if (value >= this.config.range[1]) {
+        return this.config.range[1];
       }
       newValue = value;
     }
     const isFirstOfNotSinglePointer = index === 0 && !this.isSinglePointer;
-    if (isFirstOfNotSinglePointer && this.values[1]) {
-      const boundary = this.values[1] - this.step;
+    if (isFirstOfNotSinglePointer && this.config.values[1]) {
+      const boundary = this.config.values[1] - this.config.step;
       const isValueBiggerThanOther = boundary < newValue;
       return isValueBiggerThanOther ? boundary : newValue;
     }
     if (index === 1) {
-      const boundary = this.values[0] + this.step;
+      const boundary = this.config.values[0] + this.config.step;
       const isValueBiggerThanOther = boundary > newValue;
       return isValueBiggerThanOther ? boundary : newValue;
     }
@@ -150,13 +144,13 @@ class Model {
   }
 
   setValueAndPosition(newValue: number, index: number) {
-    const leftBoundary = this.values[index] - (this.step / 2);
-    const rightBoundary = this.values[index] + (this.step / 2);
+    const leftBoundary = this.config.values[index] - (this.config.step / 2);
+    const rightBoundary = this.config.values[index] + (this.config.step / 2);
     const isOutOfBoundary = newValue >= rightBoundary || newValue <= leftBoundary;
-    const resultValue = Math.round(newValue / this.step) * this.step;
+    const resultValue = Math.round(newValue / this.config.step) * this.config.step;
 
     if (isOutOfBoundary) {
-      this.values[index] = resultValue;
+      this.config.values[index] = resultValue;
       this.positions[index] = this.getPositionFromValue(resultValue);
     }
   }
@@ -170,23 +164,20 @@ class Model {
       (viewCallback: ModelCallback) => viewCallback({
         index,
         positions: this.positions,
-        values: this.values,
+        values: this.config.values,
       }),
     );
   }
 
   getViewUpdateList(config: UserConfigList): ViewUpdateList {
     this.config = this.getVerifiedConfig({ ...this.config, ...config });
-    this.values = config.values ? [...config.values] : this.values;
-    this.range = config.range ? [...config.range] : this.range;
-    this.step = config.step ? config.step : this.step;
     const viewUpdateList: ViewUpdateList = {
-      values: this.values,
-      range: this.range,
+      values: this.config.values,
+      range: this.config.range,
       ...config,
     };
     if (config.values || config.range) {
-      this.positions = <PointerPosition> this.values.map(
+      this.positions = <PointerPosition> this.config.values.map(
         (value) => this.getPositionFromValue(value),
       );
       viewUpdateList.positions = [...this.positions];
