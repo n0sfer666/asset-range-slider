@@ -17,10 +17,9 @@ class Tooltip {
   }
 
   initElement() {
-    this.$element = jQuery('<div></div>').addClass([
-      `${classes.root}`,
-      `${classes.root}_${this.orientation}`,
-    ]);
+    this.$element = jQuery('<div></div>', {
+      class: `${classes.root} ${classes.root}_${this.orientation}`,
+    });
   }
 
   setValue(value: number) {

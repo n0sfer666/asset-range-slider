@@ -45,10 +45,9 @@ class View {
 
   getSliderElement(isContainer: boolean) {
     const className = isContainer ? classes.slider : classes.sliderContainer;
-    const $element: JQuery = jQuery('<div></div>').addClass([
-      `${className}`,
-      `${className}_${this.config.orientation}`,
-    ]);
+    const $element: JQuery = jQuery('<div></div>', {
+      class: `${className} ${className}_${this.config.orientation}`,
+    });
     return $element;
   }
 
