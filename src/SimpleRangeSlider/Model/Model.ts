@@ -19,8 +19,6 @@ class Model {
 
   private isSinglePointer: boolean;
 
-  private activePointerIndex: number = 0;
-
   constructor(config: UserConfigList) {
     this.config = this.getVerifiedConfig({ ...this.defaultConfig, ...config });
     this.isSinglePointer = this.config.values.length === 1;
@@ -137,7 +135,6 @@ class Model {
 
   updateByView(viewData: ViewData) {
     const { index } = viewData;
-    this.activePointerIndex = index;
     const newValue = this.getNewValue(viewData);
     this.setValueAndPosition(newValue, index);
     this.callbackList.forEach(
