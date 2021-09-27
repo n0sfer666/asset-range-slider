@@ -36,7 +36,7 @@ class DemoPanel {
 
   getSecondValue(): JQuery {
     const values = this.textInputBlocks.find((block) => block.configurationName === 'values')?.inputs;
-    return values ? values[values.length - 1] : $(document.createElement('input'));
+    return values ? values[values.length - 1] : jQuery('<input />');
   }
 
   initContainers() {

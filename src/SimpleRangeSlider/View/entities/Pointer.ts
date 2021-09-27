@@ -51,9 +51,10 @@ class Pointer {
   }
 
   initElement() {
-    this.$element = jQuery(document.createElement('div'));
-    this.$element.addClass(`${classes.root}`);
-    this.$element.addClass(`${classes.root}_${this.orientation}`);
+    this.$element = jQuery('<div></div>').addClass([
+      `${classes.root}`,
+      `${classes.root}_${this.orientation}`,
+    ]);
   }
 
   initTooltip(value: number) {

@@ -41,8 +41,7 @@ class Scale {
   }
 
   static getElement(elementClassName: string, modifier?: string): JQuery {
-    const $element: JQuery = jQuery(document.createElement('div'));
-    $element.addClass(`${elementClassName}`);
+    const $element: JQuery = jQuery('<div></div>').addClass(`${elementClassName}`);
     if (modifier) {
       $element.addClass(`${elementClassName}_${modifier}`);
     }
