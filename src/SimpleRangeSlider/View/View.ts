@@ -261,7 +261,9 @@ class View {
       this.config.orientation = orientation;
       this.$slider.addClass(`${classes.slider}_${this.config.orientation}`);
       this.$sliderContainer.addClass(`${classes.sliderContainer}_${this.config.orientation}`);
-      this.entities.pointers.forEach((pointer) => { pointer.setOrientation(orientation); });
+      this.entities.pointers.forEach((pointer) => {
+        pointer.setOrientation(orientation);
+      });
       if (this.entities.connect) {
         this.entities.connect.setOrientation(orientation);
       }
