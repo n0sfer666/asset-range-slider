@@ -11,9 +11,10 @@ interface SliderData extends ObjectKeyString {
   positions: PointerPosition,
   value?: number,
   values: PointerValue,
-  index: number
+  index: number,
+  activePointerIndex: number
 }
-type ViewData = Pick<SliderData, 'position' | 'value' | 'index'>;
+type ViewData = Pick<SliderData, 'position' | 'value' | 'activePointerIndex'>;
 type PointerData = Required<Pick<SliderData, 'position' | 'index'>>;
 type ScaleData = Required<Pick<SliderData, 'value'>>;
 type InputTextData = Required<Pick<SliderData, 'value' | 'index'>>;

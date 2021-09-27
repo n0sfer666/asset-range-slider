@@ -130,7 +130,10 @@ class View {
   updateByPointer(pointerData: PointerData) {
     const { position, index } = pointerData;
     this.activePointerIndex = index;
-    this.callbackList.forEach((modelCallback) => modelCallback({ index, position }));
+    this.callbackList.forEach((modelCallback) => modelCallback({
+      activePointerIndex: index,
+      position,
+    }));
   }
 
   updateByScale(scaleData: ScaleData) {
@@ -142,7 +145,10 @@ class View {
       this.activePointerIndex = difference[0] < difference[1] ? 0 : 1;
     }
     const index = this.activePointerIndex;
-    this.callbackList.forEach((modelCallback) => modelCallback({ index, value }));
+    this.callbackList.forEach((modelCallback) => modelCallback({
+      activePointerIndex: index,
+      value,
+    }));
   }
 
   updateByModel(modelData: ModelData) {

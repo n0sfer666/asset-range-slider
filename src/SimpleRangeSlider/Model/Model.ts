@@ -87,7 +87,7 @@ class Model {
   }
 
   getNewValue(viewData: ViewData): number {
-    const { index, position, value } = viewData;
+    const { activePointerIndex, position, value } = viewData;
     let newValue = 0;
     if (typeof position === 'number') {
       if (position <= 0) {
@@ -107,13 +107,13 @@ class Model {
       }
       newValue = value;
     }
-    const isFirstOfNotSinglePointer = index === 0 && !this.isSinglePointer;
+    const isFirstOfNotSinglePointer = activePointerIndex === 0 && !this.isSinglePointer;
     if (isFirstOfNotSinglePointer && this.config.values[1]) {
       const boundary = this.config.values[1] - this.config.step;
       const isValueBiggerThanOther = boundary < newValue;
       return isValueBiggerThanOther ? boundary : newValue;
     }
-    if (index === 1) {
+    if (activePointerIndex === 1) {
       const boundary = this.config.values[0] + this.config.step;
       const isValueBiggerThanOther = boundary > newValue;
       return isValueBiggerThanOther ? boundary : newValue;
@@ -134,12 +134,12 @@ class Model {
   }
 
   updateByView(viewData: ViewData) {
-    const { index } = viewData;
+    const { activePointerIndex } = viewData;
     const newValue = this.getNewValue(viewData);
-    this.setValueAndPosition(newValue, index);
+    this.setValueAndPosition(newValue, activePointerIndex);
     this.callbackList.forEach(
       (viewCallback: ModelCallback) => viewCallback({
-        index,
+        index: activePointerIndex,
         positions: this.positions,
         values: this.config.values,
       }),
