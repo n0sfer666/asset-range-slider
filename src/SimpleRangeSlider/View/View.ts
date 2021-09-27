@@ -164,38 +164,39 @@ class View {
   }
 
   updateView(viewUpdateList: ViewUpdateList) {
-    if (viewUpdateList.orientation && viewUpdateList.orientation !== this.config.orientation) {
-      this.updateOrientation(viewUpdateList.orientation);
+    const {
+      values, range, positions, tooltip, connect, orientation, scale,
+    } = viewUpdateList;
+    if (orientation && orientation !== this.config.orientation) {
+      this.updateOrientation(orientation);
     }
 
-    if (viewUpdateList.connect !== undefined && this.config.connect !== viewUpdateList.connect) {
-      this.updateConnect(viewUpdateList.connect);
+    if (connect !== undefined && this.config.connect !== connect) {
+      this.updateConnect(connect);
     }
 
-    if (viewUpdateList.tooltip !== undefined && this.config.tooltip !== viewUpdateList.tooltip) {
-      this.config.tooltip = viewUpdateList.tooltip;
-      const { tooltip, values } = viewUpdateList;
+    if (tooltip !== undefined && this.config.tooltip !== tooltip) {
+      this.config.tooltip = tooltip;
       this.entities.pointers.forEach((pointer, index) => {
         pointer.updateTooltip(tooltip, values[index]);
       });
     }
 
-    if (viewUpdateList.scale !== undefined) {
-      this.updateScale(viewUpdateList.scale, viewUpdateList.range);
+    if (scale !== undefined) {
+      this.updateScale(scale, range);
     }
 
-    if (viewUpdateList.range) {
-      const { range } = viewUpdateList;
+    if (range) {
       if (this.entities.scale) {
         const isRangeChanged = JSON.stringify(range) !== JSON.stringify(this.entities.scale.range);
         if (isRangeChanged) {
-          this.entities.scale.updateScale(range, viewUpdateList.orientation);
+          this.entities.scale.updateScale(range, orientation);
         }
       }
     }
 
-    if (viewUpdateList.positions) {
-      this.updatePositions(viewUpdateList.positions, viewUpdateList.values);
+    if (positions) {
+      this.updatePositions(positions, values);
     }
   }
 

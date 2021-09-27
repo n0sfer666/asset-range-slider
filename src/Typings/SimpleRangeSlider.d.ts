@@ -32,7 +32,7 @@ interface UserConfigList extends ObjectKeyString {
 }
 interface CompleteConfigList extends Required<UserConfigList> {
 }
-interface ViewUpdateList extends UserConfigList {
+interface ViewUpdateList extends Omit<UserConfigList, 'step'> {
   positions?: PointerValue,
   values: PointerValue,
   range: ConfigRange,
