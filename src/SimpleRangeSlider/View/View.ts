@@ -191,14 +191,9 @@ class View {
     if (scale !== undefined) {
       this.updateScale(scale, range);
     }
-
-    if (range) {
-      if (this.entities.scale) {
-        const isRangeChanged = JSON.stringify(range) !== JSON.stringify(this.entities.scale.range);
-        if (isRangeChanged) {
-          this.entities.scale.updateScale(range, orientation);
-        }
-      }
+    const isRangeChanged = JSON.stringify(range) !== JSON.stringify(this.config.range);
+    if (this.entities.scale && isRangeChanged) {
+      this.entities.scale.updateScale(range, orientation);
     }
 
     if (positions) {
