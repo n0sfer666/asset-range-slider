@@ -27,9 +27,9 @@ interface UserConfigList extends ObjectKeyString {
   values?: PointerValue;
   range?: ConfigRange;
   step?: number;
-  connect?: boolean;
-  tooltip?: boolean;
-  scale?: boolean;
+  withConnect?: boolean;
+  withTooltip?: boolean;
+  withScale?: boolean;
 }
 interface CompleteConfigList extends Required<UserConfigList> {
 }

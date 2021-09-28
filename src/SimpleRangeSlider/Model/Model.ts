@@ -6,9 +6,9 @@ class Model {
     values: [10],
     range: [0, 100],
     step: 1,
-    connect: true,
-    tooltip: true,
-    scale: true,
+    withConnect: true,
+    withTooltip: true,
+    withScale: true,
   };
 
   private config: CompleteConfigList;

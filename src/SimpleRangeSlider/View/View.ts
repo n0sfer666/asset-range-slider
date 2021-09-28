@@ -57,7 +57,7 @@ class View {
       this.config.orientation,
       position,
       index,
-      this.config.tooltip,
+      this.config.withTooltip,
       value,
     );
     pointerInstance.subscribeOn(this.updateByPointer);
@@ -97,8 +97,8 @@ class View {
     );
     this.entities = {
       pointers,
-      connect: this.config.connect ? this.getConnect(pointers) : undefined,
-      scale: this.config.scale ? this.getScale(range) : undefined,
+      connect: this.config.withConnect ? this.getConnect(pointers) : undefined,
+      scale: this.config.withScale ? this.getScale(range) : undefined,
     };
   }
 
@@ -161,7 +161,7 @@ class View {
       this.entities.connect.setPosition(start, end, this.isSinglePointer);
     }
     this.entities.pointers.forEach((pointer, i) => {
-      pointer.setPositionAndUpdateTooltip(positions[i], this.config.tooltip, values[i]);
+      pointer.setPositionAndUpdateTooltip(positions[i], this.config.withTooltip, values[i]);
     });
     this.activePointerIndex = index;
     this.switchActivePointer();
@@ -171,25 +171,25 @@ class View {
 
   updateView(viewUpdateList: ViewUpdateList) {
     const {
-      values, range, positions, tooltip, connect, orientation, scale,
+      values, range, positions, orientation, withTooltip, withConnect, withScale,
     } = viewUpdateList;
     if (orientation && orientation !== this.config.orientation) {
       this.updateOrientation(orientation);
     }
 
-    if (connect !== undefined && this.config.connect !== connect) {
-      this.updateConnect(connect);
+    if (withConnect !== undefined && this.config.withConnect !== withConnect) {
+      this.updateConnect(withConnect);
     }
 
-    if (tooltip !== undefined && this.config.tooltip !== tooltip) {
-      this.config.tooltip = tooltip;
+    if (withTooltip !== undefined && this.config.withTooltip !== withTooltip) {
+      this.config.withTooltip = withTooltip;
       this.entities.pointers.forEach((pointer, index) => {
-        pointer.updateTooltip(tooltip, values[index]);
+        pointer.updateTooltip(withTooltip, values[index]);
       });
     }
 
-    if (scale !== undefined) {
-      this.updateScale(scale, range);
+    if (withScale !== undefined) {
+      this.updateScale(withScale, range);
     }
     const isRangeChanged = JSON.stringify(range) !== JSON.stringify(this.config.range);
     if (this.entities.scale && isRangeChanged) {
@@ -202,9 +202,9 @@ class View {
   }
 
   updateScale(withScale: boolean, range: ConfigRange) {
-    const isScaleChange = withScale !== this.config.scale;
+    const isScaleChange = withScale !== this.config.withScale;
     if (isScaleChange) {
-      this.config.scale = withScale;
+      this.config.withScale = withScale;
       if (withScale) {
         this.entities.scale = this.getScale(range);
         if (this.config.orientation === 'horizontal') {
@@ -244,8 +244,8 @@ class View {
   }
 
   updateConnect(withConnect: boolean) {
-    this.config.connect = withConnect;
-    if (this.config.connect) {
+    this.config.withConnect = withConnect;
+    if (this.config.withConnect) {
       this.entities.connect = this.getConnect(this.entities.pointers);
       this.entities.connect.$element.appendTo(this.$slider);
     } else {

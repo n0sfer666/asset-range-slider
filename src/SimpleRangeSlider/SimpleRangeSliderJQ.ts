@@ -16,8 +16,13 @@ import Presenter from './Presenter/Presenter';
           } else {
             dataConfig[key] = <ConfigRange> correctValue;
           }
-        } else {
+        } else if (key === 'step' || key === 'orientation') {
           dataConfig[key] = value;
+        } else {
+          const correctKey = String(key).split('').map(
+            (char, index) => (index === 4 ? char.toUpperCase() : char.toLowerCase()),
+          ).join('');
+          dataConfig[correctKey] = value;
         }
       });
       const config = <UserConfigList> { ...userConfig, ...dataConfig };

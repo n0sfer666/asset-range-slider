@@ -52,7 +52,7 @@ class RadioBlock {
   getText($radio: JQuery): string | boolean {
     return this.configurationName === 'orientation'
       ? $radio.data('text')
-      : $radio.data('text') === 'enable';
+      : $radio.data('text') === true;
   }
 
   bindContext() {

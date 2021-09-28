@@ -2,7 +2,7 @@ mixin radio-block({name = 'change-me'})
   -
     const texts = name === 'orientation' || name === 'Orientation'
       ? ['horizontal', 'vertical']
-      : ['enable', 'disable'];
+      : ['true', 'false'];
     const randomNumber = Math.round(Math.random() * 1e4)
     const inputName = `${name}-${randomNumber}`
   div(class = ' radio-block js-radio-block', data-configuration-name = name)
