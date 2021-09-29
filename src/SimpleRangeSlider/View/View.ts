@@ -221,7 +221,7 @@ class View {
       if (this.entities.scale) {
         this.entities.scale.$element.remove();
       }
-      this.entities.scale = undefined;
+      this.entities.scale = null;
     }
   }
 
@@ -235,8 +235,8 @@ class View {
     this.updateByModel({ values, positions, index: this.activePointerIndex });
   }
 
-  updatePointerAndTooltip(PointerLength: number, positions: PointerPosition, values: PointerValue) {
-    if (PointerLength === 2) {
+  updatePointerAndTooltip(pointerLength: number, positions: PointerPosition, values: PointerValue) {
+    if (pointerLength === 2) {
       if (typeof values[1] === 'number' && typeof positions[1] === 'number') {
         this.entities.pointers.push(this.getPointer(positions[1], 1, values[1]));
         this.entities.pointers[1].$element.appendTo(this.$slider);
@@ -255,7 +255,7 @@ class View {
       if (this.entities.connect) {
         this.entities.connect.$element.remove();
       }
-      this.entities.connect = undefined;
+      this.entities.connect = null;
     }
   }
 

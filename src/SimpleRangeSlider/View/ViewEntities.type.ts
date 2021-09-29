@@ -4,8 +4,8 @@ import Scale from './entities/Scale';
 
 interface ViewEntities extends ObjectKeyString {
   pointers: Pointer[],
-  connect?: Connect,
-  scale?: Scale,
+  connect?: Connect | null,
+  scale?: Scale | null,
 }
 
 export default ViewEntities;
