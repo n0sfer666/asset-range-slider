@@ -181,7 +181,6 @@ class View {
     const isValuesChanged = JSON.stringify(values) !== JSON.stringify(this.config.values);
     const isPositionsChanged = JSON.stringify(positions) !== JSON.stringify(this.config.positions);
     if (isOrientationChanged) {
-      this.config.orientation = orientation;
       this.updateOrientation(orientation);
     }
     if (isConnectChanged) {
@@ -195,6 +194,7 @@ class View {
       });
     }
     if (isScaleChanged) {
+      this.config.withScale = withScale;
       this.updateScale(range);
     }
     if (isRangeChanged && this.entities.scale) {
