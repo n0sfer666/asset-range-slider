@@ -148,18 +148,12 @@ class Model {
 
   getViewUpdateList(config: UserConfigList): ViewUpdateList {
     this.config = this.getVerifiedConfig({ ...this.config, ...config });
-    const viewUpdateList: ViewUpdateList = {
-      values: this.config.values,
-      range: this.config.range,
-      ...config,
-    };
-    if (config.values || config.range) {
-      this.positions = <PointerPosition> this.config.values.map(
+    return {
+      ...this.config,
+      positions: <PointerPosition> this.config.values.map(
         (value) => this.getPositionFromValue(value),
-      );
-      viewUpdateList.positions = [...this.positions];
-    }
-    return viewUpdateList;
+      ),
+    };
   }
 }
 

@@ -173,51 +173,55 @@ class View {
     const {
       values, range, positions, orientation, withTooltip, withConnect, withScale,
     } = viewUpdateList;
-    if (orientation && orientation !== this.config.orientation) {
+    const isOrientationChanged = orientation !== this.config.orientation;
+    const isConnectChanged = withConnect !== this.config.withConnect;
+    const isTooltipChanged = withTooltip !== this.config.withTooltip;
+    const isScaleChanged = withScale !== this.config.withScale;
+    const isRangeChanged = JSON.stringify(range) !== JSON.stringify(this.config.range);
+    const isValuesChanged = JSON.stringify(values) !== JSON.stringify(this.config.values);
+    const isPositionsChanged = JSON.stringify(positions) !== JSON.stringify(this.config.positions);
+    if (isOrientationChanged) {
+      this.config.orientation = orientation;
       this.updateOrientation(orientation);
     }
-
-    if (withConnect !== undefined && this.config.withConnect !== withConnect) {
-      this.updateConnect(withConnect);
+    if (isConnectChanged) {
+      this.config.withConnect = withConnect;
+      this.updateConnect();
     }
-
-    if (withTooltip !== undefined && this.config.withTooltip !== withTooltip) {
+    if (isTooltipChanged) {
       this.config.withTooltip = withTooltip;
       this.entities.pointers.forEach((pointer, index) => {
         pointer.updateTooltip(withTooltip, values[index]);
       });
     }
-
-    if (withScale !== undefined) {
-      this.updateScale(withScale, range);
+    if (isScaleChanged) {
+      this.updateScale(range);
     }
-    const isRangeChanged = JSON.stringify(range) !== JSON.stringify(this.config.range);
-    if (this.entities.scale && isRangeChanged) {
+    if (isRangeChanged && this.entities.scale) {
       this.entities.scale.updateScale(range, orientation);
     }
 
-    if (positions) {
+    if (isPositionsChanged) {
       this.updatePositions(positions, values);
+    }
+    if (isValuesChanged) {
+      this.config.values = values;
     }
   }
 
-  updateScale(withScale: boolean, range: ConfigRange) {
-    const isScaleChange = withScale !== this.config.withScale;
-    if (isScaleChange) {
-      this.config.withScale = withScale;
-      if (withScale) {
-        this.entities.scale = this.getScale(range);
-        if (this.config.orientation === 'horizontal') {
-          this.entities.scale.$element.appendTo(this.$sliderContainer);
-        } else {
-          this.entities.scale.$element.prependTo(this.$sliderContainer);
-        }
+  updateScale(range: ConfigRange) {
+    if (this.config.withScale) {
+      this.entities.scale = this.getScale(range);
+      if (this.config.orientation === 'horizontal') {
+        this.entities.scale.$element.appendTo(this.$sliderContainer);
       } else {
-        if (this.entities.scale) {
-          this.entities.scale.$element.remove();
-        }
-        this.entities.scale = undefined;
+        this.entities.scale.$element.prependTo(this.$sliderContainer);
       }
+    } else {
+      if (this.entities.scale) {
+        this.entities.scale.$element.remove();
+      }
+      this.entities.scale = undefined;
     }
   }
 
@@ -228,7 +232,7 @@ class View {
     if (lastPointerLength !== newPointerLength) {
       this.updatePointerAndTooltip(newPointerLength, positions, values);
     }
-    this.updateByModel({ values, positions, index: 0 });
+    this.updateByModel({ values, positions, index: this.activePointerIndex });
   }
 
   updatePointerAndTooltip(PointerLength: number, positions: PointerPosition, values: PointerValue) {
@@ -243,8 +247,7 @@ class View {
     }
   }
 
-  updateConnect(withConnect: boolean) {
-    this.config.withConnect = withConnect;
+  updateConnect() {
     if (this.config.withConnect) {
       this.entities.connect = this.getConnect(this.entities.pointers);
       this.entities.connect.$element.appendTo(this.$slider);
@@ -257,25 +260,23 @@ class View {
   }
 
   updateOrientation(orientation: ConfigOrientation) {
-    if (this.config.orientation !== orientation) {
-      this.$slider.removeClass(`${classes.slider}_${this.config.orientation}`);
-      this.$sliderContainer.removeClass(`${classes.sliderContainer}_${this.config.orientation}`);
-      this.config.orientation = orientation;
-      this.$slider.addClass(`${classes.slider}_${this.config.orientation}`);
-      this.$sliderContainer.addClass(`${classes.sliderContainer}_${this.config.orientation}`);
-      this.entities.pointers.forEach((pointer) => {
-        pointer.setOrientation(orientation);
-      });
-      if (this.entities.connect) {
-        this.entities.connect.setOrientation(orientation);
-      }
-      if (this.entities.scale) {
-        this.entities.scale.setOrientation(orientation);
-        if (orientation === 'vertical') {
-          this.entities.scale.$element.prependTo(this.$sliderContainer);
-        } else {
-          this.$slider.prependTo(this.$sliderContainer);
-        }
+    this.$slider.removeClass(`${classes.slider}_${this.config.orientation}`);
+    this.$sliderContainer.removeClass(`${classes.sliderContainer}_${this.config.orientation}`);
+    this.config.orientation = orientation;
+    this.$slider.addClass(`${classes.slider}_${this.config.orientation}`);
+    this.$sliderContainer.addClass(`${classes.sliderContainer}_${this.config.orientation}`);
+    this.entities.pointers.forEach((pointer) => {
+      pointer.setOrientation(orientation);
+    });
+    if (this.entities.connect) {
+      this.entities.connect.setOrientation(orientation);
+    }
+    if (this.entities.scale) {
+      this.entities.scale.setOrientation(orientation);
+      if (orientation === 'vertical') {
+        this.entities.scale.$element.prependTo(this.$sliderContainer);
+      } else {
+        this.$slider.prependTo(this.$sliderContainer);
       }
     }
   }
