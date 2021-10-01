@@ -31,7 +31,7 @@ class View {
   constructor($container: JQuery, config: CompleteConfigList, positions: PointerPosition) {
     this.bindContext();
     this.$container = $container;
-    this.config = { ...config };
+    this.config = JSON.parse(JSON.stringify(config));
     this.positions = [...positions];
     this.isSinglePointer = this.positions.length === 1;
     this.initEntities(this.positions, this.config.values, [...this.config.range]);

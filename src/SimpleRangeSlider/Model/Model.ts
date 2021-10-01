@@ -148,6 +148,7 @@ class Model {
 
   getViewUpdateList(config: UserConfigList): ViewUpdateList {
     this.config = this.getVerifiedConfig({ ...this.config, ...config });
+    this.isSinglePointer = this.config.values.length === 1;
     return {
       ...this.config,
       positions: <PointerPosition> this.config.values.map(

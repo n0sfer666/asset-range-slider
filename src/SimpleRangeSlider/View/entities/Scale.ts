@@ -70,7 +70,7 @@ class Scale {
   getValuePips(): JQuery[] {
     const valuePips: JQuery[] = this.values.map(() => {
       const $dash = Scale.getElement(classes.pipDash);
-      const $pipValue = Scale.getElement(classes.pipValue);
+      const $pipValue = Scale.getElement(`${classes.pipValue} js-${classes.pipValue}`);
       const $pip = Scale.getElement(classes.pip);
       $pip.append(this.orientation === 'horizontal' ? [$dash, $pipValue] : [$pipValue, $dash]);
       return $pip;
@@ -102,7 +102,7 @@ class Scale {
     }
     this.valuePips.forEach(($pip, index) => {
       this.setPipPosition($pip, this.values[index]);
-      $pip.find(`.${classes.pipValue}`).text(this.values[index]);
+      $pip.find(`.js-${classes.pipValue}`).text(this.values[index]);
     });
     this.emptyPips.forEach(($pip, index) => this.setPipPosition($pip, this.emptyValues[index]));
   }
