@@ -129,7 +129,9 @@ class Model {
 
     if (isOutOfBoundary) {
       this.config.values[index] = resultValue;
-      this.positions[index] = this.getPositionFromValue(resultValue);
+      this.positions = <PointerPosition> this.config.values.map(
+        (value) => this.getPositionFromValue(value),
+      );
     }
   }
 
@@ -140,8 +142,8 @@ class Model {
     this.callbackList.forEach(
       (viewCallback: ModelCallback) => viewCallback({
         index: activePointerIndex,
-        positions: this.positions,
-        values: this.config.values,
+        positions: [...this.positions],
+        values: [...this.config.values],
       }),
     );
   }
