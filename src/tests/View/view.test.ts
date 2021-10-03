@@ -1,3 +1,6 @@
+describe('View', () => {
+  test.todo('please pass');
+});
 // import Connect from '../../SimpleRangeSlider/View/entities/Connect';
 // import InputTextValue from '../../SimpleRangeSlider/View/entities/inputs/InputTextValue';
 // import Pointer from '../../SimpleRangeSlider/View/entities/Pointer';

@@ -1,3 +1,6 @@
+describe('Tooltip', () => {
+  test.todo('please pass');
+});
 // import Tooltip from '../../../SimpleRangeSlider/View/entities/Tooltip';
 // import makeRandomNumber from '../../makeRandomNumber';
 

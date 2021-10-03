@@ -1,3 +1,6 @@
+describe('Model', () => {
+  test.todo('please pass');
+});
 // import Model from '../../SimpleRangeSlider/Model/Model';
 // import makeRandomNumber from '../makeRandomNumber';
 

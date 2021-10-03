@@ -28,13 +28,8 @@ import Presenter from './Presenter/Presenter';
       const config = <UserConfigList> { ...userConfig, ...dataConfig };
       const slider = new Presenter(<JQuery> this, <UserConfigList> config);
       const completeConfig = slider.getConfig();
-      const configKeys: string[] = Object.keys(completeConfig);
-      const indexOfInput = configKeys.indexOf('input');
-      if (indexOfInput !== -1) {
-        configKeys.splice(indexOfInput);
-      }
-      configKeys.forEach((key) => {
-        $container.attr(`data-${key}`, completeConfig[key]);
+      Object.keys(completeConfig).forEach((key) => {
+        $container.attr(`data-${key}`, completeConfig[key]).data(key, completeConfig[key]);
       });
       $container.data('SimpleRangeSlider', slider);
       return $container;
