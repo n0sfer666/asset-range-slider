@@ -74,7 +74,6 @@ describe('Connect.ts', () => {
 
   test('setOrientation()', () => {
     connects.forEach((connect) => {
-      const orientations: ConfigOrientation[] = ['horizontal', 'vertical'];
       orientations.forEach((orientation) => {
         connect.setOrientation(orientation);
         expect(connect.$element.hasClass(`${classes.root}_${orientation}`)).toBe(true);
