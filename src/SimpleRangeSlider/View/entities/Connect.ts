@@ -36,15 +36,15 @@ class Connect {
   }
 
   setPosition(startPosition: number, endPosition: number, isSinglePointer?: boolean) {
-    ['width', 'height', 'left', 'top'].forEach((attr) => {
-      this.$element.css(attr, '');
+    ['width', 'height', 'left', 'top'].forEach((attribute) => {
+      this.$element.css(attribute, '');
     });
     this.isSinglePointer = isSinglePointer !== undefined ? isSinglePointer : this.isSinglePointer;
-    const values: number = Math.round(startPosition * this.normalizingCoefficient);
+    const start: number = Math.round(startPosition * this.normalizingCoefficient);
     const end: number = Math.round(endPosition * this.normalizingCoefficient);
-    this.$element.css(this.orientation === 'horizontal' ? 'width' : 'height', `${end - values}%`);
+    this.$element.css(this.orientation === 'horizontal' ? 'width' : 'height', `${end - start}%`);
     if (!this.isSinglePointer) {
-      this.$element.css(this.orientation === 'horizontal' ? 'left' : 'top', `${values}%`);
+      this.$element.css(this.orientation === 'horizontal' ? 'left' : 'top', `${start}%`);
     }
     this.startPosition = startPosition;
     this.endPosition = endPosition;

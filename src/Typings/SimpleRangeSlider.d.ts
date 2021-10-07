@@ -2,10 +2,6 @@ type ConfigOrientation = 'horizontal' | 'vertical';
 type ConfigRange = [number, number];
 type PointerValue = [number] | [number, number];
 type PointerPosition = PointerValue;
-type PointerCssValues = {
-  attribute: string,
-  value: string
-};
 interface SliderData extends ObjectKeyString {
   position?: number,
   positions: PointerPosition,
