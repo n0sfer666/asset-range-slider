@@ -59,24 +59,19 @@ class Scale {
   }
 
   getEmptyPips(): JQuery[] {
-    const emptyPips: JQuery[] = [];
-    for (let i = 0; i < this.emptyPipsNumber; i += 1) {
-      const $emptyDash = Scale.getElement(classes.pipDash, 'empty');
-      emptyPips.push(Scale.getElement(classes.pip).append($emptyDash));
-    }
-    return emptyPips;
+    return new Array(this.emptyPipsNumber).fill(
+      Scale.getElement(classes.pip).append(Scale.getElement(classes.pipDash, 'empty')),
+    );
   }
 
   getValuePips(): JQuery[] {
-    const valuePips: JQuery[] = this.values.map(() => {
+    return this.values.map(() => {
       const $dash = Scale.getElement(classes.pipDash);
       const $pipValue = Scale.getElement(`${classes.pipValue} js-${classes.pipValue}`);
-      const $pip = Scale.getElement(classes.pip);
-      $pip.append(this.orientation === 'horizontal' ? [$dash, $pipValue] : [$pipValue, $dash]);
-      return $pip;
+      return Scale.getElement(classes.pip).append(
+        this.orientation === 'horizontal' ? [$dash, $pipValue] : [$pipValue, $dash],
+      );
     });
-
-    return valuePips;
   }
 
   drawPips() {
@@ -130,7 +125,7 @@ class Scale {
         const difference = (this.values[index + 1] - value) / (this.emptyPipsNumber + 1);
         new Array(this.emptyPipsNumber)
           .fill(difference)
-          .forEach((val, i) => emptyValues.push(value + val * (i + 1)));
+          .forEach((val, i) => emptyValues.push(Math.round(value + val * (i + 1))));
       }
     });
     return emptyValues;
@@ -143,7 +138,7 @@ class Scale {
 
   handlerValuePipClick(event: JQuery.MouseEventBase) {
     event.stopPropagation();
-    const value = $(event.target).hasClass(`${classes.pipValue}`)
+    const value = $(event.target).hasClass(`js-${classes.pipValue}`)
       ? Number($(event.target).text())
       : Number($(event.target).siblings().text());
     this.callbackList.forEach((callback) => {
