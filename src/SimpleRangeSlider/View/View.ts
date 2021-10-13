@@ -97,8 +97,8 @@ class View {
     );
     this.entities = {
       pointers,
-      connect: this.config.withConnect ? this.getConnect(pointers) : undefined,
-      scale: this.config.withScale ? this.getScale(range) : undefined,
+      connect: this.config.withConnect ? this.getConnect(pointers) : null,
+      scale: this.config.withScale ? this.getScale(range) : null,
     };
   }
 

@@ -18,7 +18,7 @@ class Pointer {
 
   withTooltip: boolean;
 
-  tooltip?: Tooltip;
+  tooltip?: Tooltip | null;
 
   $element: JQuery;
 
@@ -74,7 +74,7 @@ class Pointer {
       }
     } else if (this.tooltip) {
       this.tooltip.$element.remove();
-      this.tooltip = undefined;
+      this.tooltip = null;
     }
   }
 
