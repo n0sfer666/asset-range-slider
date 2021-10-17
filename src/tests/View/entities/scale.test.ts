@@ -183,12 +183,17 @@ describe('Scale', () => {
   test('handlerValuePipClick(event)', () => {
     scales.forEach((scale) => {
       const randomIndex = makeRandomNumber(0, scale.valuePips.length - 1);
+      const correctIndex = randomIndex <= scale.valuePips.length - 1
+        ? randomIndex
+        : scale.valuePips.length - 1;
       if (makeRandomNumber(0, 1)) {
-        scale.valuePips[randomIndex].find(`.js-${classes.pipValue}`).click();
+        scale.valuePips[correctIndex].find(`.js-${classes.pipValue}`).click();
       } else {
-        scale.valuePips[randomIndex].click();
+        scale.valuePips[correctIndex].click();
       }
-      expect(callbackValue).toBe(scale.values[randomIndex]);
+      setTimeout(() => {
+        expect(callbackValue).toBe(scale.values[correctIndex]);
+      }, 15);
     });
   });
 });
