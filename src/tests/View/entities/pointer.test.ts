@@ -1,132 +1,239 @@
+import Pointer from '../../../SimpleRangeSlider/View/entities/Pointer';
+import Tooltip from '../../../SimpleRangeSlider/View/entities/Tooltip';
+import makeRandomNumber from '../../makeRandomNumber';
+
 describe('Pointer', () => {
-  test.todo('please pass');
+  const classes = {
+    root: 'simple-range-slider__pointer',
+    active: 'simple-range-slider__pointer_active',
+  };
+  const normalizingCoefficient: number = 1e4;
+  const orientations: ConfigOrientation[] = ['horizontal', 'vertical'];
+  const withTooltips: boolean[] = [true, false];
+  const indexes = [0, 1];
+  const testPosition = makeRandomNumber(0, 100) / 100;
+  const testValue = makeRandomNumber(-100, 100);
+  const pointers: Pointer[] = [];
+  orientations.forEach((orientation) => {
+    withTooltips.forEach((withTooltip) => {
+      indexes.forEach((index) => {
+        const isHorizontal = orientation === 'horizontal';
+        const size = `${isHorizontal ? 'width' : 'height'}: 300px; ${isHorizontal ? 'height' : 'width'}: 6px;`;
+        pointers.push(new Pointer(
+          $('<div></div>', {
+            style: `margin: 20px; ${size}`,
+          }).appendTo($(document.body)),
+          orientation,
+          testPosition,
+          index,
+          withTooltip,
+          testValue,
+        ));
+      });
+    });
+  });
+  pointers.forEach((pointer) => {
+    pointer.$element.css({
+      width: '16px',
+      height: '16px',
+    });
+  });
+  let testPointerData: PointerData = {
+    position: NaN,
+    index: NaN,
+  };
+
+  test('initElement()', () => {
+    pointers.forEach((pointer) => {
+      expect(pointer.$element.prop('tagName')).toBe('DIV');
+      expect(pointer.$element.hasClass(`${classes.root}`)).toBe(true);
+      expect(pointer.$element.hasClass(`${classes.root}_${pointer.orientation}`)).toBe(true);
+    });
+  });
+
+  test('initTooltip()', () => {
+    pointers.forEach((pointer) => {
+      if (pointer.withTooltip) {
+        expect(pointer.tooltip instanceof Tooltip).toBe(true);
+        expect(pointer.tooltip?.$element.parent()).toEqual(pointer.$element);
+      } else {
+        expect(pointer.tooltip).toBe(undefined);
+      }
+    });
+  });
+
+  test('updateTooltip(withTooltip, value)', () => {
+    pointers.forEach((pointer) => {
+      const testWithTooltip = !!makeRandomNumber(0, 1);
+      const expectValue = makeRandomNumber(-100, 100);
+      pointer.updateTooltip(testWithTooltip, expectValue);
+      if (testWithTooltip) {
+        expect(pointer.tooltip instanceof Tooltip).toBe(true);
+        expect(pointer.tooltip?.value).toBe(expectValue);
+        expect(pointer.tooltip?.$element.parent()).toEqual(pointer.$element);
+      } else {
+        expect(pointer.tooltip?.$element.parent()).not.toEqual(pointer.$element);
+        if (pointer.tooltip !== undefined) {
+          expect(pointer.tooltip).toBe(null);
+        }
+      }
+    });
+  });
+
+  test('setPosition(position)', () => {
+    pointers.forEach((pointer) => {
+      const expectPosition = makeRandomNumber(0, 100) / 100;
+      pointer.setPosition(expectPosition);
+      const liter = pointer.orientation === 'horizontal' ? 'X' : 'Y';
+      const pos = expectPosition * normalizingCoefficient;
+      expect(`translate${liter}(${pos}%)`).toBe(pointer.$element.css('transform'));
+    });
+  });
+
+  test('setPositionAndUpdateTooltip(position, withTooltip, value)', () => {
+    pointers.forEach((pointer) => {
+      const expectPosition = makeRandomNumber(0, 100) / 100;
+      const testWithTooltip = !!makeRandomNumber(0, 1);
+      const expectValue = makeRandomNumber(-100, 100);
+      const spyOnSetPosition = jest.spyOn(pointer, 'setPosition');
+      const spyOnUpdateTooltip = jest.spyOn(pointer, 'updateTooltip');
+      pointer.setPositionAndUpdateTooltip(expectPosition, testWithTooltip, expectValue);
+      expect(spyOnSetPosition).toBeCalled();
+      expect(spyOnUpdateTooltip).toBeCalled();
+    });
+  });
+
+  test('switchActive(isActive)', () => {
+    pointers.forEach((pointer) => {
+      const isActive = !!makeRandomNumber(0, 1);
+      pointer.switchActive(isActive);
+      if (isActive) {
+        expect(pointer.$element.hasClass(classes.active)).toBe(true);
+      } else {
+        expect(pointer.$element.hasClass(classes.active)).toBe(false);
+      }
+    });
+  });
+
+  test('subscribeOn(callback)', () => {
+    const testCallback: PointerCallback = (pointerData: PointerData) => {
+      testPointerData = pointerData;
+    };
+    pointers.forEach((pointer) => {
+      pointer.subscribeOn(testCallback);
+      expect(pointer.callbackList[0]).toEqual(testCallback);
+    });
+  });
+
+  test('getShift(event)', () => {
+    pointers.forEach((pointer) => {
+      const testOffset = makeRandomNumber(1, 50);
+      const testClient = makeRandomNumber(51, 100);
+      const isHorizontal = pointer.orientation === 'horizontal';
+      const offsetSpy = jest.spyOn(pointer.$element, 'offset').mockReturnValue({
+        left: isHorizontal ? testOffset : 0,
+        top: isHorizontal ? 0 : testOffset,
+      });
+      const expectShift = testClient - testOffset;
+      const fakeEvent: JQuery.MouseEventBase = new jQuery.Event('click');
+      fakeEvent.clientX = isHorizontal ? testClient : 0;
+      fakeEvent.clientY = isHorizontal ? 0 : testClient;
+      expect(expectShift).toBe(pointer.getShift(fakeEvent));
+      offsetSpy.mockReset().mockRestore();
+      jest.resetAllMocks();
+    });
+  });
+
+  test('getNormalizePosition(position)', () => {
+    const position = makeRandomNumber(0, 100) / 100;
+    const expectResult = Math.round(position * normalizingCoefficient) / normalizingCoefficient;
+    expect(expectResult).toBe(pointers[0].getNormalizePosition(position));
+  });
+
+  test('setOrientation(orientation)', () => {
+    pointers.forEach((pointer) => {
+      const lastOrientation = pointer.orientation;
+      const newOrientation: ConfigOrientation = lastOrientation === 'horizontal'
+        ? 'vertical'
+        : 'horizontal';
+      const spyTooltipSetOrientation = pointer.tooltip
+        ? jest.spyOn(pointer.tooltip, 'setOrientation')
+        : jest.fn(() => {});
+      pointer.setOrientation(newOrientation);
+      expect(pointer.orientation).toBe(newOrientation);
+      expect(pointer.$element.hasClass(`${classes.root}_${newOrientation}`)).toBe(true);
+      if (pointer.withTooltip) {
+        expect(spyTooltipSetOrientation).toBeCalled();
+      }
+      const spySetPosition = jest.spyOn(pointer.$element, 'removeClass');
+      pointer.setOrientation(newOrientation);
+      expect(spySetPosition).not.toBeCalled();
+      spySetPosition.mockReset().mockRestore();
+      spyTooltipSetOrientation.mockReset().mockRestore();
+      jest.resetAllMocks();
+      pointer.setOrientation(lastOrientation);
+    });
+  });
+
+  test('handlePointerMouseDown(event)', () => {
+    pointers.forEach((pointer) => {
+      const testOffset = makeRandomNumber(1, 50);
+      const testClient = makeRandomNumber(51, 100);
+      const testOffsetContainer = makeRandomNumber(101, 150);
+      const isHorizontal = pointer.orientation === 'horizontal';
+      const fakeEvent: JQuery.MouseEventBase = new jQuery.Event('mousedown');
+      fakeEvent.clientX = isHorizontal ? testClient : 0;
+      fakeEvent.clientY = isHorizontal ? 0 : testClient;
+      const spyOffset = jest.spyOn(pointer.$element, 'offset').mockReturnValue({
+        left: isHorizontal ? testOffset : 0,
+        top: isHorizontal ? 0 : testOffset,
+      });
+      const spyOffsetContainer = jest.spyOn(pointer.$container, 'offset').mockReturnValue({
+        left: isHorizontal ? testOffsetContainer : 0,
+        top: isHorizontal ? 0 : testOffsetContainer,
+      });
+      const spyOn = jest.spyOn(jQuery.fn, 'on');
+      const expectContainerOffsetSize = pointer.orientation === 'horizontal'
+        ? pointer.$container.outerWidth()
+        : pointer.$container.outerHeight();
+      pointer.handlePointerMouseDown(fakeEvent);
+      expect(pointer.shift).toBe(pointer.getShift(fakeEvent));
+      expect(pointer.boundingClientRect).toBe(testOffsetContainer);
+      expect(pointer.containerOffsetSize).toBe(expectContainerOffsetSize);
+      expect(spyOn).toHaveBeenNthCalledWith(1, 'mousemove', pointer.handlePointerMove);
+      expect(spyOn).toHaveBeenNthCalledWith(2, 'mouseup', pointer.handlePointerMouseUp);
+      spyOn.mockReset().mockRestore();
+      spyOffset.mockReset().mockRestore();
+      spyOffsetContainer.mockReset().mockRestore();
+    });
+  });
+
+  test('handlePointerMove(event)', () => {
+    pointers.forEach((pointer) => {
+      const testClient = makeRandomNumber(0, 150);
+      const isHorizontal = pointer.orientation === 'horizontal';
+      const fakeEvent: JQuery.MouseEventBase = new jQuery.Event('mousemove');
+      fakeEvent.clientX = isHorizontal ? testClient : 0;
+      fakeEvent.clientY = isHorizontal ? 0 : testClient;
+      const newPosition = testClient - pointer.shift - pointer.boundingClientRect;
+      const newPositionInPercent = newPosition / pointer.containerOffsetSize;
+      const expectPosition = pointer.getNormalizePosition(newPositionInPercent);
+      const expectPointerData: PointerData = {
+        position: expectPosition,
+        index: pointer.index,
+      };
+      pointer.handlePointerMove(fakeEvent);
+      expect(testPointerData).toEqual(expectPointerData);
+    });
+  });
+
+  test('handlePointerMouseUp()', () => {
+    pointers.forEach((pointer) => {
+      const spyOff = jest.spyOn(jQuery.fn, 'off');
+      pointer.handlePointerMouseUp();
+      expect(spyOff).toHaveBeenNthCalledWith(1, 'mousemove', pointer.handlePointerMove);
+      expect(spyOff).toHaveBeenNthCalledWith(2, 'mouseup', pointer.handlePointerMouseUp);
+      spyOff.mockReset().mockRestore();
+    });
+  });
 });
-// import Pointer from '../../../SimpleRangeSlider/View/entities/Pointer';
-// import makeRandomNumber from '../../makeRandomNumber';
-
-// describe('Pointer.ts', () => {
-//   const className = 'simple-range-slider__pointer';
-//   const normalizingCoefficient: number = 1e4;
-//   const $document = $(document);
-//   let tesPointerData: PointerData = {
-//     index: -1,
-//     position: -1,
-//   };
-//   const orientations: ConfigOrientation[] = ['horizontal', 'vertical', 'horizontal', 'vertical'];
-//   const indexes: number[] = [0, 0, 1, 1];
-//   const pointers: Pointer[] = orientations.map((orientation, index) => {
-//     const position: number = Math.round(Math.random() * normalizingCoefficient)
-//       / normalizingCoefficient;
-//     const $testContainer = $(document.createElement('div'));
-//     $document.find('body').append($testContainer);
-//     return new Pointer($testContainer, orientation, position, indexes[index]);
-//   });
-
-//   test('getElement()', () => {
-//     const $testElement: JQuery[] = orientations.map((orientation) => {
-//       const $element: JQuery = $(document.createElement('div'));
-//       $element.addClass(`${className}`);
-//       $element.addClass(`${className}_${orientation}`);
-//       return $element;
-//     });
-//     pointers.forEach(
-//       (pointer, index) => expect(pointer.getElement()).toEqual($testElement[index]),
-//     );
-//   });
-
-//   test('switchActive(isActive)', () => {
-//     pointers.forEach((pointer) => {
-//       pointer.switchActive(true);
-//       expect(pointer.$element.hasClass(`${className}_active`)).toBe(true);
-//       pointer.switchActive(false);
-//       expect(pointer.$element.hasClass(`${className}_active`)).toBe(false);
-//     });
-//   });
-
-//   test('setPosition(position)', () => {
-//     pointers.forEach((pointer) => {
-//       const position: number = Math.round(Math.random() * normalizingCoefficient)
-//         / normalizingCoefficient;
-//       const liter: string = pointer.orientation === 'horizontal' ? 'X' : 'Y';
-//       const expectCss: string = `translate${liter}(${position * normalizingCoefficient}%)`;
-//       pointer.setPosition(position);
-//       expect(pointer.$element.css('transform')).toEqual(expectCss);
-//       expect(pointer.position).toBe(position);
-//     });
-//   });
-
-//   describe('event methods', () => {
-//     pointers.forEach((pointer) => {
-//       const { $element } = pointer;
-//       const testCallback: PointerCallback = (pointerData: PointerData) => {
-//         tesPointerData = pointerData;
-//       };
-
-//       pointer.subscribeOn(testCallback);
-//       const testCallbackList: PointerCallback[] = [testCallback];
-
-//       test('subscribeOn(callback)', () => {
-//         expect(testCallbackList).toEqual(pointer.callbackList);
-//       });
-
-//       test('getShift(event)', () => {
-//         const testEvent: JQuery.MouseEventBase = jQuery.Event('click');
-//         testEvent.clientX = makeRandomNumber(-1e4, 1e4);
-//         testEvent.clientY = makeRandomNumber(-1e4, 1e4);
-//         const elementOffset = $element.offset() || $element[0].getBoundingClientRect();
-//         const expectShift: number = pointer.orientation === 'horizontal'
-//           ? testEvent.clientX - elementOffset.left
-//           : testEvent.clientY - elementOffset.top;
-//         expect(pointer.getShift(testEvent)).toEqual(expectShift);
-//       });
-
-//       test('All handlers are called', () => {
-//         const handler = jest.fn();
-//         pointer.$element.on('mousedown', handler);
-//         pointer.$element.on('mousemove', handler);
-//         pointer.$element.on('mouseup', handler);
-//         pointer.$element.mousedown();
-//         pointer.$element.mousemove();
-//         pointer.$element.mouseup();
-//         expect(handler).toBeCalledTimes(3);
-//       });
-
-//       test('handlePointerMouseDown(event)', () => {
-//         const { $container } = pointer;
-//         const testEvent: JQuery.MouseEventBase = jQuery.Event('mousedown');
-//         testEvent.clientX = makeRandomNumber(-1e4, 1e4);
-//         testEvent.clientY = makeRandomNumber(-1e4, 1e4);
-//         const containerOffset = $container.offset() || $container[0].getBoundingClientRect();
-//         const boundingClientRect = pointer.orientation === 'horizontal'
-//           ? containerOffset.left
-//           : containerOffset.top;
-//         const outerWidth = $container.outerWidth() || $container[0].offsetWidth;
-//         const outerHeight = $container.outerHeight() || $container[0].offsetHeight;
-//         const containerOffsetSize = pointer.orientation === 'horizontal'
-//           ? outerWidth
-//           : outerHeight;
-//         pointer.handlePointerMouseDown(testEvent);
-//         expect(boundingClientRect).toEqual(pointer.boundingClientRect);
-//         expect(containerOffsetSize).toEqual(pointer.containerOffsetSize);
-//       });
-
-//       test('handlePointerMove(event)', () => {
-//         const testEvent: JQuery.MouseEventBase = jQuery.Event('mousemove');
-//         testEvent.clientX = Math.round(Math.random() * 1e2);
-//         testEvent.clientY = Math.round(Math.random() * 1e2);
-//         const cursorPosition = pointer.orientation === 'horizontal'
-//           ? testEvent.clientX
-//           : testEvent.clientY;
-//         const newPosition = cursorPosition - pointer.shift - pointer.boundingClientRect;
-//         const newPositionInPercent = newPosition / pointer.containerOffsetSize;
-//         const position = pointer.getNormalizePosition(newPositionInPercent);
-//         const expectData: PointerData = {
-//           index: pointer.index,
-//           position,
-//         };
-//         pointer.handlePointerMove(testEvent);
-//         expect(expectData).toEqual(tesPointerData);
-//       });
-//     });
-//   });
-// });

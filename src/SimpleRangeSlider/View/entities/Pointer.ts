@@ -85,7 +85,7 @@ class Pointer {
 
   switchActive(isActive: boolean) {
     if (isActive) {
-      this.$element.addClass(`${classes.active}}`);
+      this.$element.addClass(`${classes.active}`);
     } else {
       this.$element.removeClass(`${classes.active}`);
     }
