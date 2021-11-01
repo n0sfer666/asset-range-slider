@@ -22,11 +22,11 @@ class View {
 
   private isSinglePointer: boolean;
 
-  private entities: ViewEntities;
-
   private callbackList: ViewCallback[] = [];
 
   private activePointerIndex: number = 0;
+
+  entities: ViewEntities;
 
   constructor($container: JQuery, config: CompleteConfigList, positions: PointerPosition) {
     this.bindContext();
@@ -144,9 +144,8 @@ class View {
       const difference = this.config.values.map((currentValue) => Math.abs(value - currentValue));
       this.activePointerIndex = difference[0] < difference[1] ? 0 : 1;
     }
-    const index = this.activePointerIndex;
     this.callbackList.forEach((modelCallback) => modelCallback({
-      activePointerIndex: index,
+      activePointerIndex: this.activePointerIndex,
       value,
     }));
   }
@@ -197,8 +196,11 @@ class View {
       this.config.withScale = withScale;
       this.updateScale(range);
     }
-    if (isRangeChanged && this.entities.scale) {
-      this.entities.scale.updateScale(range, orientation);
+    if (isRangeChanged) {
+      this.config.range = range;
+      if (this.entities.scale) {
+        this.entities.scale.updateScale(range, orientation);
+      }
     }
 
     if (isPositionsChanged) {
