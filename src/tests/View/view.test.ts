@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 import Connect from '../../SimpleRangeSlider/View/entities/Connect';
 import Pointer from '../../SimpleRangeSlider/View/entities/Pointer';
 import Scale from '../../SimpleRangeSlider/View/entities/Scale';
@@ -345,6 +346,7 @@ describe('View', () => {
       const isScaleChanged = withScale !== config.withScale;
       const isRangeChanged = JSON.stringify(viewUpdateList.range) !== JSON.stringify(config.range);
       const isPositionsChanged = JSON.stringify(positions) !== JSON.stringify(config.positions);
+      const withScaleFromStart = !!view.entities.scale;
       const spies = {
         updateOrientation: jest.spyOn(view, 'updateOrientation'),
         updateConnect: jest.spyOn(view, 'updateConnect'),
@@ -379,12 +381,20 @@ describe('View', () => {
       if (isScaleChanged) {
         expect(spies.updateScale).toBeCalled();
       }
-      if (isRangeChanged && view.entities.scale) {
+      const isUpdatedScaleByScale = isRangeChanged && view.entities.scale && withScaleFromStart;
+      if (isUpdatedScaleByScale) {
         expect(spies.updateScaleByScale).toBeCalled();
       }
       if (isPositionsChanged) {
         expect(spies.updatePosition).toBeCalled();
       }
+      $.each(spies, (_, spy) => {
+        if (Array.isArray(spy)) {
+          spy.forEach((currentSpy) => (currentSpy.mockReset().mockRestore()));
+        } else {
+          spy.mockReset().mockRestore();
+        }
+      });
     });
   });
 });
