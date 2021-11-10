@@ -3,7 +3,7 @@ import Presenter from './Presenter/Presenter';
 // eslint-disable-next-line func-names
 (function ($: JQueryStatic) {
   $.fn.extend({
-    simpleRangeSlider(userConfig: UserConfigList) {
+    simpleRangeSlider(userConfig?: UserConfigList) {
       const $container = <JQuery> this;
       const dataConfig: UserConfigList = {};
       $.each($container.data(), (key, value) => {
