@@ -27,7 +27,7 @@ describe('Connect.ts', () => {
       )),
   );
 
-  test('setPosition(startPosition, endPosition, isSinglePointer?)', () => {
+  describe('setPosition(startPosition, endPosition, isSinglePointer?)', () => {
     connects.forEach((connect) => {
       const startPosition = connect.isSinglePointer
         ? 0
@@ -54,29 +54,35 @@ describe('Connect.ts', () => {
         expectStyle += ` ${expectCss[1].attr}: ${expectCss[1].value};`;
       }
       connect.setPosition(startPosition, endPosition);
-      expect(expectStyle).toBe(connect.$element.attr('style'));
+      test(`connect[${connects.indexOf(connect)}]: the style of the element is as expected`, () => {
+        expect(expectStyle).toBe(connect.$element.attr('style'));
+      });
     });
   });
 
-  test('initElement()', () => {
+  describe('initElement()', () => {
     connects.forEach((connect, index) => {
       if (index < 2) {
         const $element = jQuery('<div></div>', {
           class: `${classes.root} ${classes.root}_${connect.orientation}`,
         });
         const backupPositions = [connect.startPosition, connect.endPosition];
-        connect.initElement();
-        expect($element).toEqual(connect.$element);
+        test(`connect[${connects.indexOf(connect)}]: the element is as expected`, () => {
+          connect.initElement();
+          expect($element).toEqual(connect.$element);
+        });
         connect.setPosition(backupPositions[0], backupPositions[1]);
       }
     });
   });
 
-  test('setOrientation()', () => {
+  describe('setOrientation()', () => {
     connects.forEach((connect) => {
       orientations.forEach((orientation) => {
-        connect.setOrientation(orientation);
-        expect(connect.$element.hasClass(`${classes.root}_${orientation}`)).toBe(true);
+        test(`connect[${connects.indexOf(connect)}]: the class of the element is as expected`, () => {
+          connect.setOrientation(orientation);
+          expect(connect.$element.hasClass(`${classes.root}_${orientation}`)).toBe(true);
+        });
       });
     });
   });
