@@ -10,31 +10,40 @@ describe('Tooltip.ts', () => {
     root: 'simple-range-slider__tooltip',
   };
 
-  test('initElement()', () => {
+  describe('initElement()', () => {
     tooltips.forEach((tooltip) => {
       const $element: JQuery = jQuery('<div></div>', {
         class: `${classes.root} ${classes.root}_${tooltip.orientation}`,
       });
-      tooltip.initElement();
-      expect(tooltip.$element).toEqual($element);
+      test(`tooltips[${tooltips.indexOf(tooltip)}]: $element is as expected`, () => {
+        tooltip.initElement();
+        expect(tooltip.$element).toEqual($element);
+      });
     });
   });
 
-  test('setValue(value)', () => {
+  describe('setValue(value)', () => {
     tooltips.forEach((tooltip) => {
       const testValue: number = makeRandomNumber(-1e4, 1e4);
-      tooltip.setValue(testValue);
-      expect(tooltip.value).toEqual(testValue);
-      expect(tooltip.$element.text()).toEqual(String(testValue));
+      test(`tooltips[${tooltips.indexOf(tooltip)}]: tooltip.value is as expected`, () => {
+        tooltip.setValue(testValue);
+        expect(tooltip.value).toEqual(testValue);
+      });
+      test(`tooltips[${tooltips.indexOf(tooltip)}]: $element.text() is as expected`, () => {
+        tooltip.setValue(testValue);
+        expect(tooltip.$element.text()).toEqual(String(testValue));
+      });
     });
   });
 
-  test('setOrientation(orientation)', () => {
+  describe('setOrientation(orientation)', () => {
     tooltips.forEach((tooltip) => {
       const orientations: ConfigOrientation[] = ['horizontal', 'vertical'];
       orientations.forEach((orientation) => {
-        tooltip.setOrientation(orientation);
-        expect(tooltip.$element.hasClass(`${classes.root}_${orientation}`)).toBe(true);
+        test(`tooltips[${tooltips.indexOf(tooltip)}]: the class of $element is as expected`, () => {
+          tooltip.setOrientation(orientation);
+          expect(tooltip.$element.hasClass(`${classes.root}_${orientation}`)).toBe(true);
+        });
       });
     });
   });
