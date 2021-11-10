@@ -49,5 +49,5 @@ interface ModelCallback {
 }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface JQuery {
-  simpleRangeSlider(config: UserConfigList): JQuery
+  simpleRangeSlider(config?: UserConfigList): JQuery
 }

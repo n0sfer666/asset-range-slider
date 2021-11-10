@@ -26,7 +26,7 @@ class DemoPanel {
   constructor($container: JQuery) {
     this.$mainContainer = $container;
     this.initContainers();
-    this.$sliderContainer.simpleRangeSlider({});
+    this.$sliderContainer.simpleRangeSlider();
     this.initBlocks();
   }
 

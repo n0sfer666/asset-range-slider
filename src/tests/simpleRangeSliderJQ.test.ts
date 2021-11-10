@@ -19,7 +19,7 @@ describe('simpleRangeSliderJQ.ts', () => {
   });
 
   test('create with empty config', () => {
-    const instance: Presenter = $container.simpleRangeSlider({}).data('SimpleRangeSlider');
+    const instance: Presenter = $container.simpleRangeSlider().data('SimpleRangeSlider');
     expect(instance instanceof Presenter).toBe(true);
     expect(instance.getConfig()).toEqual(defaultConfig);
   });
@@ -37,7 +37,7 @@ describe('simpleRangeSliderJQ.ts', () => {
     Object.keys(testConfig).forEach((key) => {
       $container.data(key, testConfig[key]);
     });
-    const instance: Presenter = $container.simpleRangeSlider({}).data('SimpleRangeSlider');
+    const instance: Presenter = $container.simpleRangeSlider().data('SimpleRangeSlider');
     expect(instance instanceof Presenter).toBe(true);
     expect(instance.getConfig()).toEqual(testConfig);
   });
