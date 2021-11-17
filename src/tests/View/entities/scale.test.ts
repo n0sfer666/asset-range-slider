@@ -20,180 +20,256 @@ describe('Scale', () => {
     callbackValue = scaleData.value;
   };
 
-  test('subscribeOn(callback)', () => {
+  describe('subscribeOn(callback)', () => {
     scales.forEach((scale) => {
-      scale.subscribeOn(testCallback);
-      const expectCallback = JSON.stringify(testCallback);
-      expect(expectCallback).toEqual(JSON.stringify(scale.callbackList[0]));
+      test(`scales[${scales.indexOf(scale)}] callback was added to callbackList`, () => {
+        scale.subscribeOn(testCallback);
+        expect(testCallback).toEqual((scale.callbackList[0]));
+      });
     });
   });
 
-  test('getElement()', () => {
+  describe('getElement()', () => {
     const className = 'testClassName';
     const modifier = 'testModifier';
     const $expectElement = jQuery(`<div class = '${className}'></div>`);
     const $expectElementWithModifier = $expectElement.clone().addClass(
       `${className}_${modifier}`,
     );
-    expect($expectElement.get(0)).toEqual(Scale.getElement(className).get(0));
-    expect($expectElementWithModifier.get(0)).toEqual(Scale.getElement(className, modifier).get(0));
-  });
-
-  test('getDiapason()', () => {
-    scales.forEach((scale) => {
-      const expectDiapason = scale.range[1] - scale.range[0];
-      expect(expectDiapason).toBe(scale.getDiapason());
+    test('get correct element', () => {
+      expect($expectElement.get(0)).toEqual(Scale.getElement(className).get(0));
+    });
+    test('get correct element with modifier', () => {
+      expect($expectElementWithModifier.get(0))
+        .toEqual(Scale.getElement(className, modifier).get(0));
     });
   });
 
-  test('getValues()', () => {
+  describe('getDiapason()', () => {
     scales.forEach((scale) => {
-      const difference = Math.round(scale.diapason / (valuePipsNumber - 1));
-      const expectedValues = new Array(valuePipsNumber).fill(scale.range[0]).map((value, index) => {
-        const newVal = value + difference * index;
-        return newVal <= scale.range[1] ? newVal : scale.range[1];
+      test(`scales[${scales.indexOf(scale)}] get correct diapason`, () => {
+        const expectDiapason = scale.range[1] - scale.range[0];
+        expect(expectDiapason).toBe(scale.getDiapason());
       });
-      expect(expectedValues).toEqual(scale.getValues());
     });
   });
 
-  test('getEmptyPips()', () => {
+  describe('getValues()', () => {
+    scales.forEach((scale) => {
+      test(`scales[${scales.indexOf(scale)}] get correct values`, () => {
+        const difference = Math.round(scale.diapason / (valuePipsNumber - 1));
+        const expectedValues = new Array(valuePipsNumber).fill(scale.range[0]).map(
+          (value, index) => {
+            const newVal = value + difference * index;
+            return newVal <= scale.range[1] ? newVal : scale.range[1];
+          },
+        );
+        expect(expectedValues).toEqual(scale.getValues());
+      });
+    });
+  });
+
+  describe('getEmptyPips()', () => {
     const expectedEmptyPips: JQuery[] = new Array(emptyPipsNumber).fill(
       Scale.getElement(classes.pip).append(Scale.getElement(classes.pipDash, 'empty')),
     );
-    expect(expectedEmptyPips[0].get(0)).toEqual(scales[0].getEmptyPips()[0].get(0));
-    expect(expectedEmptyPips.length).toBe(emptyPipsNumber);
+    test('first empty pip is correct (other is same)', () => {
+      expect(expectedEmptyPips[0].get(0)).toEqual(scales[0].getEmptyPips()[0].get(0));
+    });
+    test('length of empty pips is equal number of empty pips', () => {
+      expect(expectedEmptyPips.length).toBe(emptyPipsNumber);
+    });
   });
 
-  test('getEmptyValues()', () => {
+  describe('getEmptyValues()', () => {
     scales.forEach((scale) => {
-      const expectEmptyValues: number[] = [];
-      scale.values.forEach((value, index) => {
-        const isNotLast = index !== scale.values.length - 1;
-        if (isNotLast) {
-          const difference = (scale.values[index + 1] - value) / (emptyPipsNumber + 1);
-          new Array(emptyPipsNumber)
-            .fill(difference)
-            .forEach((val, i) => expectEmptyValues.push(Math.round(value + val * (i + 1))));
+      test(`scales[${scales.indexOf(scale)}] was got correct values of empty pips`, () => {
+        const expectEmptyValues: number[] = [];
+        scale.values.forEach((value, index) => {
+          const isNotLast = index !== scale.values.length - 1;
+          if (isNotLast) {
+            const difference = (scale.values[index + 1] - value) / (emptyPipsNumber + 1);
+            new Array(emptyPipsNumber)
+              .fill(difference)
+              .forEach((val, i) => expectEmptyValues.push(Math.round(value + val * (i + 1))));
+          }
+        });
+        expect(expectEmptyValues).toEqual(scale.getEmptyValues());
+      });
+    });
+  });
+
+  describe('getValuePips()', () => {
+    scales.forEach((scale) => {
+      describe(`scales[${scales.indexOf(scale)}]`, () => {
+        const expectValuePips = scale.values.map(() => {
+          const $dash = Scale.getElement(classes.pipDash);
+          const $pipValue = Scale.getElement(`${classes.pipValue} js-${classes.pipValue}`);
+          return Scale.getElement(classes.pip).append(
+            scale.orientation === 'horizontal' ? [$dash, $pipValue] : [$pipValue, $dash],
+          );
+        });
+        const receivedValuePips = scale.getValuePips();
+        expectValuePips.forEach((expectValuePip, index) => {
+          test(`valuePip[${index}] is correct`, () => {
+            expect(expectValuePip.get(0)).toEqual(receivedValuePips[index].get(0));
+          });
+        });
+      });
+    });
+  });
+
+  describe('getPositionByValue(value)', () => {
+    scales.forEach((scale) => {
+      test(`scales[${scales.indexOf(scale)}] return position by value correct`, () => {
+        const testValue = makeRandomNumber(scale.range[0], scale.range[1]);
+        const testPosition = (testValue - scale.range[0]) / (scale.range[1] - scale.range[0]);
+        const expectPosition = Math.round(testPosition * 1e6) / 1e4;
+        expect(expectPosition).toBe(scale.getPositionByValue(testValue));
+      });
+    });
+  });
+
+  describe('setPipPosition($pip, value)', () => {
+    scales.forEach((scale) => {
+      test(`scales[${scales.indexOf(scale)}] set correct position in element style`, () => {
+        const $testPip = jQuery('<div></div>');
+        const testValue = makeRandomNumber(scale.range[0], scale.range[1]);
+        const attribute = `${scale.orientation === 'horizontal' ? 'left' : 'top'}`;
+        const expectedStyle = `${attribute}: ${scale.getPositionByValue(testValue)}%;`;
+        scale.setPipPosition($testPip, testValue);
+        expect(expectedStyle).toBe($testPip.attr('style'));
+      });
+    });
+  });
+
+  describe('setOrientation(orientation)', () => {
+    orientations.forEach((orientation) => {
+      test(`${orientation} orientation set correct`, () => {
+        scales[1].setOrientation(orientation);
+        expect(scales[1].$element.hasClass(`${classes.root}_${orientation}`)).toBe(true);
+      });
+    });
+  });
+
+  describe('updatePips()', () => {
+    scales.forEach((scale) => {
+      describe(`scales[${scales.indexOf(scale)}]`, () => {
+        const attr = scale.orientation === 'horizontal' ? 'left' : 'top';
+        test('empty pips length grater than emptyPipsNumber', () => {
+          expect(scale.emptyPips.length).toBeGreaterThan(emptyPipsNumber);
+        });
+        scale.emptyPips.forEach(($pip, index) => {
+          test(`emptyPips[${index}] style is correct`, () => {
+            const expectStyle = `${attr}: ${scale.getPositionByValue(scale.emptyValues[index])}%;`;
+            expect(expectStyle).toBe($pip.attr('style'));
+          });
+        });
+        scale.valuePips.forEach(($pip, index) => {
+          test(`valuePips[${index}] style is correct`, () => {
+            const expectStyle = `${attr}: ${scale.getPositionByValue(scale.values[index])}%;`;
+            expect(expectStyle).toBe($pip.attr('style'));
+          });
+        });
+      });
+    });
+  });
+
+  describe('drawPips()', () => {
+    scales.forEach((scale) => {
+      describe(`scales[${scales.indexOf(scale)}]`, () => {
+        scale.valuePips.forEach(($pip, index) => {
+          test(`valuePips[${index}] was draw`, () => {
+            expect(scale.$element.find($pip).length).toBeGreaterThan(0);
+          });
+        });
+        scale.emptyPips.forEach(($pip, index) => {
+          test(`valuePips[${index}] was draw`, () => {
+            expect(scale.$element.find($pip).length).toBeGreaterThan(0);
+          });
+        });
+        test('pips amount is correct', () => {
+          const pipAmount = valuePipsNumber + valuePipsNumber * emptyPipsNumber - emptyPipsNumber;
+          expect(pipAmount).toBe(scale.$element.children().length);
+        });
+      });
+    });
+  });
+
+  describe('updateScale(newRange, newOrientation?)', () => {
+    scales.forEach((scale) => {
+      describe(`scales[${scales.indexOf(scale)}]`, () => {
+        const newRange: ConfigRange = [
+          makeRandomNumber(-1e4, -1e3),
+          makeRandomNumber(1e3, 1e4),
+        ];
+        const oppositeOrientation = scale.orientation === 'horizontal' ? 'vertical' : 'horizontal';
+        const newOrientation = makeRandomNumber(0, 1)
+          ? oppositeOrientation
+          : undefined;
+        let spies = {
+          getDiapason: jest.spyOn(scale, 'getDiapason'),
+          getValues: jest.spyOn(scale, 'getValues'),
+          getEmptyValues: jest.spyOn(scale, 'getEmptyValues'),
+          updatePips: jest.spyOn(scale, 'updatePips'),
+          setOrientation: jest.spyOn(scale, 'setOrientation'),
+        };
+        beforeEach(() => {
+          spies = {
+            getDiapason: jest.spyOn(scale, 'getDiapason'),
+            getValues: jest.spyOn(scale, 'getValues'),
+            getEmptyValues: jest.spyOn(scale, 'getEmptyValues'),
+            updatePips: jest.spyOn(scale, 'updatePips'),
+            setOrientation: jest.spyOn(scale, 'setOrientation'),
+          };
+          scale.updateScale(newRange, newOrientation);
+        });
+        afterEach(() => {
+          $.each(spies, (_, spy) => {
+            spy.mockReset().mockRestore();
+          });
+        });
+        test('getDiapason() was called', () => {
+          expect(spies.getDiapason).toBeCalled();
+        });
+        test('getEmptyValues() was called', () => {
+          expect(spies.getEmptyValues).toBeCalled();
+        });
+        test('getValues() was called', () => {
+          expect(spies.getValues).toBeCalled();
+        });
+        test('updatePips() was called', () => {
+          expect(spies.updatePips).toBeCalled();
+        });
+        if (newOrientation) {
+          test(`newOrientation: ${newOrientation}. setOrientation(...) was called`, () => {
+            expect(spies.setOrientation).toBeCalled();
+          });
+        } else {
+          test(`newOrientation: ${newOrientation}. setOrientation(...) was NOT called`, () => {
+            expect(spies.setOrientation).not.toBeCalled();
+          });
         }
       });
-      expect(expectEmptyValues).toEqual(scale.getEmptyValues());
     });
   });
 
-  test('getValuePips()', () => {
+  describe('handlerValuePipClick(event)', () => {
     scales.forEach((scale) => {
-      const expectValuePips = scale.values.map(() => {
-        const $dash = Scale.getElement(classes.pipDash);
-        const $pipValue = Scale.getElement(`${classes.pipValue} js-${classes.pipValue}`);
-        return Scale.getElement(classes.pip).append(
-          scale.orientation === 'horizontal' ? [$dash, $pipValue] : [$pipValue, $dash],
-        );
+      test(`scales[${scales.indexOf(scale)}]: callback value is as expected`, () => {
+        const randomIndex = makeRandomNumber(0, scale.valuePips.length - 1);
+        const correctIndex = randomIndex <= scale.valuePips.length - 1
+          ? randomIndex
+          : scale.valuePips.length - 1;
+        if (makeRandomNumber(0, 1)) {
+          scale.valuePips[correctIndex].find(`.js-${classes.pipValue}`).click();
+        } else {
+          scale.valuePips[correctIndex].click();
+        }
+        setTimeout(() => {
+          expect(callbackValue).toBe(scale.values[correctIndex]);
+        }, 15);
       });
-      const receivedValuePips = scale.getValuePips();
-      expectValuePips.forEach((expectValuePip, index) => {
-        expect(expectValuePip.get(0)).toEqual(receivedValuePips[index].get(0));
-      });
-    });
-  });
-
-  test('getPositionByValue(value)', () => {
-    scales.forEach((scale) => {
-      const testValue = makeRandomNumber(scale.range[0], scale.range[1]);
-      const testPosition = (testValue - scale.range[0]) / (scale.range[1] - scale.range[0]);
-      const expectPosition = Math.round(testPosition * 1e6) / 1e4;
-      expect(expectPosition).toBe(scale.getPositionByValue(testValue));
-    });
-  });
-
-  test('setPipPosition($pip, value)', () => {
-    scales.forEach((scale) => {
-      const $testPip = jQuery('<div></div>');
-      const testValue = makeRandomNumber(scale.range[0], scale.range[1]);
-      const attribute = `${scale.orientation === 'horizontal' ? 'left' : 'top'}`;
-      const expectedStyle = `${attribute}: ${scale.getPositionByValue(testValue)}%;`;
-      scale.setPipPosition($testPip, testValue);
-      expect(expectedStyle).toBe($testPip.attr('style'));
-    });
-  });
-
-  test('setOrientation(orientation)', () => {
-    orientations.forEach((orientation) => {
-      scales[1].setOrientation(orientation);
-      expect(scales[1].$element.hasClass(`${classes.root}_${orientation}`));
-    });
-  });
-
-  test('updatePips()', () => {
-    scales.forEach((scale) => {
-      const attr = scale.orientation === 'horizontal' ? 'left' : 'top';
-      expect(scale.emptyPips.length).toBeGreaterThan(emptyPipsNumber);
-      scale.emptyPips.forEach(($pip, index) => {
-        const expectStyle = `${attr}: ${scale.getPositionByValue(scale.emptyValues[index])}%;`;
-        expect(expectStyle).toBe($pip.attr('style'));
-      });
-      scale.valuePips.forEach(($pip, index) => {
-        const expectStyle = `${attr}: ${scale.getPositionByValue(scale.values[index])}%;`;
-        expect(expectStyle).toBe($pip.attr('style'));
-      });
-    });
-  });
-
-  test('drawPips()', () => {
-    scales.forEach((scale) => {
-      scale.valuePips.forEach(($pip) => {
-        expect(scale.$element.find($pip).length).toBeGreaterThan(0);
-      });
-      scale.emptyPips.forEach(($pip) => {
-        expect(scale.$element.find($pip).length).toBeGreaterThan(0);
-      });
-      const pipAmount = valuePipsNumber + valuePipsNumber * emptyPipsNumber - emptyPipsNumber;
-      expect(pipAmount).toBe(scale.$element.children().length);
-    });
-  });
-
-  test('updateScale(newRange, newOrientation?)', () => {
-    scales.forEach((scale) => {
-      const newRange: ConfigRange = [
-        makeRandomNumber(-1e4, -1e3),
-        makeRandomNumber(1e3, 1e4),
-      ];
-      const oppositeOrientation = scale.orientation === 'horizontal' ? 'vertical' : 'horizontal';
-      const newOrientation = makeRandomNumber(0, 1)
-        ? oppositeOrientation
-        : undefined;
-      const spyGetDiapason = jest.spyOn(scale, 'getDiapason');
-      const spyGetValues = jest.spyOn(scale, 'getValues');
-      const spyGetEmptyValues = jest.spyOn(scale, 'getEmptyValues');
-      const spyUpdatePips = jest.spyOn(scale, 'updatePips');
-      const spySetOrientation = jest.spyOn(scale, 'setOrientation');
-      scale.updateScale(newRange, newOrientation);
-      expect(spyGetDiapason).toBeCalled();
-      expect(spyGetValues).toBeCalled();
-      expect(spyGetEmptyValues).toBeCalled();
-      expect(spyUpdatePips).toBeCalled();
-      if (newOrientation) {
-        expect(spySetOrientation).toBeCalled();
-      } else {
-        expect(spySetOrientation).not.toBeCalled();
-      }
-    });
-  });
-
-  test('handlerValuePipClick(event)', () => {
-    scales.forEach((scale) => {
-      const randomIndex = makeRandomNumber(0, scale.valuePips.length - 1);
-      const correctIndex = randomIndex <= scale.valuePips.length - 1
-        ? randomIndex
-        : scale.valuePips.length - 1;
-      if (makeRandomNumber(0, 1)) {
-        scale.valuePips[correctIndex].find(`.js-${classes.pipValue}`).click();
-      } else {
-        scale.valuePips[correctIndex].click();
-      }
-      setTimeout(() => {
-        expect(callbackValue).toBe(scale.values[correctIndex]);
-      }, 15);
     });
   });
 });
