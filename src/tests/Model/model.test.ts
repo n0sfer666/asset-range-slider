@@ -17,8 +17,8 @@ describe('Model', () => {
   let testValues: PointerValue = [NaN];
   let testIndex: number = NaN;
   const testCallback: ModelCallback = (modelData) => {
-    testPositions = [...modelData.positions];
-    testValues = [...modelData.values];
+    testPositions = JSON.parse(JSON.stringify(modelData.positions));
+    testValues = JSON.parse(JSON.stringify(modelData.values));
     testIndex = modelData.index;
   };
 
@@ -282,28 +282,37 @@ describe('Model', () => {
             const { values, step } = testModel.getConfig();
             const { activePointerIndex } = viewData;
             const newValue = testModel.getNewValue(viewData);
-            const leftBoundary = values[activePointerIndex] - (step / 2);
-            const rightBoundary = values[activePointerIndex] + (step / 2);
-            const isOutOfBoundary = newValue >= rightBoundary || newValue <= leftBoundary;
+            const leftStep = values[activePointerIndex] - (step / 2);
+            const rightStep = values[activePointerIndex] + (step / 2);
+            const isOutOfStep = newValue >= rightStep || newValue <= leftStep;
+            let isNotOutOfRange = newValue >= range[0] && newValue <= range[1];
+            if (typeof (values[1]) === 'number') {
+              isNotOutOfRange = activePointerIndex === 0
+                ? newValue >= range[0] && newValue < values[1]
+                : newValue > values[0] && newValue <= range[1];
+            }
             const resultValue = Math.round(newValue / step) * step;
-            test('activePointerIndex is as expected', () => {
+            const expectedValues = [...testModel.getConfig().values];
+            const expectedPositions = [...testModel.getPosition()];
+            if (isOutOfStep && isNotOutOfRange) {
+              expectedValues[activePointerIndex] = resultValue;
+              expectedPositions[activePointerIndex] = testModel.getPositionFromValue(resultValue);
+            }
+            beforeEach(() => {
               testModel.updateByView(viewData);
-              expect(activePointerIndex).toBe(testIndex);
+            });
+            test('activePointerIndex is as expected', () => {
+              expect(testIndex).toBe(activePointerIndex);
             });
             test('values is as expected', () => {
-              let expectedValues = [...testModel.getConfig().values];
-              if (isOutOfBoundary) {
-                expectedValues[activePointerIndex] = resultValue;
-              }
-              testModel.updateByView(viewData);
-              expect(testValues).toEqual(expectedValues);
+              setTimeout(() => {
+                expect(testValues).toEqual(expectedValues);
+              }, 5);
             });
             test('positions is as expected', () => {
-              let expectedPositions = testModel.getPosition();
-              if (isOutOfBoundary) {
-                expectedPositions[activePointerIndex] = testModel.getPositionFromValue(resultValue);
-              }
-              expect(testPositions).toEqual(expectedPositions);
+              setTimeout(() => {
+                expect(testPositions).toEqual(expectedPositions);
+              }, 5);
             });
           });
         });

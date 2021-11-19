@@ -122,16 +122,20 @@ class Model {
   }
 
   setValueAndPosition(newValue: number, index: number) {
-    const leftBoundary = this.config.values[index] - (this.config.step / 2);
-    const rightBoundary = this.config.values[index] + (this.config.step / 2);
-    const isOutOfBoundary = newValue >= rightBoundary || newValue <= leftBoundary;
+    const leftStep = this.config.values[index] - (this.config.step / 2);
+    const rightStep = this.config.values[index] + (this.config.step / 2);
+    const isOutOfStep = newValue >= rightStep || newValue <= leftStep;
+    let isNotOutOfRange = newValue >= this.config.range[0] && newValue <= this.config.range[1];
+    if (typeof (this.config.values[1]) === 'number') {
+      isNotOutOfRange = index === 0
+        ? newValue >= this.config.range[0] && newValue < this.config.values[1]
+        : newValue > this.config.values[0] && newValue >= this.config.range[1];
+    }
     const resultValue = Math.round(newValue / this.config.step) * this.config.step;
 
-    if (isOutOfBoundary) {
+    if (isOutOfStep && isNotOutOfRange) {
       this.config.values[index] = resultValue;
-      this.positions = <PointerPosition> this.config.values.map(
-        (value) => this.getPositionFromValue(value),
-      );
+      this.positions[index] = this.getPositionFromValue(resultValue);
     }
   }
 
