@@ -18,10 +18,14 @@ describe('simpleRangeSliderJQ.ts', () => {
     $container.removeData();
   });
 
-  test('create with empty config', () => {
+  describe('create with empty config', () => {
     const instance: Presenter = $container.simpleRangeSlider().data('SimpleRangeSlider');
-    expect(instance instanceof Presenter).toBe(true);
-    expect(instance.getConfig()).toEqual(defaultConfig);
+    test('slider is instance of Presenter', () => {
+      expect(instance instanceof Presenter).toBe(true);
+    });
+    test('slider.config is equal defaultConfig', () => {
+      expect(instance.getConfig()).toEqual(defaultConfig);
+    });
   });
 
   test('create with config from .data()', () => {
@@ -38,7 +42,6 @@ describe('simpleRangeSliderJQ.ts', () => {
       $container.data(key, testConfig[key]);
     });
     const instance: Presenter = $container.simpleRangeSlider().data('SimpleRangeSlider');
-    expect(instance instanceof Presenter).toBe(true);
     expect(instance.getConfig()).toEqual(testConfig);
   });
 });
