@@ -12,14 +12,11 @@
 $(container).simpleRangeSlider({
   orientation: 'horizontal' | 'vertical',
   range: [leftBorder: number, rightBorder: number],
-  start: [startValue: number] | [leftStartValue: number, rightStartValue: number],
+  value: [startValue: number] | [leftStartValue: number, rightStartValue: number],
   step: number,
-  tooltip: boolean,
-  connect: boolean,
-  scale: boolean,
-  input: {
-    values: [leftPointer: JQuery, rightPointer: JQuery],
-  }
+  withTooltip: boolean,
+  withConnect: boolean,
+  withScale: boolean
 });
 ```
 Пример
@@ -27,17 +24,17 @@ $(container).simpleRangeSlider({
 $(container).simpleRangeSlider({
   orientation: 'horizontal',
   range: [-100, 100],
-  start:[0],
+  value: [0],
   step: 1,
-  tooltip: true,
-  connect: true,
-  scale: true,
+  withTooltip: true,
+  withConnect: true,
+  withScale: true,
 });
 ```
 2) HTML
 index.html
 ```html
-<div class="slider-container js-slider-container" data-orientation="horizontal" data-start="10" data-range="0,100" data-step="1" data-connect="true" data-tooltip="true" data-scale="true">
+<div class="slider-container js-slider-container" data-orientation="horizontal" data-value="10" data-range="0,100" data-step="1" data-withConnect="true" data-withTooltip="true" data-withScale="true">
 </div>
 ```
 index.ts(.js)
