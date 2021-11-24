@@ -48,15 +48,14 @@ $('.js-slider-container').simpleRangeSlider({});
 Содержит бизнес-логику, ничего не знает о других слоях.
 ### (V)iew (passive)
 Управляет отображением плагина и взаимодействием с пользователем. Ничего не знает о других слоях.
-### (C)Controller (Presenter)
+### (C)ontroller (Presenter)
 Главный слой. Обеспечивает взаимодействие между **(M)** и **(V)**. Позволяет получить актуальную версию конфигурации и обновлять слайдер.
 
 
 ### SimpleRangeSliderJQ
 Расширяет JQuery методами:  
- - simpleRangeSlider(config) - создаёт инстанс плагина и возвращает jQuery-объект
- - getConfig() - возвращает jQuery-объект с актуальным конфигом в .data('config')
- - updateSlider(config) - обновляет настройки плагина
+ - simpleRangeSlider(config?) - создаёт инстанс и возвращает jQuery-объект
+ > сам инстанс находится в .data('SimpleRangeSlider')
 
 ## Типы и интерфейсы
 <details><summary>Типы</summary>
