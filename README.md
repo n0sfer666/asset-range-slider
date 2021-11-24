@@ -66,34 +66,19 @@ type ConfigOrientation = 'horizontal' | 'vertical';
 type ConfigRange = [number, number];
 type PointerValue = [number] | [number, number];
 type PointerPosition = PointerValue;
-type ConfigInputs = {
-  values?: JQuery[],
-};
-type PointerCssValues = {
-  attribute: string,
-  value: string
-};
-type ViewData = {
+interface SliderData extends ObjectKeyString {
   position?: number,
+  positions: PointerPosition,
   value?: number,
-  index: number
-};
-type PointerData = {
-  position: number,
-  index: number
-};
-type ScaleData = {
-  value: number,
-};
-type InputTextData = {
-  value: number,
-  index: number
-};
-type ModelData = {
   values: PointerValue,
-  positions: PointerValue,
-  index: number
-};
+  index: number,
+  activePointerIndex: number
+}
+type ViewData = Pick<SliderData, 'position' | 'value' | 'activePointerIndex'>;
+type PointerData = Required<Pick<SliderData, 'position' | 'index'>>;
+type ScaleData = Required<Pick<SliderData, 'value'>>;
+type InputTextData = Required<Pick<SliderData, 'value' | 'index'>>;
+type ModelData = Pick<SliderData, 'positions' | 'values' | 'index'>;
 ```
 
 </p></details>
@@ -107,45 +92,17 @@ interface ObjectKeyString {
 }
 interface UserConfigList extends ObjectKeyString {
   orientation?: ConfigOrientation;
-  start?: PointerValue;
+  values?: PointerValue;
   range?: ConfigRange;
   step?: number;
-  connect?: boolean;
-  tooltip?: boolean;
-  scale?: boolean;
-  input?: ConfigInputs;
+  withConnect?: boolean;
+  withTooltip?: boolean;
+  withScale?: boolean;
 }
-interface CompleteConfigList extends ObjectKeyString {
-  orientation: ConfigOrientation;
-  start: PointerValue;
-  range: ConfigRange;
-  step: number;
-  connect: boolean;
-  tooltip: boolean;
-  scale: boolean;
-  input?: ConfigInputs;
+interface CompleteConfigList extends Required<UserConfigList> {
 }
-interface ModelConfigList extends ObjectKeyString {
-  start: PointerValue;
-  range: ConfigRange;
-  step: number;
-}
-interface ViewConfigList extends ObjectKeyString {
-  orientation: ConfigOrientation,
-  connect: boolean;
-  tooltip: boolean;
-  scale: boolean;
-  input?: ConfigInputs;
-}
-interface ViewUpdateList extends ObjectKeyString {
-  positions?: PointerValue,
-  values?: PointerValue,
-  range?: ConfigRange,
-  orientation?: ConfigOrientation,
-  connect?: boolean;
-  tooltip?: boolean;
-  scale?: boolean;
-  input?: ConfigInputs;
+interface ViewUpdateList extends Omit<CompleteConfigList, 'step'> {
+  positions: PointerPosition,
 }
 interface ViewCallback {
   (viewData: ViewData): void
@@ -163,13 +120,13 @@ interface ModelCallback {
   (modelData: ModelData): void
 }
 interface JQuery {
-  simpleRangeSlider(config: UserConfigList): JQuery
-  getSliderConfig(): JQuery
-  getSliderInstance(): JQuery
-  updateSlider(config: UserConfigList): JQuery
+  simpleRangeSlider(config?: UserConfigList): JQuery
 }
-
-
+interface ViewEntities extends ObjectKeyString {
+  pointers: Pointer[],
+  connect?: Connect | null,
+  scale?: Scale | null,
+}
 ```
 
 </p></details>
