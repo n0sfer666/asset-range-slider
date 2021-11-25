@@ -135,6 +135,6 @@ interface ViewEntities extends ObjectKeyString {
 <details><summary>диаграмма</summary>
 <p>
  
- ![slider](https://user-images.githubusercontent.com/21785370/130793602-c9b9b5b9-90e5-4018-b10f-2c161d91bec9.png)
- 
+ ![slider](https://user-images.githubusercontent.com/21785370/143451297-f49a587e-c458-4ff9-85ed-c9b70f69b5a2.png)
+
  </p></details>
