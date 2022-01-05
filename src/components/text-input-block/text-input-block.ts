@@ -78,6 +78,25 @@ class TextInput {
     }
   }
 
+  handleDocumentMousedown() {
+    $(document).on('mousemove', this.handleDocumentMousemove)
+      .on('mouseup', TextInput.handleDocumentMouseup);
+  }
+
+  handleDocumentMousemove() {
+    this.inputs.forEach((input, index) => {
+      if (Array.isArray(this.configurationValue)) {
+        input.val(this.configurationValue[index]);
+      } else {
+        input.val(this.configurationValue);
+      }
+    });
+  }
+
+  static handleDocumentMouseup() {
+    $(document).off('mousemove').off('mouseup');
+  }
+
   updateSlider(value: number | ConfigRange | PointerValue) {
     this.sliderInstance.updateSlider({ [this.configurationName]: value });
     this.sliderConfig = this.sliderInstance.getConfig();
@@ -85,13 +104,16 @@ class TextInput {
 
   bindHandlers() {
     this.inputs.forEach((input) => {
-      $(input).on('focusout', this.handleInputFocusOut);
-      $(input).on('mouseout', this.handleInputFocusOut);
+      $(input).on('focusout', this.handleInputFocusOut)
+        .on('mouseout', this.handleInputFocusOut);
     });
+    $(document).on('mousedown', this.handleDocumentMousedown);
   }
 
   bindContext() {
     this.handleInputFocusOut = this.handleInputFocusOut.bind(this);
+    this.handleDocumentMousemove = this.handleDocumentMousemove.bind(this);
+    this.handleDocumentMousedown = this.handleDocumentMousedown.bind(this);
   }
 
   blinkInputAndReturnPreviousValue($input: JQuery, previousValue: number, index: number) {
