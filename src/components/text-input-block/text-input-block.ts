@@ -1,5 +1,6 @@
 import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
 import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
+import { TextInputBlockEvent } from './types';
 
 const classes = {
   input: 'text-input-block__input',
@@ -48,7 +49,7 @@ class TextInput {
     });
   }
 
-  handleInputFocusOut(event: JQuery.FocusOutEvent) {
+  handleInputFocusOut(event: TextInputBlockEvent) {
     this.sliderConfig = this.sliderInstance.getConfig();
     const $target = $(event.target);
     const value = Number($target.val());
@@ -85,6 +86,7 @@ class TextInput {
   bindHandlers() {
     this.inputs.forEach((input) => {
       $(input).on('focusout', this.handleInputFocusOut);
+      $(input).on('mouseout', this.handleInputFocusOut);
     });
   }
 
