@@ -1,7 +1,14 @@
-function importAll(r: any) {
-  r.keys().forEach(r);
-}
-importAll(require.context('./style', true, /\.scss/));
-importAll(require.context('./components', true, /\.scss/));
-importAll(require.context('./pages', true, /\.scss/));
-importAll(require.context('./components', true, /-init\.ts/));
+import Presenter from './SimpleRangeSlider/Presenter/Presenter';
+import './SimpleRangeSlider/SimpleRangeSliderJQ';
+
+const jQuery = require('jquery');
+
+const $ = jQuery;
+
+const slider = Presenter;
+
+export {
+  slider,
+  jQuery,
+  $,
+};

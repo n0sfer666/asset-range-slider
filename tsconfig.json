@@ -4,6 +4,7 @@
     "removeComments": true,
     "strict": true,
     "alwaysStrict": true,
+    "declaration": true,
     "strictPropertyInitialization": false,
     "sourceMap": true,
   },
