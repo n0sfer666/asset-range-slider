@@ -4,7 +4,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-module.exports = (_, argv) => {
+module.exports = (env, argv) => {
   const config = {
     target: 'web',
     stats: 'errors-only',
@@ -12,7 +12,7 @@ module.exports = (_, argv) => {
       extensions: ['.ts', '.js'],
     },
     entry: argv.mode === 'production'
-    ? { index: './src/index.ts' }
+    ? { index: `./src/${env.type === 'jQuery' ? 'jQuery' : 'index'}.ts` }
     : { index: './src/demo.ts' },
     module: {
       rules: [
@@ -45,10 +45,13 @@ module.exports = (_, argv) => {
       },
       globalObject: 'this',
     }
+    if (env.type === 'js') {
+        config.output.library.export = 'default';
+    }
     config.plugins.push(
       new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: './src/pages/production/index.pug',
+        template: `./src/pages/production/${env.type === 'js' ? 'js' : 'jQuery'}/index.pug`,
       }),
     )
   } else {
@@ -56,7 +59,7 @@ module.exports = (_, argv) => {
       filename: 'index.js',
       path: path.resolve(__dirname, './demo'),
     };
-    config.devtool = 'eval';
+    config.devtool = 'source-map';
     config.performance = {
       hints: false,
     }
