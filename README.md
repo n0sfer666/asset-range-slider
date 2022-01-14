@@ -1,6 +1,8 @@
 # Simple Range Slider
  - установка: **npm run i**  
- - запуск: **npm run start**  
+ - запуск: **npm run start** 
+ - сборка плагина в JS: **npm run build**  
+ - сборка плагина в jQuery: **npm run build:jQuery** 
  - тесты: **npm run test**  
  - линтер: **npm run lint**  
  - линтер (с автофиксом) : **npm run lint:fix**
