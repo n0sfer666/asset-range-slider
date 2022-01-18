@@ -4,6 +4,7 @@ import getRadioBlocks from '../radio-block/getRadioBlocks';
 import RadioBlock from '../radio-block/radio-block';
 import TextInput from '../text-input-block/text-input-block';
 import getTextInputBlocks from '../text-input-block/getTextInputBlocks';
+import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
 
 const classes = {
   root: 'demo-panel',
@@ -26,6 +27,7 @@ class DemoPanel {
     this.$mainContainer = $container;
     this.initContainers();
     this.$sliderContainer.simpleRangeSlider();
+    this.bindContext();
     this.initBlocks();
   }
 
@@ -51,6 +53,26 @@ class DemoPanel {
       this.getSecondValue(),
       this.$sliderContainer,
     );
+    const instance: Presenter = this.$sliderContainer.data('SimpleRangeSlider');
+    instance.updateSlider({}, this.callbackValueInputChange);
+  }
+
+  callbackValueInputChange(modelData: ModelData) {
+    const { values, index } = modelData;
+    const value = values[index];
+    const valueInputs: JQuery[] = [];
+    this.textInputBlocks.forEach((block) => {
+      if (block.configurationName === 'values') {
+        block.inputs.forEach((input) => valueInputs.push(input));
+      }
+    });
+    if (typeof value === 'number') {
+      valueInputs[index].val(value);
+    }
+  }
+
+  bindContext() {
+    this.callbackValueInputChange = this.callbackValueInputChange.bind(this);
   }
 }
 

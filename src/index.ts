@@ -2,7 +2,7 @@ import Presenter from './SimpleRangeSlider/Presenter/Presenter';
 
 const rSlider = Presenter;
 $.fn.extend({
-  simpleRangeSlider(userConfig?: UserConfigList) {
+  simpleRangeSlider(userConfig?: UserConfigList, callback?: ModelCallback) {
     const $container = <JQuery> this;
     const dataConfig: UserConfigList = {};
     $.each($container.data(), (key, value) => {
@@ -25,7 +25,7 @@ $.fn.extend({
       }
     });
     const config = <UserConfigList> { ...userConfig, ...dataConfig };
-    const slider = new Presenter(<JQuery> this, <UserConfigList> config);
+    const slider = new Presenter(<JQuery> this, <UserConfigList> config, callback || undefined);
     const completeConfig = slider.getConfig();
     Object.keys(completeConfig).forEach((key) => {
       $container.attr(`data-${key}`, completeConfig[key]).data(key, completeConfig[key]);
