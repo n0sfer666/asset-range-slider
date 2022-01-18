@@ -1,5 +1,5 @@
 import Presenter from '../SimpleRangeSlider/Presenter/Presenter';
-import '../SimpleRangeSlider/SimpleRangeSliderJQ';
+import '../index';
 
 describe('simpleRangeSliderJQ.ts', () => {
   const defaultConfig: CompleteConfigList = {

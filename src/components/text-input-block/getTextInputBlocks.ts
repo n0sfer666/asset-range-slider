@@ -1,4 +1,3 @@
-import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 import TextInput from './text-input-block';
 
 function getTextInputBlocks($mainContainer: JQuery, $sliderContainer: JQuery): TextInput[] {

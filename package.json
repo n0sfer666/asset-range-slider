@@ -34,9 +34,10 @@
     "webpack-dev-server": "^3.11.0"
   },
   "scripts": {
-    "start": "webpack --mode=development serve",
-    "build": "webpack --env type=js --mode=production && postcss src/style/main.scss -o dist/index.css",
-    "build:jQuery": "webpack --env type=jQuery --mode=production && postcss src/style/main.scss -o dist/index.css",
+    "start": "webpack --mode=development serve --env type=demo",
+    "start:clean": "webpack --mode=development serve --env type=clean",
+    "build": "webpack --env type=clean --mode=production && postcss src/style/main.scss -o dist/index.css",
+    "build:demo": "webpack --env type=demo --mode=production",
     "test": "jest --runInBand",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix"

@@ -1,4 +1,3 @@
-import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 import ControlButton from '../control-button/control-button';
 import getControlButton from '../control-button/getControlButton';
 import getRadioBlocks from '../radio-block/getRadioBlocks';

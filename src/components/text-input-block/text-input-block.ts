@@ -1,5 +1,4 @@
 import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
-import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 import { TextInputBlockEvent } from './types';
 
 const classes = {

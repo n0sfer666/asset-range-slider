@@ -1,5 +1,4 @@
 import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
-import '../../SimpleRangeSlider/SimpleRangeSliderJQ';
 
 const classes = {
   radio: 'radio-block__radio',

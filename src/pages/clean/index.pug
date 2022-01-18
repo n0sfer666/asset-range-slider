@@ -1,6 +1,5 @@
-include ../../components/demo-panel/demo-panel
 doctype html
-html(lang='en')
+html(lang="en")
   head
     meta(charset='UTF-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
@@ -14,29 +13,11 @@ html(lang='en')
     meta(name='theme-color' content='#ffffff')
     meta(name='description', content='Demonstration of Simple Range Slider plugin')
     meta(name='keywords', content='slider, rangeSlider, simpleRangeSlider')
-    title Simple Range Slider Demo Page
+    link(rel="stylesheet", href="index.css", type="text/css")
     script(
       src="https://code.jquery.com/jquery-3.6.0.min.js",
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=",
       crossorigin="anonymous",
     )
   body
-    .wrapper
-      +demo-panel({wrongParam: '-1'})
-    .wrapper
-      +demo-panel({
-        orientation: 'vertical',
-        values: '[-500,500]',
-        range: '-1000,1000',
-        step: '100',
-        })
-    .wrapper
-      +demo-panel({
-        orientation: 'vertical',
-        values: '-50, 50',
-        range: '[-100, 100]',
-        step: '10',
-        withConnect: 'false',
-        withTooltip: 'false',
-        withScale: 'false',
-        })
+    .js-container
