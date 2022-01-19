@@ -163,11 +163,12 @@ class Model {
   getViewUpdateList(config: UserConfigList): ViewUpdateList {
     this.config = this.getVerifiedConfig({ ...this.config, ...config });
     this.isSinglePointer = this.config.values.length === 1;
+    this.positions = <PointerPosition> this.config.values.map(
+      (value) => this.getPositionFromValue(value),
+    );
     return {
       ...this.config,
-      positions: <PointerPosition> this.config.values.map(
-        (value) => this.getPositionFromValue(value),
-      ),
+      positions: [...this.positions],
     };
   }
 }
