@@ -56,6 +56,7 @@ class TextInput {
     const lastValue = Array.isArray(this.configurationValue)
       ? [...this.configurationValue]
       : this.configurationValue;
+    this.configurationValue = this.sliderConfig[this.configurationName];
     if (Array.isArray(this.configurationValue)) {
       this.configurationValue[index] = value;
     } else {

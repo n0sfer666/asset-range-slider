@@ -51,8 +51,8 @@ class ControlButton {
     } = this.sliderConfig;
     const isNotEqualMaximum = values[0] < range[1];
     if (isNotEqualMaximum) {
-      const newValue = values[0] + step < range[1]
-        ? values[0] + step
+      const newValue = values[0] + (step < 5 ? 5 : step) < range[1]
+        ? values[0] + (step < 5 ? 5 : step)
         : range[1];
       this.isSinglePointer = false;
       values.push(newValue);
