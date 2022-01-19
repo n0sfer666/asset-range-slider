@@ -131,8 +131,8 @@ class Model {
     if (isOutOfBoundary) {
       if (!this.isSinglePointer && typeof values[1] === 'number') {
         const isNotOutOfRange = index === 0
-          ? resultValue >= range[0] && resultValue <= values[1]
-          : resultValue >= values[0] && resultValue <= range[1];
+          ? resultValue >= range[0] && resultValue < values[1]
+          : resultValue > values[0] && resultValue <= range[1];
         if (isNotOutOfRange) {
           values[index] = resultValue;
           this.positions[index] = this.getPositionFromValue(resultValue);
