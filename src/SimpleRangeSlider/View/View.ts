@@ -157,7 +157,6 @@ class View {
       const end = typeof positions[1] === 'number'
         ? positions[1]
         : positions[0];
-      console.log(positions);
       this.entities.connect.setPosition(start, end, this.isSinglePointer);
     }
     this.entities.pointers.forEach((pointer, i) => {

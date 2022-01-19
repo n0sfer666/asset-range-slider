@@ -49,10 +49,11 @@ class ControlButton {
     const {
       values, range, step,
     } = this.sliderConfig;
-    const newValue = step < 10
-      ? values[0] + 10
-      : values[0] + step;
-    if (newValue < range[1]) {
+    const isNotEqualMaximum = values[0] < range[1];
+    if (isNotEqualMaximum) {
+      const newValue = values[0] + step < range[1]
+        ? values[0] + step
+        : range[1];
       this.isSinglePointer = false;
       values.push(newValue);
       this.$secondValue.show().val(typeof values[1] === 'number' ? values[1] : NaN);
