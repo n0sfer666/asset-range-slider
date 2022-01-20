@@ -150,7 +150,7 @@ class Model {
   }
 
   updateByView(viewData: ViewData) {
-    const { activePointerIndex, value } = viewData;
+    const { activePointerIndex, value, position } = viewData;
     const { range, values } = this.config;
     if (typeof value === 'number') {
       let isCorrectValue = false;
@@ -167,9 +167,24 @@ class Model {
       this.positions[activePointerIndex] = this.getPositionFromValue(
         values[activePointerIndex],
       );
-    } else {
-      const newValue = this.getNewValue(viewData);
-      this.setValueAndPosition(newValue, activePointerIndex);
+    } else if (typeof position === 'number') {
+      const isNextMax = position > this.getPositionFromValue(range[1] - (this.config.step / 2));
+      const isNextMin = position < this.getPositionFromValue(range[0] + (this.config.step / 2));
+      if (isNextMin || isNextMax) {
+        if (this.isSinglePointer) {
+          this.positions[activePointerIndex] = isNextMin ? 0 : 1;
+          values[activePointerIndex] = isNextMin ? range[0] : range[1];
+        } else if (activePointerIndex === 0 && isNextMin) {
+          this.positions[activePointerIndex] = 0;
+          values[activePointerIndex] = range[0];
+        } else if (activePointerIndex === 1 && isNextMax) {
+          this.positions[activePointerIndex] = 1;
+          values[activePointerIndex] = range[1];
+        }
+      } else {
+        const newValue = this.getNewValue(viewData);
+        this.setValueAndPosition(newValue, activePointerIndex);
+      }
     }
     this.callbackList.forEach(
       (viewCallback: ModelCallback) => viewCallback({
