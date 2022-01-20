@@ -107,16 +107,18 @@ class Model {
       }
       newValue = value;
     }
-    const isFirstOfNotSinglePointer = activePointerIndex === 0 && !this.isSinglePointer;
-    if (isFirstOfNotSinglePointer && this.config.values[1]) {
-      const boundary = this.config.values[1] - this.config.step;
-      const isValueBiggerThanOther = boundary < newValue;
-      return isValueBiggerThanOther ? boundary : newValue;
-    }
-    if (activePointerIndex === 1) {
-      const boundary = this.config.values[0] + this.config.step;
-      const isValueBiggerThanOther = boundary > newValue;
-      return isValueBiggerThanOther ? boundary : newValue;
+    if (typeof position === 'number') {
+      const isFirstOfNotSinglePointer = activePointerIndex === 0 && !this.isSinglePointer;
+      if (isFirstOfNotSinglePointer && this.config.values[1]) {
+        const boundary = this.config.values[1] - this.config.step;
+        const isValueBiggerThanOther = boundary < newValue;
+        return isValueBiggerThanOther ? boundary : newValue;
+      }
+      if (activePointerIndex === 1) {
+        const boundary = this.config.values[0] + this.config.step;
+        const isValueBiggerThanOther = boundary > newValue;
+        return isValueBiggerThanOther ? boundary : newValue;
+      }
     }
     return newValue;
   }
@@ -148,9 +150,27 @@ class Model {
   }
 
   updateByView(viewData: ViewData) {
-    const { activePointerIndex } = viewData;
-    const newValue = this.getNewValue(viewData);
-    this.setValueAndPosition(newValue, activePointerIndex);
+    const { activePointerIndex, value } = viewData;
+    const { range, values } = this.config;
+    if (typeof value === 'number') {
+      let isCorrectValue = false;
+      if (typeof values[1] === 'number') {
+        if (activePointerIndex === 0) {
+          isCorrectValue = value >= range[0] && value < values[1];
+        } else {
+          isCorrectValue = value > values[0] && value <= range[1];
+        }
+      } else {
+        isCorrectValue = value >= range[0] && value <= range[1];
+      }
+      values[activePointerIndex] = isCorrectValue ? value : values[activePointerIndex];
+      this.positions[activePointerIndex] = this.getPositionFromValue(
+        values[activePointerIndex],
+      );
+    } else {
+      const newValue = this.getNewValue(viewData);
+      this.setValueAndPosition(newValue, activePointerIndex);
+    }
     this.callbackList.forEach(
       (viewCallback: ModelCallback) => viewCallback({
         index: activePointerIndex,
