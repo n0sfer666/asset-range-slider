@@ -29,7 +29,7 @@ interface UserConfigList extends ObjectKeyString {
 }
 interface CompleteConfigList extends Required<UserConfigList> {
 }
-interface ViewUpdateList extends Omit<CompleteConfigList, 'step'> {
+interface ViewUpdateList extends CompleteConfigList {
   positions: PointerPosition,
 }
 interface ViewCallback {

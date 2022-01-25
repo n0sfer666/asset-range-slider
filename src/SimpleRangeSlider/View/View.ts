@@ -82,7 +82,7 @@ class View {
   }
 
   getScale(range: ConfigRange): Scale {
-    const scaleInstance = new Scale(range, this.config.orientation);
+    const scaleInstance = new Scale(range, this.config.orientation, this.config.step);
     scaleInstance.subscribeOn(this.updateByScale);
     return scaleInstance;
   }
@@ -170,13 +170,14 @@ class View {
 
   updateView(viewUpdateList: ViewUpdateList) {
     const {
-      values, range, positions, orientation, withTooltip, withConnect, withScale,
+      values, range, positions, orientation, step, withTooltip, withConnect, withScale,
     } = viewUpdateList;
     const isOrientationChanged = orientation !== this.config.orientation;
     const isConnectChanged = withConnect !== this.config.withConnect;
     const isTooltipChanged = withTooltip !== this.config.withTooltip;
     const isScaleChanged = withScale !== this.config.withScale;
     const isRangeChanged = JSON.stringify(range) !== JSON.stringify(this.config.range);
+    const isStepChanged = step !== this.config.step;
     const isValuesChanged = JSON.stringify(values) !== JSON.stringify(this.config.values);
     const isPositionsChanged = JSON.stringify(positions) !== JSON.stringify(this.config.positions);
     if (isOrientationChanged) {
@@ -202,7 +203,12 @@ class View {
         this.entities.scale.updateScale(range, orientation);
       }
     }
-
+    if (isStepChanged) {
+      this.config.step = step;
+      if (this.entities.scale) {
+        this.entities.scale.setStep(step);
+      }
+    }
     if (isPositionsChanged) {
       this.updatePositions(positions, values);
     }
@@ -280,6 +286,7 @@ class View {
       } else {
         this.$slider.prependTo(this.$sliderContainer);
       }
+      this.entities.scale.updateScale(this.config.range);
     }
   }
 

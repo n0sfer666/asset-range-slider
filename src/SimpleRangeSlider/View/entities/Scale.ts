@@ -16,6 +16,8 @@ class Scale {
 
   orientation: ConfigOrientation;
 
+  step: number;
+
   emptyPips: JQuery[] = [];
 
   valuePips: JQuery[] = [];
@@ -28,10 +30,11 @@ class Scale {
 
   emptyValues: number[] = [];
 
-  constructor(range: ConfigRange, orientation: ConfigOrientation) {
+  constructor(range: ConfigRange, orientation: ConfigOrientation, step: number) {
     this.bindContext();
     this.orientation = orientation;
     this.range = range;
+    this.step = step;
     this.diapason = this.getDiapason();
     this.values = this.getValues();
     this.emptyValues = this.getEmptyValues();
@@ -46,6 +49,11 @@ class Scale {
       $element.addClass(`${elementClassName}_${modifier}`);
     }
     return $element;
+  }
+
+  setStep(newStep: number) {
+    this.step = newStep;
+    this.updateScale(this.range);
   }
 
   getDiapason(): number {
@@ -111,9 +119,10 @@ class Scale {
 
   getValues(): number[] {
     const difference: number = Math.round(this.diapason / (this.valuePipsNumber - 1));
+    const scaleStep = Math.round(difference / this.step) * this.step;
     return new Array(this.valuePipsNumber).fill(this.range[0]).map((value, index) => {
-      const newVal = value + difference * index;
-      return newVal <= this.range[1] ? newVal : this.range[1];
+      const newVal = value + scaleStep * index;
+      return newVal < (this.range[1] - this.step) ? newVal : this.range[1];
     });
   }
 
@@ -153,8 +162,8 @@ class Scale {
     this.emptyValues = this.getEmptyValues();
     if (newOrientation) {
       this.setOrientation(newOrientation);
-      ['left', 'top'].forEach((cssAttribute) => this.$element.children().css(cssAttribute, ''));
     }
+    ['left', 'top'].forEach((cssAttribute) => this.$element.children().css(cssAttribute, ''));
     this.updatePips();
   }
 
