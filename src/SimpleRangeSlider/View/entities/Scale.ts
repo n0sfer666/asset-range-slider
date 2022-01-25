@@ -57,7 +57,6 @@ class Scale {
 
   initElements() {
     this.$element = Scale.getElement(classes.root, this.orientation);
-    this.valuePips = this.getValuePips();
   }
 
   getValuePips(): JQuery[] {
@@ -71,6 +70,7 @@ class Scale {
   }
 
   drawPips() {
+    this.valuePips = this.getValuePips();
     this.valuePips.forEach(($valuePip) => {
       this.$element.append($valuePip);
     });
@@ -95,15 +95,26 @@ class Scale {
     const difference: number = Math.round(this.diapason / (this.maxValuePipsNumber - 1));
     const scaleStep = Math.round(difference / this.step) * this.step;
     const lastValueIndex = Math.ceil(this.diapason / scaleStep) + 1;
-    this.valuePipsNumber = lastValueIndex <= this.maxValuePipsNumber
-      ? lastValueIndex
-      : this.maxValuePipsNumber;
-    return new Array(this.valuePipsNumber)
+    const isPrettyScale = this.diapason % scaleStep === 0 && this.diapason % lastValueIndex === 0;
+    if (isPrettyScale) {
+      this.valuePipsNumber = lastValueIndex <= this.maxValuePipsNumber
+        ? lastValueIndex
+        : this.maxValuePipsNumber;
+    } else {
+      this.valuePipsNumber = lastValueIndex <= this.maxValuePipsNumber
+        ? lastValueIndex - 1
+        : this.maxValuePipsNumber;
+    }
+    const values = new Array(this.valuePipsNumber)
       .fill(this.range[0])
       .map((value, index) => {
         const newVal = value + scaleStep * index;
-        return newVal < (this.range[1] - this.step) ? newVal : this.range[1];
+        return newVal <= (this.range[1] - this.step) ? newVal : this.range[1];
       });
+    if (values[values.length - 1] < this.range[1]) {
+      values.push(this.range[1]);
+    }
+    return values;
   }
 
   getPositionByValue(value: number): number {
@@ -123,20 +134,14 @@ class Scale {
 
   updateScale(newRange: ConfigRange, newOrientation?: ConfigOrientation) {
     this.range = newRange;
-    const lastValuePipsNumber = this.valuePipsNumber;
     this.diapason = this.getDiapason();
     this.values = this.getValues();
     if (newOrientation) {
       this.setOrientation(newOrientation);
     }
-    if (lastValuePipsNumber === this.valuePipsNumber) {
-      ['left', 'top'].forEach((cssAttribute) => this.$element.children().css(cssAttribute, ''));
-      this.updatePips();
-    } else {
-      this.$element.children().remove();
-      this.drawPips();
-      this.bindHandler();
-    }
+    this.$element.children().remove();
+    this.drawPips();
+    this.bindHandler();
   }
 
   setOrientation(orientation: ConfigOrientation) {
