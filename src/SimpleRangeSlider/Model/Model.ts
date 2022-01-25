@@ -32,38 +32,30 @@ class Model {
   }
 
   getVerifiedConfig(userConfig: CompleteConfigList): CompleteConfigList {
+    const lastCorrectConfig: CompleteConfigList = this.config
+      ? this.defaultConfig
+      : this.config;
     const config: CompleteConfigList = JSON.parse(JSON.stringify(userConfig));
-    const { values, range } = userConfig;
-    config.step = config.step > 0
-      ? config.step
-      : this.defaultConfig.step;
+    const { range, values } = config;
+    const checks: boolean[] = [true];
+    if (config.step <= 0 || config.step > (range[1] - range[0])) {
+      checks.push(false);
+    }
 
-    if (typeof config.values[1] === 'number' && typeof values[1] === 'number') {
-      config.values[0] = values[0] >= range[0] && values[0] < config.values[1]
-        ? values[0]
-        : range[0];
-      config.values[1] = values[1] > values[0] && values[1] <= range[1]
-        ? values[1]
-        : range[1];
-    } else {
-      config.values[0] = values[0] >= range[0] && values[0] <= range[1]
-        ? values[0]
-        : range[0];
-    }
-    this.isSinglePointer = values.length === 1;
-    const isCorrectRange = typeof values[1] === 'number'
-      ? range[0] <= values[0] && range[1] >= values[1] && range[1] > range[0]
-      : range[0] <= values[0] && range[1] >= values[0] && range[1] > range[0];
     if (typeof values[1] === 'number') {
-      config.range = isCorrectRange
-        ? range
-        : [values[0] - 100, values[1] + 100];
-    } else {
-      config.range = isCorrectRange
-        ? range
-        : [values[0] - 100, values[0] + 100];
+      if (values[0] < range[0] || values[0] >= values[1]) {
+        checks.push(false);
+      }
+      if (values[1] <= values[0] || values[1] > range[1]) {
+        checks.push(false);
+      }
+    } else if (values[0] < range[0] || values[0] > range[1]) {
+      checks.push(false);
     }
-    return config;
+
+    return checks.reduce((previousValue, currentValue) => previousValue && currentValue)
+      ? config
+      : lastCorrectConfig;
   }
 
   getConfig(): CompleteConfigList {
