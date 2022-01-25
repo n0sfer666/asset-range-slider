@@ -6,9 +6,9 @@ const classes = {
 };
 
 class Scale {
-  readonly valuePipsNumber: number = 5;
+  readonly maxValuePipsNumber: number = 5;
 
-  readonly emptyPipsNumber: number = 2;
+  valuePipsNumber: number = NaN;
 
   $element: JQuery;
 
@@ -18,8 +18,6 @@ class Scale {
 
   step: number;
 
-  emptyPips: JQuery[] = [];
-
   valuePips: JQuery[] = [];
 
   callbackList: ScaleCallback[] = [];
@@ -28,8 +26,6 @@ class Scale {
 
   values: number[] = [];
 
-  emptyValues: number[] = [];
-
   constructor(range: ConfigRange, orientation: ConfigOrientation, step: number) {
     this.bindContext();
     this.orientation = orientation;
@@ -37,7 +33,6 @@ class Scale {
     this.step = step;
     this.diapason = this.getDiapason();
     this.values = this.getValues();
-    this.emptyValues = this.getEmptyValues();
     this.initElements();
     this.drawPips();
     this.bindHandler();
@@ -62,14 +57,7 @@ class Scale {
 
   initElements() {
     this.$element = Scale.getElement(classes.root, this.orientation);
-    this.emptyPips = this.getEmptyPips();
     this.valuePips = this.getValuePips();
-  }
-
-  getEmptyPips(): JQuery[] {
-    return new Array(this.emptyPipsNumber).fill(
-      Scale.getElement(classes.pip).append(Scale.getElement(classes.pipDash, 'empty')),
-    );
   }
 
   getValuePips(): JQuery[] {
@@ -83,31 +71,17 @@ class Scale {
   }
 
   drawPips() {
-    this.valuePips.forEach(($valuePip, index) => {
+    this.valuePips.forEach(($valuePip) => {
       this.$element.append($valuePip);
-      const isNotLast: boolean = this.valuePips.length - 1 !== index;
-      if (isNotLast) {
-        this.emptyPips.forEach(($emptyPip) => this.$element.append($emptyPip.clone()));
-      }
     });
     this.updatePips();
   }
 
   updatePips() {
-    if (this.emptyPips.length === this.emptyPipsNumber) {
-      this.emptyPips = [];
-      this.$element.children().each((_, pip) => {
-        const $pip = $(pip);
-        if ($pip.children().hasClass(`${classes.pipDash}_empty`)) {
-          this.emptyPips.push($pip);
-        }
-      });
-    }
     this.valuePips.forEach(($pip, index) => {
       this.setPipPosition($pip, this.values[index]);
       $pip.find(`.js-${classes.pipValue}`).text(this.values[index]);
     });
-    this.emptyPips.forEach(($pip, index) => this.setPipPosition($pip, this.emptyValues[index]));
   }
 
   setPipPosition($pip: JQuery, value: number) {
@@ -118,26 +92,18 @@ class Scale {
   }
 
   getValues(): number[] {
-    const difference: number = Math.round(this.diapason / (this.valuePipsNumber - 1));
+    const difference: number = Math.round(this.diapason / (this.maxValuePipsNumber - 1));
     const scaleStep = Math.round(difference / this.step) * this.step;
-    return new Array(this.valuePipsNumber).fill(this.range[0]).map((value, index) => {
-      const newVal = value + scaleStep * index;
-      return newVal < (this.range[1] - this.step) ? newVal : this.range[1];
-    });
-  }
-
-  getEmptyValues(): number[] {
-    const emptyValues: number[] = [];
-    this.values.forEach((value, index) => {
-      const isNotLast = index !== this.values.length - 1;
-      if (isNotLast) {
-        const difference = (this.values[index + 1] - value) / (this.emptyPipsNumber + 1);
-        new Array(this.emptyPipsNumber)
-          .fill(difference)
-          .forEach((val, i) => emptyValues.push(Math.round(value + val * (i + 1))));
-      }
-    });
-    return emptyValues;
+    const lastValueIndex = Math.ceil(this.diapason / scaleStep) + 1;
+    this.valuePipsNumber = lastValueIndex <= this.maxValuePipsNumber
+      ? lastValueIndex
+      : this.maxValuePipsNumber;
+    return new Array(this.valuePipsNumber)
+      .fill(this.range[0])
+      .map((value, index) => {
+        const newVal = value + scaleStep * index;
+        return newVal < (this.range[1] - this.step) ? newVal : this.range[1];
+      });
   }
 
   getPositionByValue(value: number): number {
@@ -157,14 +123,20 @@ class Scale {
 
   updateScale(newRange: ConfigRange, newOrientation?: ConfigOrientation) {
     this.range = newRange;
+    const lastValuePipsNumber = this.valuePipsNumber;
     this.diapason = this.getDiapason();
     this.values = this.getValues();
-    this.emptyValues = this.getEmptyValues();
     if (newOrientation) {
       this.setOrientation(newOrientation);
     }
-    ['left', 'top'].forEach((cssAttribute) => this.$element.children().css(cssAttribute, ''));
-    this.updatePips();
+    if (lastValuePipsNumber === this.valuePipsNumber) {
+      ['left', 'top'].forEach((cssAttribute) => this.$element.children().css(cssAttribute, ''));
+      this.updatePips();
+    } else {
+      this.$element.children().remove();
+      this.drawPips();
+      this.bindHandler();
+    }
   }
 
   setOrientation(orientation: ConfigOrientation) {
