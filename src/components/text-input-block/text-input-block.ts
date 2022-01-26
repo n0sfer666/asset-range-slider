@@ -105,7 +105,6 @@ class TextInput {
     } else {
       this.configurationValue = previousValue;
     }
-    this.updateSlider(this.configurationValue);
   }
 }
 

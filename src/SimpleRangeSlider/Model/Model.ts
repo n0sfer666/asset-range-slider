@@ -32,16 +32,15 @@ class Model {
   }
 
   getVerifiedConfig(userConfig: CompleteConfigList): CompleteConfigList {
-    const lastCorrectConfig: CompleteConfigList = this.config
-      ? this.defaultConfig
-      : this.config;
+    const lastCorrectConfig: CompleteConfigList = this.config === undefined
+      ? JSON.parse(JSON.stringify(this.defaultConfig))
+      : JSON.parse(JSON.stringify(this.config));
     const config: CompleteConfigList = JSON.parse(JSON.stringify(userConfig));
     const { range, values } = config;
     const checks: boolean[] = [true];
     if (config.step <= 0 || config.step > (range[1] - range[0])) {
       checks.push(false);
     }
-
     if (typeof values[1] === 'number') {
       if (values[0] < range[0] || values[0] >= values[1]) {
         checks.push(false);
@@ -52,14 +51,16 @@ class Model {
     } else if (values[0] < range[0] || values[0] > range[1]) {
       checks.push(false);
     }
-
-    return checks.reduce((previousValue, currentValue) => previousValue && currentValue)
+    const result: CompleteConfigList = checks.reduce(
+      (previousValue, currentValue) => previousValue && currentValue,
+    )
       ? config
       : lastCorrectConfig;
+    return result;
   }
 
   getConfig(): CompleteConfigList {
-    return this.config;
+    return JSON.parse(JSON.stringify(this.config));
   }
 
   subscribeOn(callback: ModelCallback) {
