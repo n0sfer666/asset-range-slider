@@ -10,10 +10,13 @@ describe('Scale', () => {
   };
   const valuePipsNumber = 5;
 
-  const emptyPipsNumber = 2;
   const orientations: ConfigOrientation[] = ['horizontal', 'vertical'];
+  const ranges: ConfigRange[] = orientations.map(
+    (_) => ([makeRandomNumber(-1e6, -1e4), makeRandomNumber(1e4, 1e6)]),
+  );
+  const steps: number[] = ranges.map((range) => makeRandomNumber(1, (range[1] / 2)));
   const scales: Scale[] = orientations.map(
-    (orientation, index) => new Scale([-((index + 1) * 1e3), (index + 1) * 1e3], orientation),
+    (orientation, index) => new Scale(ranges[index], orientation, steps[index]),
   );
   let callbackValue = NaN;
   const testCallback: ScaleCallback = (scaleData) => {
@@ -64,37 +67,9 @@ describe('Scale', () => {
             return newVal <= scale.range[1] ? newVal : scale.range[1];
           },
         );
-        expect(expectedValues).toEqual(scale.getValues());
-      });
-    });
-  });
-
-  describe('getEmptyPips()', () => {
-    const expectedEmptyPips: JQuery[] = new Array(emptyPipsNumber).fill(
-      Scale.getElement(classes.pip).append(Scale.getElement(classes.pipDash, 'empty')),
-    );
-    test('first empty pip is correct (other is same)', () => {
-      expect(expectedEmptyPips[0].get(0)).toEqual(scales[0].getEmptyPips()[0].get(0));
-    });
-    test('length of empty pips is equal number of empty pips', () => {
-      expect(expectedEmptyPips.length).toBe(emptyPipsNumber);
-    });
-  });
-
-  describe('getEmptyValues()', () => {
-    scales.forEach((scale) => {
-      test(`scales[${scales.indexOf(scale)}] was got correct values of empty pips`, () => {
-        const expectEmptyValues: number[] = [];
-        scale.values.forEach((value, index) => {
-          const isNotLast = index !== scale.values.length - 1;
-          if (isNotLast) {
-            const difference = (scale.values[index + 1] - value) / (emptyPipsNumber + 1);
-            new Array(emptyPipsNumber)
-              .fill(difference)
-              .forEach((val, i) => expectEmptyValues.push(Math.round(value + val * (i + 1))));
-          }
-        });
-        expect(expectEmptyValues).toEqual(scale.getEmptyValues());
+        setTimeout(() => {
+          expect(expectedValues).toEqual(scale.getValues());
+        }, 5);
       });
     });
   });
@@ -156,15 +131,6 @@ describe('Scale', () => {
     scales.forEach((scale) => {
       describe(`scales[${scales.indexOf(scale)}]`, () => {
         const attr = scale.orientation === 'horizontal' ? 'left' : 'top';
-        test('empty pips length grater than emptyPipsNumber', () => {
-          expect(scale.emptyPips.length).toBeGreaterThan(emptyPipsNumber);
-        });
-        scale.emptyPips.forEach(($pip, index) => {
-          test(`emptyPips[${index}] style is correct`, () => {
-            const expectStyle = `${attr}: ${scale.getPositionByValue(scale.emptyValues[index])}%;`;
-            expect(expectStyle).toBe($pip.attr('style'));
-          });
-        });
         scale.valuePips.forEach(($pip, index) => {
           test(`valuePips[${index}] style is correct`, () => {
             const expectStyle = `${attr}: ${scale.getPositionByValue(scale.values[index])}%;`;
@@ -183,14 +149,8 @@ describe('Scale', () => {
             expect(scale.$element.find($pip).length).toBeGreaterThan(0);
           });
         });
-        scale.emptyPips.forEach(($pip, index) => {
-          test(`valuePips[${index}] was draw`, () => {
-            expect(scale.$element.find($pip).length).toBeGreaterThan(0);
-          });
-        });
         test('pips amount is correct', () => {
-          const pipAmount = valuePipsNumber + valuePipsNumber * emptyPipsNumber - emptyPipsNumber;
-          expect(pipAmount).toBe(scale.$element.children().length);
+          expect(scale.valuePips.length).toBeLessThanOrEqual(scale.$element.children().length);
         });
       });
     });
@@ -210,7 +170,6 @@ describe('Scale', () => {
         let spies = {
           getDiapason: jest.spyOn(scale, 'getDiapason'),
           getValues: jest.spyOn(scale, 'getValues'),
-          getEmptyValues: jest.spyOn(scale, 'getEmptyValues'),
           updatePips: jest.spyOn(scale, 'updatePips'),
           setOrientation: jest.spyOn(scale, 'setOrientation'),
         };
@@ -218,7 +177,6 @@ describe('Scale', () => {
           spies = {
             getDiapason: jest.spyOn(scale, 'getDiapason'),
             getValues: jest.spyOn(scale, 'getValues'),
-            getEmptyValues: jest.spyOn(scale, 'getEmptyValues'),
             updatePips: jest.spyOn(scale, 'updatePips'),
             setOrientation: jest.spyOn(scale, 'setOrientation'),
           };
@@ -231,9 +189,6 @@ describe('Scale', () => {
         });
         test('getDiapason() was called', () => {
           expect(spies.getDiapason).toBeCalled();
-        });
-        test('getEmptyValues() was called', () => {
-          expect(spies.getEmptyValues).toBeCalled();
         });
         test('getValues() was called', () => {
           expect(spies.getValues).toBeCalled();

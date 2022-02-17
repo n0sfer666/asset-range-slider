@@ -608,6 +608,8 @@ describe('View', () => {
             ? [-10, 10]
             : [1],
           range: [-1500, 1500],
+          step: makeRandomNumber(1, 100),
+          orientation: makeRandomNumber(0, 1) ? 'horizontal' : 'vertical',
           withTooltip: !!makeRandomNumber(0, 1),
           withConnect: !!makeRandomNumber(0, 1),
           withScale: !!makeRandomNumber(0, 1),

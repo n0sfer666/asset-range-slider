@@ -32,64 +32,77 @@ describe('Model', () => {
     const testConfigs: CompleteConfigList[] = [
       {
         ...defaultConfig,
-        step: makeRandomNumber(1, 10),
-        values: [makeRandomNumber(-10, 10)],
-        range: [makeRandomNumber(-100, -11), makeRandomNumber(11, 100)],
+        step: makeRandomNumber(-10, 0),
       },
       {
         ...defaultConfig,
-        step: makeRandomNumber(1, 10),
-        values: [makeRandomNumber(-10, 0), makeRandomNumber(1, 10)],
-        range: [makeRandomNumber(-100, -11), makeRandomNumber(11, 100)],
+        step: makeRandomNumber(101, 200),
       },
       {
         ...defaultConfig,
-        step: makeRandomNumber(-100, 100),
-        values: [makeRandomNumber(-100, 100)],
-        range: [makeRandomNumber(-100, 100), makeRandomNumber(-100, 100)],
+        step: makeRandomNumber(1, 100),
       },
       {
         ...defaultConfig,
-        step: makeRandomNumber(-100, 100),
-        values: [makeRandomNumber(-100, 100), makeRandomNumber(-100, 100)],
-        range: [makeRandomNumber(-100, 100), makeRandomNumber(-100, 100)],
+        values: [makeRandomNumber(-100, -1)],
+      },
+      {
+        ...defaultConfig,
+        values: [makeRandomNumber(101, 200)],
+      },
+      {
+        ...defaultConfig,
+        values: [makeRandomNumber(0, 100)],
+      },
+      {
+        ...defaultConfig,
+        values: [makeRandomNumber(50, 100), makeRandomNumber(0, 49)],
+      },
+      {
+        ...defaultConfig,
+        values: [makeRandomNumber(0, 49), makeRandomNumber(50, 100)],
+      },
+      {
+        ...defaultConfig,
+        range: [makeRandomNumber(100, 200), makeRandomNumber(300, 400)],
+      },
+      {
+        ...defaultConfig,
+        range: [makeRandomNumber(-100, -200), makeRandomNumber(-300, -400)],
+      },
+      {
+        ...defaultConfig,
+        range: [makeRandomNumber(-100, 10), makeRandomNumber(11, 100)],
       },
     ];
     testConfigs.forEach((testConfig) => {
-      const expectedConfig: CompleteConfigList = JSON.parse(JSON.stringify(testConfig));
+      const lastCorrectConfig = JSON.parse(JSON.stringify(model.getConfig()));
+      const checks: boolean[] = [true];
       const { values, range } = testConfig;
 
-      expectedConfig.step = testConfig.step > 0
-        ? testConfig.step
-        : defaultConfig.step;
-
-      if (typeof expectedConfig.values[1] === 'number' && typeof values[1] === 'number') {
-        expectedConfig.values[0] = values[0] >= range[0] && values[0] < expectedConfig.values[1]
-          ? values[0]
-          : range[0];
-        expectedConfig.values[1] = values[1] > values[0] && values[1] <= range[1]
-          ? values[1]
-          : range[1];
-      } else {
-        expectedConfig.values[0] = values[0] >= range[0] && values[0] <= range[1]
-          ? values[0]
-          : range[0];
+      if (testConfig.step > 0 || testConfig.step <= (range[1] - range[0])) {
+        checks.push(false);
       }
 
-      const isCorrectRange = typeof values[1] === 'number'
-        ? range[0] <= values[0] && range[1] >= values[1] && range[1] > range[0]
-        : range[0] <= values[0] && range[1] >= values[0] && range[1] > range[0];
       if (typeof values[1] === 'number') {
-        expectedConfig.range = isCorrectRange
-          ? range
-          : [values[0] - 100, values[1] + 100];
-      } else {
-        expectedConfig.range = isCorrectRange
-          ? range
-          : [values[0] - 100, values[0] + 100];
+        if (values[0] < range[0] || values[0] >= values[1]) {
+          checks.push(false);
+        }
+        if (values[1] <= values[0] || values[1] > range[1]) {
+          checks.push(false);
+        } else if (values[0] < range[0] || values[0] > range[1]) {
+          checks.push(false);
+        }
       }
+      const expectedConfig: CompleteConfigList = checks.reduce(
+        (previousValue, currentValue) => previousValue && currentValue,
+      )
+        ? testConfig
+        : lastCorrectConfig;
       test(`testConfigs[${testConfigs.indexOf(testConfig)}]: returned config is as expected`, () => {
-        expect(defaultConfig).toEqual(model.getConfig());
+        setTimeout(() => {
+          expect(expectedConfig).toEqual(model.getVerifiedConfig(testConfig));
+        }, 5);
       });
     });
   });
@@ -202,7 +215,9 @@ describe('Model', () => {
             }
           }
           test(`testViewData[${testViewData.indexOf(viewData)}]`, () => {
-            expect(newValue).toBe(testModel.getNewValue(viewData));
+            setTimeout(() => {
+              expect(newValue).toBe(testModel.getNewValue(viewData));
+            }, 5);
           });
         });
       });

@@ -3,17 +3,22 @@ import Presenter from '../../SimpleRangeSlider/Presenter/Presenter';
 
 describe('Presenter', () => {
   let $container = $('<div></div>').appendTo(document.body);
-  let instance: Presenter = new Presenter($container, {});
+  const additionalCallback = jest.fn();
+  let instance: Presenter = new Presenter($container, {}, additionalCallback);
+  let spies = {
+    view: jest.spyOn(instance['view'], 'subscribeOn'),
+    model: jest.spyOn(instance['model'], 'subscribeOn'),
+  };
   beforeEach(() => {
     $container = $('<div></div>').appendTo(document.body);
-    instance = new Presenter($container, {});
+    instance = new Presenter($container, {}, additionalCallback);
   });
   afterEach(() => {
     $container.remove();
   });
 
   describe('view subscribe on model end vice versa', () => {
-    let spies = {
+    spies = {
       view: jest.spyOn(instance['view'], 'subscribeOn'),
       model: jest.spyOn(instance['model'], 'subscribeOn'),
     };
@@ -44,13 +49,19 @@ describe('Presenter', () => {
         expect(spies.view).toHaveBeenCalledWith(callbacks.forView);
       }, 5);
     });
+    test('addition callback was added to model', () => {
+      setTimeout(() => {
+        expect(spies.model).toHaveBeenCalledWith(additionalCallback);
+      }, 5);
+    });
   });
 
   describe('updateSlider', () => {
     const config = JSON.parse(JSON.stringify(instance.getConfig()));
     instance.updateSlider({
       range: [-1000, 1000],
-    });
+    },
+    additionalCallback);
     test('config was change', () => {
       setTimeout(() => {
         expect(config).not.toEqual(instance.getConfig());
